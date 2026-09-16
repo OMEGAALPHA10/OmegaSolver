@@ -35,6 +35,6 @@ Debido a que las herramientas nativas modifican registros y dependencias del sis
 ------------------------------
 ## ⚖️ Licencia
 Este proyecto está registrado bajo la Licencia MIT. Eres libre de usar, modificar y distribuir este software siempre y cuando mantengas los créditos del autor original. Consulta el archivo LICENSE para ver los términos legales de exención de responsabilidad.
-¿Te gustaría que también adaptemos la versión en inglés de este documento manteniendo los nuevos nombres de los módulos (OmegaOpti, OmegaFix, etc.) para que la agregues a tu repositorio?
+
 
 
