@@ -31,6 +31,7 @@ Debido a que las herramientas nativas modifican registros y dependencias del sis
 * Desarrollador Principal: OMEGA_ALPHA
 * Edad de inicio del desarrollo: 16 años
 * Propósito: Crear herramientas libres, transparentes y potentes para la comunidad.
+* [![Descargar OmegaSolver](https://shields.io)](https://github.com)
 
 ------------------------------
 ## ⚖️ Licencia
