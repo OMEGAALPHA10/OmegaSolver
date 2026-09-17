@@ -3,12 +3,15 @@
 [![Versión](https://img.shields.io/badge/versi%C3%B3n-V3.9-blue)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
 [![Plataforma](https://img.shields.io/badge/plataforma-Windows%2010%20%7C%2011-0078D4)](https://www.microsoft.com/windows)
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue)](https://microsoft.com/powershell)
+[![PS2EXE](https://img.shields.io/badge/compilado%20con-PS2EXE-purple)](https://github.com/MScholtes/PS2EXE)
 [![Licencia](https://img.shields.io/badge/licencia-MIT-green)](LICENSE)
 [![Estado](https://img.shields.io/badge/estado-estable-success)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
 
-**OmegaSolver** es una herramienta gráfica (GUI) desarrollada en **PowerShell + WPF** diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización de sistemas Windows. Reúne las herramientas nativas de Windows en una interfaz moderna con **Modo Básico/Avanzado**, **7 temas visuales** y **sistema de reversión de cambios**.
+**OmegaSolver** es una herramienta gráfica (GUI) desarrollada en **PowerShell + WPF** y compilada a `.exe` con **PS2EXE**, diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización de sistemas Windows. Reúne las herramientas nativas de Windows en una interfaz moderna con **Modo Básico/Avanzado**, **7 temas visuales** y **sistema de reversión de cambios**.
 
 ---
+
+# 🚀 Última versión: OmegaSolver V3.9
 
 ## ✨ Características principales
 
@@ -76,7 +79,129 @@ Detecta automáticamente todas las unidades y su rol:
 
 ---
 
-# ⚡ OmegaSolver V3.2.2
+## 📥 Instalación de la V3.9
+
+### Opción 1 — Ejecución directa (recomendado)
+
+1. Descarga **`OmegaSolver V3.9.exe`** desde la sección [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest).
+2. Guarda el archivo en cualquier carpeta (por ejemplo, el Escritorio).
+3. **Clic derecho → Ejecutar como administrador**.
+4. Acepta la solicitud de elevación de UAC.
+5. Listo. La ventana de OmegaSolver se abrirá automáticamente.
+
+> ⚠️ **Importante:** el `.exe` requiere permisos de administrador para modificar el registro, servicios y ejecutar SFC/DISM/CHKDSK. Si lo ejecutas sin permisos de admin, el propio programa te pedirá elevación.
+
+### Opción 2 — Desde consola
+
+```cmd
+OmegaSolver V3.9.exe
+```
+
+### Opción 3 — Verificar integridad
+
+Calcula el hash SHA256 y compáralo con el publicado en la página del release:
+
+```powershell
+Get-FileHash "OmegaSolver V3.9.exe" -Algorithm SHA256
+```
+
+### 🛡️ Nota sobre antivirus y SmartScreen
+
+Como el `.exe` está generado con **PS2EXE**, algunos antivirus pueden mostrar falsos positivos al ejecutarlo por primera vez. Esto es un comportamiento habitual en ejecutables PowerShell empaquetados. Si Windows SmartScreen lo bloquea:
+
+1. Clic en **"Más información"**.
+2. Clic en **"Ejecutar de todos modos"**.
+
+Si tu antivirus lo pone en cuarentena, añade una exclusión para el archivo o la carpeta donde lo guardaste.
+
+---
+
+## 📋 Requisitos
+
+- **Windows 10** (build 1809 o superior) o **Windows 11** (64-bit).
+- **.NET Framework 4.7.2** o superior (incluido por defecto en Windows actualizado).
+- **Permisos de administrador** (para modificar registro, servicios y ejecutar SFC/DISM/CHKDSK).
+- **No requiere instalar PowerShell** — el ejecutable lleva embebido el runtime.
+
+---
+
+## ⚠️ Advertencias importantes
+
+- 🔴 **Ejecuta siempre como administrador.** Varias funciones modifican el registro y servicios del sistema.
+- 🔴 **La limpieza de WinSxS con `/ResetBase` es irreversible.** Impide desinstalar componentes anteriores de Windows.
+- 🔴 **"Revertir cambios" no recupera archivos eliminados.** Solo restaura configuración guardada.
+- 🟡 **Cierra juegos y programas pesados** antes de ejecutar rutinas de limpieza.
+- 🟡 **Haz copia de seguridad** o un punto de restauración antes de aplicar cambios masivos.
+
+---
+
+## 🗂️ Estructura de archivos generados
+
+```
+%ProgramData%\OmegaSolver\
+├── reversible-state.json   # Estado guardado para reversión
+└── theme.txt                # Tema visual seleccionado
+```
+
+Ninguno de estos archivos sale del equipo. OmegaSolver **no envía telemetría ni datos a Internet**.
+
+---
+
+## 🔐 Privacidad
+
+OmegaSolver **no recolecta, transmite ni comparte ningún dato del usuario.** Toda la información del sistema se muestra localmente en la interfaz y nunca se envía a servidores externos.
+
+---
+
+## 🗂️ Historial de versiones
+
+| Versión | Tipo | Destacado |
+|---|---|---|
+| **V3.9** | ✅ Release estable | 7 temas, Modo Básico/Avanzado, correcciones |
+| V3.3 – V3.8 | ⚠️ Pre-release (histórico) | Reversión, diagnóstico inteligente, selector de disco |
+| V3.2.2 | 📦 Versión anterior | Mantenimiento profundo y desbloqueo QoS |
+| V3.0.0 | 📦 Stable Release | Windows Forms, OmegaOpti + OmegaFix |
+| V2.0 | 🧪 Betas | WinSuite v3 (.exe) y .bat |
+
+Consulta el [CHANGELOG](CHANGELOG.md) para más detalle.
+
+---
+
+## 🧰 Compilación desde el código fuente
+
+Si prefieres compilar el `.exe` tú mismo a partir del script `.ps1`:
+
+1. Instala el módulo **PS2EXE** desde PowerShell (como administrador):
+
+   ```powershell
+   Install-Module -Name ps2exe -Scope CurrentUser -Force
+   ```
+
+2. Ejecuta el comando de compilación:
+
+   ```powershell
+   Invoke-PS2EXE -InputFile "OmegaSolver V3.9.ps1" `
+                 -OutputFile "OmegaSolver V3.9.exe" `
+                 -NoConsole `
+                 -Title "OmegaSolver V3.9" `
+                 -Description "Diagnóstico, mantenimiento y optimización de Windows" `
+                 -Company "OMEGA ALPHA" `
+                 -Product "OmegaSolver" `
+                 -Version "3.9.0.0" `
+                 -RequireAdmin `
+                 -x64
+   ```
+
+3. El archivo `OmegaSolver V3.9.exe` aparecerá en la misma carpeta.
+
+> 💡 El flag `-NoConsole` oculta la ventana de consola de PowerShell para que solo se vea la GUI.
+> El flag `-RequireAdmin` hace que el `.exe` pida elevación automáticamente mediante un manifiesto embebido.
+
+---
+
+# 📦 Versiones anteriores
+
+## ⚡ OmegaSolver V3.2.2
 
 **OmegaSolver** es una herramienta gráfica (GUI) desarrollada en PowerShell y WPF diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización de red en sistemas Windows.
 
@@ -84,39 +209,37 @@ Detecta automáticamente todas las unidades y su rol:
 
 ---
 
-## 🌟 Características Principales
+### 🌟 Características Principales
 
-### 🛠️ Diagnostic & Sistema
+#### 🛠️ Diagnostic & Sistema
 * **SFC /Scannow:** Escaneo y reparación de archivos dañados del sistema.
 * **DISM /RestoreHealth:** Reparación de la imagen base de Windows.
 * **CHKDSK:** Diagnóstico y verificación del estado del disco duro.
 
-### 🌐 Red y Conexión
+#### 🌐 Red y Conexión
 * **Limpieza DNS:** Vaciado de la caché DNS (`ipconfig /flushdns`).
 * **Reset de Red:** Restablecimiento de sockets Winsock e IP.
 * **🚀 Desbloqueo de Ancho de Banda QoS:** Ajusta el *Límite de ancho de banda reservable* al `0%` directamente en el registro (`HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched`) para liberar la reserva del sistema.
 
-### 🚀 Mantenimiento & Limpieza Profunda
+#### 🚀 Mantenimiento & Limpieza Profunda
 * **Limpieza de Windows Update:** Vaciado seguro de descargas temporales (`SoftwareDistribution\Download`).
 * **Depuración WinSxS:** Eliminación de componentes antiguos e innecesarios (`DISM /StartComponentCleanup /ResetBase`).
 * **Depuración de Temporales:** Limpieza de registros CBS, cachés de navegadores Chromium (Edge / Chrome) y archivos temporales de usuario/sistema.
 * **Papelera y Mantenimiento:** Vaciado automático de la Papelera de Reciclaje y ejecución del Liberador de Espacio nativo (`cleanmgr`).
 
-### ⚡ Reparación 1-Clic
-* Ejecución automatizada en secuencia: **Flush DNS ➡️ Limpieza Profunda Profunda ➡️ Análisis SFC**.
-
----
-
-## 💻 Requisitos
-* **Sistema Operativo:** Windows 10 / Windows 11 (64-bit)
-* **Permisos:** Requiere ejecutarse como **Administrador** (UAC).
+#### ⚡ Reparación 1-Clic
+* Ejecución automatizada en secuencia: **Flush DNS ➡️ Limpieza Profunda ➡️ Análisis SFC**.
 
 ---
 
 ## OmegaSolver v3.0 - Centro de Mantenimiento Avanzado
+
 ¡Bienvenido a OmegaSolver! Una suite de optimización, limpieza y reparación profunda de Windows diseñada en PowerShell y estructurada bajo una interfaz gráfica interactiva utilizando Windows Forms. Este es un proyecto de código abierto enfocado en brindar transparencia técnica total tanto a usuarios comunes como a administradores de sistemas.
-------------------------------
-## 🚀 Módulos y Características Principales
+
+---
+
+### 🚀 Módulos y Características Principales
+
 El Toolkit se divide en dos grandes enfoques operativos basados en scripts híbridos avanzados:
 
 | Módulo | Operación Técnica | Beneficio Real |
@@ -126,31 +249,56 @@ El Toolkit se divide en dos grandes enfoques operativos basados en scripts híbr
 | OmegaFix (Reparación) | Verificación SFC, Reparación de Imagen DISM y Reseteo Winsock/IP | Soluciona archivos corruptos del sistema y restablece la pila de red ante fallas. |
 | OmegaFix 1-Clic | Diagnóstico Integral Secuencial Automatizado | Ejecuta todo el protocolo de reparación en un solo bloque con reportes en tiempo real. |
 
-------------------------------
-## 🛠️ Requisitos Técnicos de Ejecución
+---
+
+### 🛠️ Requisitos Técnicos de Ejecución
+
 Debido a que las herramientas nativas modifican registros y dependencias del sistema, el script cuenta con las siguientes políticas:
 
-   1. Privilegios de Administrador Obligatorios: El script incluye un sistema de auto-elevación nativo. Si no se ejecuta con privilegios elevados, solicitará de forma transparente el Control de Cuentas de Usuario (UAC).
-   2. Registro en Tiempo Real (Live Logging): Todas las acciones se imprimen en una terminal interactiva dentro de la interfaz y se guardan localmente para auditorías.
+1. **Privilegios de Administrador Obligatorios:** El script incluye un sistema de auto-elevación nativo. Si no se ejecuta con privilegios elevados, solicitará de forma transparente el Control de Cuentas de Usuario (UAC).
+2. **Registro en Tiempo Real (Live Logging):** Todas las acciones se imprimen en una terminal interactiva dentro de la interfaz y se guardan localmente para auditorías.
 
-------------------------------
-## ⚠️ Advertencias y Seguridad Técnica
+---
 
-* Uso de DISM: La velocidad de reparación de la imagen del sistema dependerá directamente del tipo de hardware del usuario (unidades SSD procesarán el cambio de forma veloz, mientras que unidades HDD mecánicas tomarán notablemente más tiempo).
-* Análisis de Disco (CHKDSK): Al solicitar un examen en la unidad activa C:, el script programará de forma segura la revisión interactiva para el próximo reinicio del sistema operativo.
-* Seguridad de Código: Al ser Open Source, puedes revisar cada línea antes de presionar el botón de inicio. El software cuenta con una capa de confirmación previa antes de alterar cualquier archivo.
+### ⚠️ Advertencias y Seguridad Técnica
 
-------------------------------
+* **Uso de DISM:** La velocidad de reparación de la imagen del sistema dependerá directamente del tipo de hardware del usuario (unidades SSD procesarán el cambio de forma veloz, mientras que unidades HDD mecánicas tomarán notablemente más tiempo).
+* **Análisis de Disco (CHKDSK):** Al solicitar un examen en la unidad activa C:, el script programará de forma segura la revisión interactiva para el próximo reinicio del sistema operativo.
+* **Seguridad de Código:** Al ser Open Source, puedes revisar cada línea antes de presionar el botón de inicio. El software cuenta con una capa de confirmación previa antes de alterar cualquier archivo.
+
+---
+
 ## 🧑‍💻 Autor del Proyecto
 
-* Desarrollador Principal: OMEGA_ALPHA
-* Edad de inicio del desarrollo: 16 años
-* Propósito: Crear herramientas libres, transparentes y potentes para la comunidad.
-* [![Descargar OmegaSolver](https://shields.io)](https://github.com)
+* **Desarrollador Principal:** OMEGA_ALPHA
+* **Edad de inicio del desarrollo:** 16 años
+* **Propósito:** Crear herramientas libres, transparentes y potentes para la comunidad.
 
-------------------------------
+[![Descargar OmegaSolver](https://shields.io)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
+
+---
+
+## 🤝 Contribuir
+
+Las contribuciones son bienvenidas. Abre un issue o un pull request.
+
+---
+
 ## ⚖️ Licencia
-Este proyecto está registrado bajo la Licencia MIT. Eres libre de usar, modificar y distribuir este software siempre y cuando mantengas los créditos del autor original. Consulta el archivo LICENSE para ver los términos legales de exención de responsabilidad.
 
+Este proyecto está registrado bajo la **Licencia MIT**. Eres libre de usar, modificar y distribuir este software siempre y cuando mantengas los créditos del autor original. Consulta el archivo [LICENSE](LICENSE) para ver los términos legales de exención de responsabilidad.
 
+---
 
+## 🙏 Agradecimientos
+
+A todos los usuarios que probaron las versiones V2.0 → V3.8, reportaron bugs y sugirieron mejoras. Este release estable es el resultado directo de ese feedback.
+
+---
+
+## 🔗 Enlaces rápidos
+
+- 📦 [Última versión (V3.9)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
+- 🗃️ [Todas las releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases)
+- 📄 [CHANGELOG](CHANGELOG.md)
+- 🐛 [Reportar un bug](https://github.com/OMEGAALPHA10/OmegaSolver/issues)
