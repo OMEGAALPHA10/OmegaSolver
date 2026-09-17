@@ -1,3 +1,93 @@
+# ⚡ OmegaSolver
+
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-V3.9-blue)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
+[![Plataforma](https://img.shields.io/badge/plataforma-Windows%2010%20%7C%2011-0078D4)](https://www.microsoft.com/windows)
+[![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue)](https://microsoft.com/powershell)
+[![Licencia](https://img.shields.io/badge/licencia-MIT-green)](LICENSE)
+[![Estado](https://img.shields.io/badge/estado-estable-success)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
+
+**OmegaSolver** es una herramienta gráfica (GUI) desarrollada en **PowerShell + WPF** diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización de sistemas Windows. Reúne las herramientas nativas de Windows en una interfaz moderna con **Modo Básico/Avanzado**, **7 temas visuales** y **sistema de reversión de cambios**.
+
+---
+
+## ✨ Características principales
+
+### 🎯 Doble modo de uso
+- **Modo Básico** (predeterminado): interfaz limpia con nombres simples para usuarios sin experiencia técnica. Oculta estadísticas y registro.
+- **Modo Avanzado**: activable con el checkbox superior derecho. Muestra nombres técnicos, panel de estadísticas y registro de actividad.
+
+Los botones mantienen **la misma funcionalidad completa** en ambos modos; solo cambia la etiqueta visible.
+
+### 🎨 7 temas visuales
+Cambia el aspecto en tiempo real sin reiniciar:
+
+| Tema | Paleta |
+|---|---|
+| **Oscuro** | Tema por defecto (azul/negro) |
+| **Claro** | Alto contraste para entornos iluminados |
+| **GitHub** | Inspirado en GitHub Dark |
+| **Retro** | Verde fósforo sobre negro |
+| **Twitter X** | Negro puro + azul oficial `#1D9BF0` |
+| **Discord** | Blurple `#5865F2` sobre gris oscuro |
+| **WhatsApp** | Verde `#00A884` sobre fondo teal |
+
+El tema elegido se **persiste** en `%ProgramData%\OmegaSolver\theme.txt`.
+
+### 🔄 Sistema de reversión de cambios
+Antes de cada modificación, guarda el estado original en `%ProgramData%\OmegaSolver\reversible-state.json`:
+
+1. Plan de energía activo antes de aplicar "Alto Rendimiento".
+2. Hibernación e Inicio rápido antes de la Limpieza Profunda.
+3. Valor original de QoS (`NonBestEffortLimit`).
+4. Estado de servicios (`wuauserv`, `FontCache`, `UsoSvc`).
+
+El botón **"Revertir cambios"** restaura exactamente lo que se guardó.
+
+### 🔍 Diagnóstico inteligente
+- Analiza tamaño de `%TEMP%`, `%SystemRoot%\Temp`, descargas de Windows Update, caché de Delivery Optimization, cachés de Edge y Chrome.
+- Nivel orientativo de residuos (5 GB = 100%).
+- Espacio libre del disco del sistema.
+- Estado de alimentación (batería / corriente).
+- Genera recomendaciones personalizadas.
+
+### 🛠️ Reparación completa
+- **SFC** (`/scannow`) online u offline según disco seleccionado.
+- **DISM** (`/RestoreHealth`) online u offline.
+- **CHKDSK** (`/f`) en cualquier volumen.
+- **Reparación 1-Clic** que combina todo lo anterior + limpieza profunda.
+
+### 🌐 Red y conexión
+- Limpieza de caché DNS.
+- Restablecimiento de Winsock / IP.
+- Ajuste de límite QoS (`NonBestEffortLimit = 0`).
+
+### 🧹 Mantenimiento
+- Limpieza de temporales básicos.
+- Limpieza profunda (Windows Update, cachés Chromium, residuos de instaladores, papelera).
+- Limpieza avanzada de Logs + WinSxS.
+- Liberador de espacio nativo (`cleanmgr /sagerun:1`).
+
+### 💽 Selector de disco inteligente
+Detecta automáticamente todas las unidades y su rol:
+
+- **Windows activo** (SFC/DISM online).
+- **Windows offline** (SFC/DISM en modo offline).
+- **Volumen de datos** (solo CHKDSK aplica).
+
+---
+
+## 📥 Instalación
+
+### Opción 1 — Ejecución directa
+1. Descarga `OmegaSolver V3.9.ps1` desde [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest).
+2. Clic derecho → **Ejecutar con PowerShell**.
+3. Acepta la solicitud de elevación de UAC.
+4. Listo.
+
+### Opción 2 — Desde consola
+```powershell
+powershell -ExecutionPolicy Bypass -File "OmegaSolver V3.9.ps1"
+
 # ⚡ OmegaSolver V3.2.2
 
 **OmegaSolver** es una herramienta gráfica (GUI) desarrollada en PowerShell y WPF diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización de red en sistemas Windows.
