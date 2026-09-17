@@ -1,6 +1,6 @@
 # ⚡ OmegaSolver
 
-[![Versión](https://img.shields.io/badge/versi%C3%B3n-V3.9-blue)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-V3.9%20%7C%20V3.9%20ALT-blue)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
 [![Plataforma](https://img.shields.io/badge/plataforma-Windows%2010%20%7C%2011-0078D4)](https://www.microsoft.com/windows)
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue)](https://microsoft.com/powershell)
 [![PS2EXE](https://img.shields.io/badge/compilado%20con-PS2EXE-purple)](https://github.com/MScholtes/PS2EXE)
@@ -11,13 +11,28 @@
 
 ---
 
-# 🚀 Última versión: OmegaSolver V3.9
+# 🚀 Última versión: OmegaSolver V3.9 (Edición Estándar & ALT)
+
+La versión V3.9 se distribuye en dos variantes oficiales: la versión **Estándar** (mantenimiento profundo completo) y la versión **ALT** (optimizada para máxima estabilidad y prevención de inestabilidad del sistema).
+
+## 📊 Comparativa de versiones: ¿Cuál elegir?
+
+| Característica / Función | ⚡ V3.9 (Estándar) | 🛡️ V3.9 ALT (Edición Recomendada) |
+|---|---|---|
+| **Punto de Restauración Automático** | Manual | **Automático** (`Checkpoint-Computer` previo a reparaciones) |
+| **Mantenimiento WinSxS** | Profundo (`/ResetBase`) | **Seguro** (Preserva la capacidad de desinstalar actualizaciones) |
+| **Manejo de Caché de Fuentes** | Modificación en registro | **Reinicio seguro de servicio** (`Restart-Service -Name FontCache`) |
+| **Verificación de Reinicio Pendiente** | No | **Sí** (Detecta `RebootPending` / `RebootRequired` antes de limpiar) |
+| **Interfaz y Temas Visuales** | 7 temas + Doble Modo | 7 temas + Doble Modo |
+| **Sistema de Reversión de Cambios** | Incluido (`json`) | Incluido (`json`) |
+
+---
 
 ## ✨ Características principales
 
 ### 🎯 Doble modo de uso
 - **Modo Básico** (predeterminado): interfaz limpia con nombres simples para usuarios sin experiencia técnica. Oculta estadísticas y registro.
-- **Modo Avanzado**: activable con el checkbox superior derecho. Muestra nombres técnicos, panel de estadísticas y registro de actividad.
+- **Modo Avanzado**: activable con el checkbox superior derecho. Muestra nombres técnicos, panel de estadísticas y registro de actividad en tiempo real.
 
 Los botones mantienen **la misma funcionalidad completa** en ambos modos; solo cambia la etiqueta visible.
 
@@ -51,11 +66,11 @@ El botón **"Revertir cambios"** restaura exactamente lo que se guardó.
 - Nivel orientativo de residuos (5 GB = 100%).
 - Espacio libre del disco del sistema.
 - Estado de alimentación (batería / corriente).
-- Genera recomendaciones personalizadas.
+- Genera recomendaciones personalizadas (en la versión ALT incluye detección de reinicios pendientes).
 
 ### 🛠️ Reparación completa
 - **SFC** (`/scannow`) online u offline según disco seleccionado.
-- **DISM** (`/RestoreHealth`) online u offline.
+- **DISM** (`/RestoreHealth` o `/StartComponentCleanup`) online u offline.
 - **CHKDSK** (`/f`) en cualquier volumen.
 - **Reparación 1-Clic** que combina todo lo anterior + limpieza profunda.
 
@@ -79,11 +94,11 @@ Detecta automáticamente todas las unidades y su rol:
 
 ---
 
-## 📥 Instalación de la V3.9
+## 📥 Instalación de la V3.9 / V3.9 ALT
 
 ### Opción 1 — Ejecución directa (recomendado)
 
-1. Descarga **`OmegaSolver V3.9.exe`** desde la sección [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest).
+1. Descarga **`OmegaSolver V3.9.exe`** o **`OmegaSolver V3.9 ALT.exe`** desde la sección [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest).
 2. Guarda el archivo en cualquier carpeta (por ejemplo, el Escritorio).
 3. **Clic derecho → Ejecutar como administrador**.
 4. Acepta la solicitud de elevación de UAC.
@@ -93,45 +108,44 @@ Detecta automáticamente todas las unidades y su rol:
 
 ### Opción 2 — Desde consola
 
-```cmd
-OmegaSolver V3.9.exe
-```
+cmd
+"OmegaSolver V3.9 ALT.exe"
 
-### Opción 3 — Verificar integridad
+### Opción 3 - verificar integridad 
 
-Calcula el hash SHA256 y compáralo con el publicado en la página del release:
+powershell
+Get-FileHash "OmegaSolver V3.9 ALT.exe" -Algorithm SHA256
 
-```powershell
-Get-FileHash "OmegaSolver V3.9.exe" -Algorithm SHA256
-```
+---
 
-### 🛡️ Nota sobre antivirus y SmartScreen
+🛡️ Nota sobre antivirus y SmartScreen
+Como el .exe está generado con PS2EXE, algunos antivirus pueden mostrar falsos positivos al ejecutarlo por primera vez. Esto es un comportamiento habitual en ejecutables PowerShell empaquetados. Si Windows SmartScreen lo bloquea:
 
-Como el `.exe` está generado con **PS2EXE**, algunos antivirus pueden mostrar falsos positivos al ejecutarlo por primera vez. Esto es un comportamiento habitual en ejecutables PowerShell empaquetados. Si Windows SmartScreen lo bloquea:
+Clic en "Más información".
 
-1. Clic en **"Más información"**.
-2. Clic en **"Ejecutar de todos modos"**.
+Clic en "Ejecutar de todos modos".
 
 Si tu antivirus lo pone en cuarentena, añade una exclusión para el archivo o la carpeta donde lo guardaste.
 
----
+📋 Requisitos
+Windows 10 (build 1809 o superior) o Windows 11 (64-bit).
 
-## 📋 Requisitos
+.NET Framework 4.7.2 o superior (incluido por defecto en Windows actualizado).
 
-- **Windows 10** (build 1809 o superior) o **Windows 11** (64-bit).
-- **.NET Framework 4.7.2** o superior (incluido por defecto en Windows actualizado).
-- **Permisos de administrador** (para modificar registro, servicios y ejecutar SFC/DISM/CHKDSK).
-- **No requiere instalar PowerShell** — el ejecutable lleva embebido el runtime.
+Permisos de administrador (para modificar registro, servicios y ejecutar SFC/DISM/CHKDSK).
 
----
+No requiere instalar PowerShell — el ejecutable lleva embebido el runtime.
 
-## ⚠️ Advertencias importantes
+⚠️ Advertencias importantes
+🔴 Ejecuta siempre como administrador. Varias funciones modifican el registro y servicios del sistema.
 
-- 🔴 **Ejecuta siempre como administrador.** Varias funciones modifican el registro y servicios del sistema.
-- 🔴 **La limpieza de WinSxS con `/ResetBase` es irreversible.** Impide desinstalar componentes anteriores de Windows.
-- 🔴 **"Revertir cambios" no recupera archivos eliminados.** Solo restaura configuración guardada.
-- 🟡 **Cierra juegos y programas pesados** antes de ejecutar rutinas de limpieza.
-- 🟡 **Haz copia de seguridad** o un punto de restauración antes de aplicar cambios masivos.
+🔴 La limpieza de WinSxS con /ResetBase (solo en edición V3.9 Estándar) es irreversible. Impide desinstalar actualizaciones anteriores de Windows. Si buscas mayor seguridad, utiliza la edición V3.9 ALT.
+
+🔴 "Revertir cambios" no recupera archivos eliminados. Solo restaura configuración guardada de servicios y registro.
+
+🟡 Cierra juegos y programas pesados antes de ejecutar rutinas de limpieza.
+
+🟡 Haz copia de seguridad o un punto de restauración antes de aplicar cambios masivos (automatizado en la versión ALT).
 
 ---
 
@@ -147,9 +161,8 @@ Ninguno de estos archivos sale del equipo. OmegaSolver **no envía telemetría n
 
 ---
 
-## 🔐 Privacidad
-
-OmegaSolver **no recolecta, transmite ni comparte ningún dato del usuario.** Toda la información del sistema se muestra localmente en la interfaz y nunca se envía a servidores externos.
+🔐 Privacidad
+OmegaSolver no recolecta, transmite ni comparte ningún dato del usuario. Toda la información del sistema se muestra localmente en la interfaz y nunca se envía a servidores externos.
 
 ---
 
@@ -157,7 +170,7 @@ OmegaSolver **no recolecta, transmite ni comparte ningún dato del usuario.** To
 
 | Versión | Tipo | Destacado |
 |---|---|---|
-| **V3.9** | ✅ Release estable | 7 temas, Modo Básico/Avanzado, correcciones |
+| **V3.9 & R.9 ALT** | ✅ Release estable | 7 temas, Modo Básico/Avanzado, correcciones |
 | V3.3 – V3.8 | ⚠️ Pre-release (histórico) | Reversión, diagnóstico inteligente, selector de disco |
 | V3.2.2 | 📦 Versión anterior | Mantenimiento profundo y desbloqueo QoS |
 | V3.0.0 | 📦 Stable Release | Windows Forms, OmegaOpti + OmegaFix |
@@ -196,6 +209,8 @@ Si prefieres compilar el `.exe` tú mismo a partir del script `.ps1`:
 
 > 💡 El flag `-NoConsole` oculta la ventana de consola de PowerShell para que solo se vea la GUI.
 > El flag `-RequireAdmin` hace que el `.exe` pida elevación automáticamente mediante un manifiesto embebido.
+
+si usaras la version ALT, solo recuerda colocar "ALT" justo despues de la version.
 
 ---
 
