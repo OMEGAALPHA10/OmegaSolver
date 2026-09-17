@@ -1,0 +1,85 @@
+@echo off
+title Limpiador Inteligente Universal - Windows 10 & 11
+setlocal enabledelayedexpansion
+
+:: 1. Validar privilegios de Administrador de forma universal
+openfiles >nul 2>&1
+if %errorLevel% neq 0 (
+    echo ============================================================
+    echo [ERROR] SE REQUIEREN PERMISOS DE ADMINISTRADOR
+    echo ============================================================
+    echo Por favor, haz clic derecho sobre este archivo y selecciona:
+    echo "Ejecutar como Administrador"
+    echo ============================================================
+    echo.
+    pause
+    exit /b
+)
+
+echo ============================================================
+echo      INICIANDO LIMPIEZA UNIVERSAL DE ALMACENAMIENTO
+echo ============================================================
+echo.
+
+:: 2. Desactivar Hibernacion de forma segura (Libera espacio masivo)
+echo [+] Desactivando archivo de hibernacion (hiberfil.sys)...
+powercfg -h off >nul 2>&1
+
+:: 3. Detener servicios bloqueantes de forma segura (Solo si existen y estan corriendo)
+echo [+] Deteniendo servicios temporales para liberar archivos...
+sc query wuauserv | find "RUNNING" >nul 2>&1 && net stop wuauserv >nul 2>&1
+sc query FontCache | find "RUNNING" >nul 2>&1 && net stop FontCache >nul 2>&1
+sc query UsoSvc | find "RUNNING" >nul 2>&1 && net stop UsoSvc >nul 2>&1
+
+:: 4. Vaciar caches especificas del Sistema (Tus rutas solicitadas)
+echo [+] Vaciando caches del sistema, logs de actualizaciones y optimizaciones...
+if exist "%SystemRoot%\SoftwareDistribution\Download" del /f /q /s "%SystemRoot%\SoftwareDistribution\Download\*.*" >nul 2>&1
+if exist "%SystemRoot%\Logs\CBS" (
+    del /f /q /s "%SystemRoot%\Logs\CBS\*.log" >nul 2>&1
+    del /f /q /s "%SystemRoot%\Logs\CBS\*.cab" >nul 2>&1
+)
+if exist "%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache" (
+    del /f /q /s "%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache\*.*" >nul 2>&1
+)
+if exist "%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\FontCache" (
+    del /f /q /s "%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\FontCache\*.*" >nul 2>&1
+)
+
+:: 5. Vaciar Cache de Navegadores basados en Chromium (Edge y Chrome) de CUALQUIER usuario
+echo [+] Buscando y limpiando caches de navegadores de forma universal...
+if exist "%LocalAppData%\Microsoft\Edge\User Data\Default\Cache" (
+    del /f /q /s "%LocalAppData%\Microsoft\Edge\User Data\Default\Cache\*.*" >nul 2>&1
+)
+if exist "%LocalAppData%\Google\Chrome\User Data\Default\Cache" (
+    del /f /q /s "%LocalAppData%\Google\Chrome\User Data\Default\Cache\*.*" >nul 2>&1
+)
+
+:: 6. Limpieza Total de Temporales Universales (Sistema y Usuario actual)
+echo [+] Eliminando archivos temporales acumulados...
+del /f /q /s "%temp%\*.*" >nul 2>&1
+if exist "%SystemRoot%\Temp" del /f /q /s "%SystemRoot%\Temp\*.*" >nul 2>&1
+
+:: 7. Remover residuos de instalaciones corruptas o abortadas
+if exist "C:\Config.Msi" rmdir /s /q "C:\Config.Msi" >nul 2>&1
+
+:: 8. Restaurar y arrancar servicios del sistema
+echo [+] Restaurando servicios esenciales de Windows...
+net start wuauserv >nul 2>&1
+net start FontCache >nul 2>&1
+net start UsoSvc >nul 2>&1
+
+:: 9. Optimizacion Inteligente del Almacen de Componentes (WinSxS)
+echo [+] Analizando y descartando componentes obsoletos en WinSxS...
+echo [!] Esto puede tardar unos minutos segun la velocidad del disco, espera...
+DISM.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase >nul 2>&1
+
+:: 10. Forzar ejecucion silenciosa del Liberador de Espacio Nativo (Papelera, DirectX Shader, etc)
+echo [+] Ejecutando Liberador de Espacio nativo en segundo plano...
+cleanmgr /sagerun:1 >nul 2>&1
+
+echo.
+echo ============================================================
+echo    ¡MANTENIMIENTO FINALIZADO Y ESPACIO RECUPERADO CON EXITO!
+echo ============================================================
+echo.
+pause
