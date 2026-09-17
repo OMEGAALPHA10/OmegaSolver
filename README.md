@@ -1,3 +1,40 @@
+# ⚡ OmegaSolver V3.2.2
+
+**OmegaSolver** es una herramienta gráfica (GUI) desarrollada en PowerShell y WPF diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización de red en sistemas Windows.
+
+![OmegaSolver GUI](https://raw.githubusercontent.com/OMEGAALPHA10/OmegaSolver/main/preview.png) <!-- Reemplaza con la ruta de una captura de tu interfaz si la tienes -->
+
+---
+
+## 🌟 Características Principales
+
+### 🛠️ Diagnostic & Sistema
+* **SFC /Scannow:** Escaneo y reparación de archivos dañados del sistema.
+* **DISM /RestoreHealth:** Reparación de la imagen base de Windows.
+* **CHKDSK:** Diagnóstico y verificación del estado del disco duro.
+
+### 🌐 Red y Conexión
+* **Limpieza DNS:** Vaciado de la caché DNS (`ipconfig /flushdns`).
+* **Reset de Red:** Restablecimiento de sockets Winsock e IP.
+* **🚀 Desbloqueo de Ancho de Banda QoS:** Ajusta el *Límite de ancho de banda reservable* al `0%` directamente en el registro (`HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched`) para liberar la reserva del sistema.
+
+### 🚀 Mantenimiento & Limpieza Profunda
+* **Limpieza de Windows Update:** Vaciado seguro de descargas temporales (`SoftwareDistribution\Download`).
+* **Depuración WinSxS:** Eliminación de componentes antiguos e innecesarios (`DISM /StartComponentCleanup /ResetBase`).
+* **Depuración de Temporales:** Limpieza de registros CBS, cachés de navegadores Chromium (Edge / Chrome) y archivos temporales de usuario/sistema.
+* **Papelera y Mantenimiento:** Vaciado automático de la Papelera de Reciclaje y ejecución del Liberador de Espacio nativo (`cleanmgr`).
+
+### ⚡ Reparación 1-Clic
+* Ejecución automatizada en secuencia: **Flush DNS ➡️ Limpieza Profunda Profunda ➡️ Análisis SFC**.
+
+---
+
+## 💻 Requisitos
+* **Sistema Operativo:** Windows 10 / Windows 11 (64-bit)
+* **Permisos:** Requiere ejecutarse como **Administrador** (UAC).
+
+---
+
 ## OmegaSolver v3.0 - Centro de Mantenimiento Avanzado
 ¡Bienvenido a OmegaSolver! Una suite de optimización, limpieza y reparación profunda de Windows diseñada en PowerShell y estructurada bajo una interfaz gráfica interactiva utilizando Windows Forms. Este es un proyecto de código abierto enfocado en brindar transparencia técnica total tanto a usuarios comunes como a administradores de sistemas.
 ------------------------------
