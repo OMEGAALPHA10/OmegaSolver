@@ -76,18 +76,6 @@ Detecta automáticamente todas las unidades y su rol:
 
 ---
 
-## 📥 Instalación
-
-### Opción 1 — Ejecución directa
-1. Descarga `OmegaSolver V3.9.ps1` desde [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest).
-2. Clic derecho → **Ejecutar con PowerShell**.
-3. Acepta la solicitud de elevación de UAC.
-4. Listo.
-
-### Opción 2 — Desde consola
-```powershell
-powershell -ExecutionPolicy Bypass -File "OmegaSolver V3.9.ps1"
-
 # ⚡ OmegaSolver V3.2.2
 
 **OmegaSolver** es una herramienta gráfica (GUI) desarrollada en PowerShell y WPF diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización de red en sistemas Windows.
