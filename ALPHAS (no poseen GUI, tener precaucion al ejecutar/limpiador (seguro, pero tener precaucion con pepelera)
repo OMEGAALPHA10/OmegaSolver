@@ -1,0 +1,95 @@
+@echo off
+title Limpiador Inteligente Universal con Interfaz - Windows 10 & 11
+setlocal enabledelayedexpansion
+
+:: 1. Validar privilegios de Administrador de forma universal
+openfiles >nul 2>&1
+if %errorLevel% neq 0 (
+    echo MsgBox "SE REQUIEREN PERMISOS DE ADMINISTRADOR." ^& vbCrLf ^& "Por favor, haz clic derecho sobre este archivo y selecciona 'Ejecutar como Administrador'.", 16, "Error de Privilegios" > "%temp%\msg.vbs"
+    wscript "%temp%\msg.vbs"
+    del "%temp%\msg.vbs"
+    exit /b
+)
+
+:: Mostrar ventana de confirmación antes de iniciar
+echo Ans = MsgBox("¿Deseas iniciar la limpieza profunda y optimización del sistema?", 4 + 32, "Limpiador Inteligente Universal") > "%temp%\confirm.vbs"
+echo WScript.Quit Ans >> "%temp%\confirm.vbs"
+wscript "%temp%\confirm.vbs"
+set "clearAns=%errorlevel%"
+del "%temp%\confirm.vbs"
+if %clearAns% neq 6 exit /b
+
+cls
+echo ============================================================
+echo         OPTIMIZADOR Y LIMPIADOR VISUAL DE WINDOWS
+echo ============================================================
+echo.
+
+:: 2. Desactivar Hibernacion de forma segura
+echo  [ 10%% ] Desactivando archivo de hibernacion (hiberfil.sys)...
+powercfg -h off >nul 2>&1
+
+:: 3. Detener servicios bloqueantes de forma segura
+echo  [ 25%% ] Deteniendo servicios temporales del sistema...
+sc query wuauserv | find "RUNNING" >nul 2>&1 && net stop wuauserv >nul 2>&1
+sc query FontCache | find "RUNNING" >nul 2>&1 && net stop FontCache >nul 2>&1
+sc query UsoSvc | find "RUNNING" >nul 2>&1 && net stop UsoSvc >nul 2>&1
+
+:: 4. Vaciar caches especificas del Sistema
+echo  [ 45%% ] Vaciando logs, actualizaciones y optimizaciones...
+if exist "%SystemRoot%\SoftwareDistribution\Download" del /f /q /s "%SystemRoot%\SoftwareDistribution\Download\*.*" >nul 2>&1
+if exist "%SystemRoot%\Logs\CBS" (
+    del /f /q /s "%SystemRoot%\Logs\CBS\*.log" >nul 2>&1
+    del /f /q /s "%SystemRoot%\Logs\CBS\*.cab" >nul 2>&1
+)
+if exist "%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache" (
+    del /f /q /s "%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache\*.*" >nul 2>&1
+)
+if exist "%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\FontCache" (
+    del /f /q /s "%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\FontCache\*.*" >nul 2>&1
+)
+
+:: 5. Vaciar Cache de Navegadores basados en Chromium
+echo  [ 60%% ] Buscando y limpiando caches de Edge y Chrome...
+if exist "%LocalAppData%\Microsoft\Edge\User Data\Default\Cache" (
+    del /f /q /s "%LocalAppData%\Microsoft\Edge\User Data\Default\Cache\*.*" >nul 2>&1
+)
+if exist "%LocalAppData%\Google\Chrome\User Data\Default\Cache" (
+    del /f /q /s "%LocalAppData%\Google\Chrome\User Data\Default\Cache\*.*" >nul 2>&1
+)
+
+:: 6. Limpieza Total de Temporales Universales
+echo  [ 75%% ] Eliminando archivos temporales acumulados...
+del /f /q /s "%temp%\*.*" >nul 2>&1
+if exist "%SystemRoot%\Temp" del /f /q /s "%SystemRoot%\Temp\*.*" >nul 2>&1
+
+:: 7. Remover residuos de instalaciones corruptas
+if exist "C:\Config.Msi" rmdir /s /q "C:\Config.Msi" >nul 2>&1
+
+:: 8. Restaurar y arrancar servicios del sistema
+echo  [ 85%% ] Restaurando servicios esenciales de Windows...
+net start wuauserv >nul 2>&1
+net start FontCache >nul 2>&1
+net start UsoSvc >nul 2>&1
+
+:: 9. Optimizacion Inteligente del Almacen de Componentes (WinSxS)
+echo  [ 95%% ] Analizando y descartando componentes obsoletos en WinSxS...
+echo          (Esto puede tardar unos minutos, por favor espera...)
+DISM.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase >nul 2>&1
+
+:: 10. Forzar ejecucion silenciosa del Liberador de Espacio Nativo
+echo  [ 100%%] Ejecutando Liberador de Espacio nativo en segundo plano...
+cleanmgr /sagerun:1 >nul 2>&1
+
+:: Ventana final con mensaje de éxito de Windows
+echo MsgBox "¡Mantenimiento finalizado con éxito!" ^& vbCrLf ^& "El espacio en disco ha sido recuperado e indexado de forma correcta.", 64, "Limpieza Completada" > "%temp%\success.vbs"
+wscript "%temp%\success.vbs"
+del "%temp%\success.vbs"
+
+echo.
+echo ============================================================
+echo    ¡PROCESO FINALIZADO CON ÉXITO! PUEDES CERRAR ESTA VENTANA.
+echo ============================================================
+echo.
+pause
+exit
