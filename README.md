@@ -1,14 +1,140 @@
-# ⚡ OmegaSolver
+# ⚡ OmegaSolver V4.0
 
-[![Versión](https://img.shields.io/badge/versi%C3%B3n-V3.9%20%7C%20V3.9%20ALT-blue)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-V4.0-blue)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
 [![Plataforma](https://img.shields.io/badge/plataforma-Windows%2010%20%7C%2011-0078D4)](https://www.microsoft.com/windows)
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue)](https://microsoft.com/powershell)
 [![PS2EXE](https://img.shields.io/badge/compilado%20con-PS2EXE-purple)](https://github.com/MScholtes/PS2EXE)
 [![Licencia](https://img.shields.io/badge/licencia-MIT-green)](LICENSE)
 [![Estado](https://img.shields.io/badge/estado-estable-success)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
 
-**OmegaSolver** es una herramienta gráfica (GUI) desarrollada en **PowerShell + WPF** y compilada a `.exe` con **PS2EXE**, diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización de sistemas Windows. Reúne las herramientas nativas de Windows en una interfaz moderna con **Modo Básico/Avanzado**, **7 temas visuales** y **sistema de reversión de cambios**.
+**OmegaSolver V4.0** es una suite gráfica (GUI) desarrollada en **PowerShell + WPF** y compilada a `.exe` mediante **PS2EXE**. Diseñada para simplificar el diagnóstico, mantenimiento profundo y optimización integral de sistemas Windows, combina herramientas nativas en una interfaz moderna con **17 temas visuales**, **Doble Modo (Básico y Avanzado)**, **Manual Adaptativo Bilingüe**, **Protección Automática para SSD** y un **Sistema de Reversión de Cambios**.
 
+---
+
+## ✨ Novedades y Características Principales (V4.0)
+
+### 🎯 Doble Modo de Uso
+- **Modo Básico** (predeterminado): Interfaz limpia con terminología accesible para usuarios sin experiencia técnica.
+- **Modo Avanzado**: Habilita la consola de registro en vivo (*Live Logging*), indicadores técnicos explícitos y el panel de estadísticas del sistema.
+
+### 🛡️ Detección Inteligente y Protección de SSD
+- **Identificación de Hardware**: Detecta automáticamente la tecnología de almacenamiento (`SSD` o `HDD`).
+- **Bloqueo Preventivo**: Inhabilita la opción de desfragmentación en unidades SSD para evitar ciclos de escritura innecesarios y proteger la vida útil del disco.
+
+### 📖 Manual de Usuario Adaptativo (ES / EN)
+- **Interfaz Bilingüe Integrada**: Ventana modal en español e inglés dentro de la propia aplicación.
+- **Explicación Dinámica**: El manual ajusta sus descripciones y terminología dependiendo de si se consulta en Modo Básico o Modo Avanzado.
+
+### 🎨 17 Temas Visuales
+Cambio de apariencia en tiempo real con motor de renderizado WPF:
+- **Temas disponibles**: Oscuro, Claro, Spotify Neon, GitHub Dark, Retro (verde fósforo), Twitter X, Discord, WhatsApp, entre otros.
+- **Persistencia**: Recuerda la paleta seleccionada guardándola localmente en la configuración.
+
+### 🔍 Diagnóstico Automático en Tiempo Real
+- **Análisis de Residuos**: Mide el espacio acumulado en `%TEMP%`, `%SystemRoot%\Temp`, descargas de Windows Update, Delivery Optimization y cachés de navegadores Chromium (Edge y Chrome).
+- **Lectura del Sistema**: Muestra espacio libre en disco, estado de alimentación (Batería vs. Corriente AC) y emite recomendaciones dinámicas personalizadas.
+
+### 🛠️ Reparación y Mantenimiento Integrado
+- **Reparación del Sistema**: Ejecución de **SFC** (`/scannow`), **DISM** (`/RestoreHealth` o `/StartComponentCleanup`) y **CHKDSK** (`/f`) con selector automático para instalaciones activas u offline.
+- **Optimización de Red**: Vaciado de caché DNS (`ipconfig /flushdns`), restablecimiento de la pila TCP/IP/Winsock y liberación del límite de ancho de banda QoS (`NonBestEffortLimit = 0`).
+- **Limpieza de Archivos**: Eliminación de temporales básicos, purgado de registros del Visor de Eventos (*EventLogs*) y limpieza profunda de componentes WinSxS (`/ResetBase`).
+- **Reparación 1-Clic**: Ejecuta de forma automática una secuencia optimizada de diagnóstico, limpieza de red, purga de temporales y escaneo del sistema.
+
+### 🔄 Sistema de Reversión de Cambios
+Guarda el estado previo en `%ProgramData%\OmegaSolver\reversible-state.json` antes de realizar modificaciones críticas:
+1. Plan de energía activo antes de aplicar "Alto Rendimiento".
+2. Configuración de Hibernación y Fast Startup antes de la Limpieza Profunda.
+3. Valor original del registro de QoS.
+4. Estado de servicios del sistema (`wuauserv`, `FontCache`, `UsoSvc`).
+
+---
+
+## 📊 Comparativa de Ediciones y Evolución
+
+| Característica / Función | 📦 V3.2.2 | ⚡ V3.9 / ALT | 🚀 V4.0 (Actual) |
+|---|---|---|---|
+| **Interfaz Gráfica** | Windows Forms | WPF (7 temas) | **WPF Avanzado (17 temas)** |
+| **Protección SSD (TRIM)** | No | No | **Sí (Bloqueo automático de defrag en SSD)** |
+| **Manual de Usuario** | No | No | **Sí (Integrado, Bilingüe ES/EN y Adaptativo)** |
+| **Modos de Usuario** | Único | Doble | **Doble (Básico / Avanzado con Live Log)** |
+| **Diagnóstico** | Manual | Estático | **Detección en tiempo real + Recomendaciones** |
+| **Reversión de Cambios** | No | Incluido | **Incluido (`json` persistente)** |
+
+---
+
+## 📥 Instalación y Ejecución
+
+### Opción 1 — Ejecución directa (Recomendado)
+
+1. Descarga **`OmegaSolver V4.0.exe`** desde la sección [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest).
+2. Haz clic derecho sobre el archivo → **Ejecutar como administrador**.
+3. Acepta la solicitud de elevación de UAC.
+4. La interfaz de OmegaSolver V4.0 se abrirá automáticamente.
+
+> ⚠️ **Nota de Administrador:** El programa requiere permisos elevados para interactuar con servicios del sistema, registro y herramientas nativas (SFC/DISM/CHKDSK). Si se ejecuta sin elevación, el script solicitará permisos automáticamente.
+
+### Opción 2 — Desde la consola
+
+```cmd
+"OmegaSolver V4.0.exe"
+```
+
+### Opción 3 — Verificación de integridad SHA256
+
+```powershell
+Get-FileHash "OmegaSolver V4.0.exe" -Algorithm SHA256
+```
+
+---
+
+## 📋 Requisitos del Sistema
+
+- **Sistema Operativo**: Windows 10 (build 1809 o superior) o Windows 11 (64-bit).
+- **Entorno**: .NET Framework 4.7.2 o superior (incluido en Windows actualizado).
+- **Permisos**: Privilegios de Administrador.
+- **Dependencias**: No requiere instalación previa de PowerShell (el ejecutable `.exe` incluye el runtime empaquetado).
+
+---
+
+## 🗂️ Estructura de Archivos Generados
+
+```
+%ProgramData%\OmegaSolver\
+├── reversible-state.json    # Estado guardado para la reversión de cambios
+└── theme.txt                # Preferencia del tema visual seleccionado
+```
+
+OmegaSolver es **100% offline y privado**: no recolecta, transmite ni envía telemetría a servidores externos.
+
+---
+
+---
+
+## 🗂️ Historial de Versiones
+
+| Versión | Estado | Descripción |
+|---|---|---|
+| **V4.0** | ✅ Release Estable | WPF completo, 17 temas, manual bilingüe adaptativo, protección SSD y diagnósticos en vivo. |
+| **V3.9 / ALT** | 📦 Versión Anterior | Introducción de WPF, 7 temas visuales, doble modo y sistema de reversión. |
+| **V3.2.2** | 📦 Legacy | Mantenimiento profundo y desbloqueo de QoS en Windows Forms. |
+| **V3.0.0** | 📦 Legacy | Interfaz gráfica inicial en Windows Forms (OmegaOpti + OmegaFix). |
+| **V2.0** | 🧪 Antecedente | Scripts empaquetados WinSuite (.exe / .bat). |
+
+---
+
+## 🧑‍💻 Autoría y Créditos
+
+- **Desarrollador Principal:** OMEGA_ALPHA
+- **Colaboración y Optimización:** Gemini & DeepSeek
+- **Propósito:** Ofrecer herramientas transparentes, potentes y gratuitas de mantenimiento para la comunidad.
+
+---
+
+## 🤝 Contribuciones y Licencia
+
+Las contribuciones son bien recibidas. Puedes abrir un *Issue* o enviar un *Pull Request* en el repositorio oficial.
+
+Este proyecto se distribuye bajo la **Licencia MIT**. Consulta el archivo [LICENSE](LICENSE) para más detalles.
 ---
 
 # 🚀 Última versión: OmegaSolver V3.9 (Edición Estándar & ALT)
