@@ -1,0 +1,54 @@
+## 🔐 Verificación de firma digital (solo usuarios avanzados)
+
+### ¿Qué es el archivo `OmegaSolver.cer`?
+
+Es la **clave pública** del certificado de firma digital con el que se firman los
+ejecutables de OmegaSolver. Permite verificar que un `.exe` fue publicado
+legítimamente por OMEGA_ALPHA y no ha sido alterado.
+
+### ¿Qué verifica exactamente?
+
+Cuando Windows valida un `.exe` firmado contra el `.cer`, comprueba 3 cosas:
+
+1. **Integridad** — Que el archivo NO se modificó después de firmarlo.
+   Si alguien cambia un solo byte (virus, parche, modificación), la firma se rompe.
+
+2. **Identidad** — Que el archivo fue firmado por quien dice el certificado.
+   En este caso: `CN=OMEGA_ALPHA`.
+
+3. **Autenticidad temporal** — Que la firma se hizo mientras el certificado era válido
+   (gracias al timestamp de DigiCert, sigue siendo válida después de 2029).
+
+### ⚠️ NO verifica que el software sea seguro
+
+Un certificado firmado **NO significa** que el programa sea inofensivo. Significa
+únicamente que el programa **fue creado por esa persona** y **no ha sido alterado**
+desde que se firmó.
+
+### Cómo verificar manualmente un .exe (Windows)
+
+#### Método 1: Interfaz gráfica (rápido)
+
+1. Descarga el `.exe` desde GitHub Releases.
+2. Click derecho → **Propiedades** → pestaña **Firmas digitales**.
+3. Debe aparecer: **OMEGA_ALPHA** como firmante.
+4. Si dice "Editor desconocido" o no hay pestaña → el archivo NO está firmado.
+
+#### Método 2: PowerShell (recomendado para técnicos)
+
+```powershell
+# 1. Descargar el .cer del repositorio
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/OMEGAALPHA10/OmegaSolver/main/OmegaSolver.cer" `
+                  -OutFile "$env:TEMP\OmegaSolver.cer"
+
+# 2. Importar el certificado como confiable (solo una vez)
+Import-Certificate -FilePath "$env:TEMP\OmegaSolver.cer" `
+                   -CertStoreLocation "Cert:\CurrentUser\TrustedPublisher"
+
+# 3. Verificar el .exe
+$sig = Get-AuthenticodeSignature "C:\Ruta\A\OmegaSolver V4.3.exe"
+
+# 4. Mostrar resultado
+$sig | Format-List Status, StatusMessage,
+    @{N='SignedBy';E={$_.SignerCertificate.Subject}},
+    @{N='ValidUntil';E={$_.SignerCertificate.NotAfter}}
