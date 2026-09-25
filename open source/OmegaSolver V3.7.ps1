@@ -1,0 +1,1326 @@
+﻿# OmegaSolver - Suite de diagnóstico, mantenimiento y optimización para Windows.
+# Copyright (C) 2026 OMEGA_ALPHA
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://gnu.org>.
+
+# ==============================================================================
+# PROYECTO: OmegaSolver V3.8
+# ARCHIVO: OmegaSolver V3.8.ps1
+# DESCRIPCIÓN: Herramienta gráfica de diagnóstico, reparación, mantenimiento
+#              y optimización de Windows con registro de cambios reversibles.
+# ================================================================================
+
+# Solicitar permisos de administrador porque varias funciones modifican Windows.
+function Test-OmegaAdministrator {
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
+if (-not (Test-OmegaAdministrator)) {
+    try {
+        $scriptPath = $MyInvocation.MyCommand.Path
+        if (-not $scriptPath) {
+            [System.Windows.MessageBox]::Show("Guarda el script como archivo .ps1 y ejecútalo de nuevo.", "OmegaSolver V3.8") | Out-Null
+            exit 1
+        }
+        # Intentar conservar el mismo host de PowerShell al solicitar elevación.
+        $hostExe = $null
+        try { $hostExe = (Get-Process -Id $PID -ErrorAction Stop).Path } catch { }
+        if ([string]::IsNullOrWhiteSpace($hostExe) -or -not (Test-Path $hostExe)) {
+            $hostExe = Join-Path $PSHOME 'powershell.exe'
+            if (-not (Test-Path $hostExe)) { $hostExe = 'powershell.exe' }
+        }
+        Start-Process $hostExe -Verb RunAs -ArgumentList @(
+            '-NoProfile',
+            '-ExecutionPolicy', 'Bypass',
+            '-File', "`"$scriptPath`""
+        ) | Out-Null
+        exit 0
+    }
+    catch {
+        Add-Type -AssemblyName PresentationFramework
+        [System.Windows.MessageBox]::Show("OmegaSolver necesita permisos de administrador para ejecutar varias funciones.", "OmegaSolver V3.8", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning) | Out-Null
+        exit 1
+    }
+}
+
+Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
+
+# ------------------------------------------------------------------------------
+# XAML / INTERFAZ
+# ------------------------------------------------------------------------------
+[xml]$xaml = @"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OmegaSolver V3.8" Height="780" Width="1020"
+        MinHeight="700" MinWidth="940"
+        WindowStartupLocation="CenterScreen" Background="#101216" Foreground="#FFFFFF">
+    <Window.Resources>
+        <!-- Botones normales: hover oscuro para conservar contraste y lectura. -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#242831"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#4B5563"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#1E293B"/>
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#94A3B8"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#111827"/>
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#CBD5E1"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.55"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#0067A3"/>
+            <Setter Property="BorderBrush" Value="#2EA3F2"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#004D7A"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#003855"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="RevertButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#7A2E2E"/>
+            <Setter Property="BorderBrush" Value="#F87171"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5B1E1E"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#3F1515"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ManualButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#374151"/>
+            <Setter Property="BorderBrush" Value="#9CA3AF"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4B5563"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#1F2937"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="132"/>
+            <RowDefinition Height="160"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Cabecera -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="OmegaSolver V3.8" FontSize="23" FontWeight="Bold" Foreground="#38BDF8"/>
+            <TextBlock Text="Diagnóstico, mantenimiento y optimización de Windows" FontSize="12" Foreground="#AEB7C4" Margin="0,3,0,0"/>
+            <TextBlock x:Name="lblStatus" Text="Estado: Analizando el equipo..." FontSize="12" Foreground="#D1D5DB" Margin="0,4,0,0"/>
+            <Border Background="#171B22" BorderBrush="#303846" BorderThickness="1" CornerRadius="6" Padding="9" Margin="0,8,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.35*"/>
+                        <ColumnDefinition Width="1.15*"/>
+                        <ColumnDefinition Width="1.15*"/>
+                        <ColumnDefinition Width="1.8*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="2,0,8,0">
+                        <TextBlock Text="EQUIPO" FontSize="9" Foreground="#93A4B8"/>
+                        <TextBlock x:Name="lblPCName" Text="Detectando..." FontSize="13" FontWeight="Bold" Foreground="#FFFFFF" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="2,0,8,0">
+                        <TextBlock Text="WINDOWS" FontSize="9" Foreground="#93A4B8"/>
+                        <TextBlock x:Name="lblWindowsInfo" Text="Detectando..." FontSize="12" Foreground="#E5E7EB" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Margin="2,0,8,0">
+                        <TextBlock Text="POWERSHELL" FontSize="9" Foreground="#93A4B8"/>
+                        <TextBlock x:Name="lblPowerShellInfo" Text="Detectando..." FontSize="12" Foreground="#E5E7EB" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3" Margin="2,0,2,0">
+                        <TextBlock Text="COMPONENTES" FontSize="9" Foreground="#93A4B8"/>
+                        <TextBlock x:Name="lblComponentsInfo" Text="Comprobando herramientas..." FontSize="11" Foreground="#E5E7EB" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+
+        <!-- Contenido Principal -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Tarjeta 1: Sistema -->
+            <Border Grid.Column="0" Background="#1B1F27" CornerRadius="7" Padding="10" Margin="0,0,6,0" BorderBrush="#303846" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="🛠️ Sistema y Rendimiento" FontSize="14" FontWeight="Bold" Margin="4,0,0,8" Foreground="#38BDF8"/>
+                    <TextBlock Text="Disco objetivo para reparaciones:" FontSize="11" Foreground="#D1D5DB" Margin="4,0,4,3"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <ComboBox x:Name="cmbRepairDrive" Width="190" Height="32" Background="#0C0E12" Foreground="#FFFFFF" BorderBrush="#4B5563" Padding="6,4" ToolTip="Selecciona el volumen sobre el que se aplicarán SFC, DISM y CHKDSK."/>
+                        <Button x:Name="btnRefreshDrives" Content="↻ Actualizar" Width="92" Height="32" Margin="6,0,0,0" ToolTip="Vuelve a detectar los discos disponibles."/>
+                    </StackPanel>
+                    <TextBlock x:Name="lblDiskInfo" Text="Detectando discos..." FontSize="10" Foreground="#9CA3AF" TextWrapping="Wrap" Margin="4,0,4,7"/>
+                    <Button x:Name="btnSfc" Content="Ejecutar SFC /Scannow" ToolTip="Repara archivos protegidos de Windows en el disco seleccionado. En C: usa el Windows activo; en otra unidad usa reparación offline si existe una instalación de Windows."/>
+                    <Button x:Name="btnDism" Content="Reparar Imagen DISM" ToolTip="Repara componentes de la imagen de Windows mediante DISM."/>
+                    <Button x:Name="btnChkDsk" Content="Reparar Disco (CHKDSK /f)" ToolTip="Comprueba y repara errores del sistema de archivos del volumen seleccionado. Puede pedir reinicio si es el disco del sistema."/>
+                    <Button x:Name="btnMaxPower" Content="⚡ Activar Alto Rendimiento" ToolTip="Guarda el plan actual y activa el plan Alto rendimiento."/>
+                </StackPanel>
+            </Border>
+
+            <!-- Tarjeta 2: Red -->
+            <Border Grid.Column="1" Background="#1B1F27" CornerRadius="7" Padding="10" Margin="6,0,6,0" BorderBrush="#303846" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="🌐 Red y Conexión" FontSize="14" FontWeight="Bold" Margin="4,0,0,10" Foreground="#38BDF8"/>
+                    <Button x:Name="btnFlushDns" Content="Limpiar Caché DNS" ToolTip="Vacía la caché DNS local; se vuelve a crear automáticamente al navegar."/>
+                    <Button x:Name="btnResetNet" Content="Restablecer Winsock / IP" ToolTip="Restablece componentes de red. Puede requerir reinicio y no tiene un deshacer general."/>
+                    <Button x:Name="btnQoS" Content="🚀 Configurar Límite QoS a 0%" ToolTip="Guarda el valor anterior del límite QoS y establece NonBestEffortLimit en 0."/>
+                </StackPanel>
+            </Border>
+
+            <!-- Tarjeta 3: Mantenimiento -->
+            <Border Grid.Column="2" Background="#1B1F27" CornerRadius="7" Padding="10" Margin="6,0,0,0" BorderBrush="#303846" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="🧹 Mantenimiento" FontSize="14" FontWeight="Bold" Margin="4,0,0,10" Foreground="#38BDF8"/>
+                    <Button x:Name="btnTemp" Content="Limpiar Temporales Básicos" ToolTip="Elimina temporales del usuario. Algunos archivos pueden estar en uso y se omiten."/>
+                    <Button x:Name="btnDeepClean" Content="🧹 Limpieza Profunda / WinUpdate" ToolTip="Limpia temporales, cachés y Windows Update. Guarda antes los estados necesarios para revertir ajustes."/>
+                    <Button x:Name="btnLogClean" Content="🗑️ Limpiar Logs y WinSxS" ToolTip="Depura logs y ejecuta DISM ResetBase. Parte de esta operación es irreversible."/>
+                    <Button x:Name="btnFullRepair" Style="{StaticResource PrimaryButton}" Content="⚡ Reparación 1-Clic" Margin="4,10,4,4" ToolTip="Combina varias operaciones de mantenimiento y reparación. Revisa el manual antes de usarla."/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Diagnóstico inteligente -->
+        <Border Grid.Row="2" Background="#171B22" CornerRadius="7" Padding="10" Margin="0,12,0,0" BorderBrush="#303846" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.45*"/>
+                    <ColumnDefinition Width="2.1*"/>
+                    <ColumnDefinition Width="1.6*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="2,0,14,0" VerticalAlignment="Center">
+                    <TextBlock Text="🔍 Diagnóstico inteligente" FontSize="13" FontWeight="Bold" Foreground="#38BDF8"/>
+                    <TextBlock Text="Nivel aproximado de temporales y cachés detectados" FontSize="10" Foreground="#AEB7C4" Margin="0,3,0,7" TextWrapping="Wrap"/>
+                    <ProgressBar x:Name="pbJunkLevel" Height="15" Minimum="0" Maximum="100" Value="0" Background="#0C0E12" Foreground="#38BDF8" BorderBrush="#4B5563"/>
+                    <TextBlock x:Name="lblJunkPercent" Text="Analizando..." FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,4,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="2,0,14,0" VerticalAlignment="Center">
+                    <TextBlock Text="RESUMEN" FontSize="9" Foreground="#93A4B8"/>
+                    <TextBlock x:Name="lblJunkDetails" Text="Preparando análisis del sistema..." FontSize="11" Foreground="#E5E7EB" TextWrapping="Wrap" Margin="0,3,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Margin="2,0,2,0" VerticalAlignment="Center">
+                    <TextBlock Text="RECOMENDACIONES" FontSize="9" Foreground="#93A4B8"/>
+                    <TextBox x:Name="txtRecommendations" Text="Analizando..." Height="70" Background="#0C0E12" Foreground="#F3F4F6" BorderBrush="#374151" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" FontSize="10" Padding="7"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Terminal de Logs -->
+        <Border Grid.Row="3" Background="#181B21" CornerRadius="7" Padding="10" Margin="0,12,0,0" BorderBrush="#303846" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="📜 Registro de Actividad" FontSize="12" FontWeight="Bold" Foreground="#AEB7C4" Margin="0,0,0,5"/>
+                <TextBox x:Name="txtLog" Height="130" Background="#0C0E12" Foreground="#63F28B"
+                         BorderBrush="#2A303A" FontFamily="Consolas" FontSize="11" IsReadOnly="True"
+                         TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Barra de herramientas separada -->
+        <Border Grid.Row="4" Background="#181B21" CornerRadius="7" Padding="7" Margin="0,12,0,0" BorderBrush="#303846" BorderThickness="1">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <Button x:Name="btnDiagnose" Style="{StaticResource ManualButton}" Content="🔍 Analizar PC" Width="150" ToolTip="Vuelve a calcular el diagnóstico de temporales, cachés, espacio libre y recomendaciones."/>
+                    <Button x:Name="btnManual" Style="{StaticResource ManualButton}" Content="📖 Manual detallado" Width="170"/>
+                    <Button x:Name="btnRevert" Style="{StaticResource RevertButton}" Content="↩ Revertir cambios" Width="170" ToolTip="Restaura los cambios de configuración que OmegaSolver haya guardado como reversibles."/>
+                </StackPanel>
+                <TextBlock Text="Los cambios reversibles se guardan en el equipo para poder restaurarlos incluso después de cerrar la aplicación."
+                           VerticalAlignment="Center" Foreground="#9CA3AF" TextWrapping="Wrap" Margin="8,0,10,0"/>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>
+"@
+
+# Cargar la interfaz WPF
+$reader = (New-Object System.Xml.XmlNodeReader $xaml)
+$window = [Windows.Markup.XamlReader]::Load($reader)
+
+# Vincular controles XAML
+$txtLog        = $window.FindName("txtLog")
+$lblStatus     = $window.FindName("lblStatus")
+$lblPCName     = $window.FindName("lblPCName")
+$lblWindowsInfo = $window.FindName("lblWindowsInfo")
+$lblPowerShellInfo = $window.FindName("lblPowerShellInfo")
+$lblComponentsInfo = $window.FindName("lblComponentsInfo")
+$btnSfc        = $window.FindName("btnSfc")
+$btnDism       = $window.FindName("btnDism")
+$btnChkDsk     = $window.FindName("btnChkDsk")
+$btnMaxPower   = $window.FindName("btnMaxPower")
+$btnFlushDns   = $window.FindName("btnFlushDns")
+$btnResetNet   = $window.FindName("btnResetNet")
+$btnQoS        = $window.FindName("btnQoS")
+$btnTemp       = $window.FindName("btnTemp")
+$btnDeepClean  = $window.FindName("btnDeepClean")
+$btnLogClean   = $window.FindName("btnLogClean")
+$btnManual     = $window.FindName("btnManual")
+$btnRevert     = $window.FindName("btnRevert")
+$btnFullRepair = $window.FindName("btnFullRepair")
+$cmbRepairDrive = $window.FindName("cmbRepairDrive")
+$lblDiskInfo = $window.FindName("lblDiskInfo")
+$btnRefreshDrives = $window.FindName("btnRefreshDrives")
+$pbJunkLevel = $window.FindName("pbJunkLevel")
+$lblJunkPercent = $window.FindName("lblJunkPercent")
+$lblJunkDetails = $window.FindName("lblJunkDetails")
+$txtRecommendations = $window.FindName("txtRecommendations")
+$btnDiagnose = $window.FindName("btnDiagnose")
+
+# ------------------------------------------------------------------------------
+# ESTADO PERSISTENTE DE CAMBIOS REVERSIBLES
+# ------------------------------------------------------------------------------
+$OmegaStateDir  = Join-Path $env:ProgramData "OmegaSolver"
+$OmegaStatePath = Join-Path $OmegaStateDir "reversible-state.json"
+
+if (-not (Test-Path $OmegaStateDir)) {
+    New-Item -Path $OmegaStateDir -ItemType Directory -Force | Out-Null
+}
+
+function Get-DefaultOmegaState {
+    return [ordered]@{
+        Version = 1
+        SavedAt = $null
+        PowerPlan = [ordered]@{
+            OriginalSchemeGuid = $null
+            TargetSchemeGuid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+        }
+        FastStartup = [ordered]@{
+            OriginalHibernationEnabled = $null
+            OriginalHiberbootEnabled = $null
+        }
+        QoS = [ordered]@{
+            RegistryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Psched"
+            OriginalValueExists = $false
+            OriginalValue = $null
+        }
+        Services = [ordered]@{
+            wuauserv = $null
+            FontCache = $null
+            UsoSvc = $null
+        }
+    }
+}
+
+function Save-OmegaState {
+    param([object]$State)
+    $State.SavedAt = (Get-Date).ToString("o")
+    $State | ConvertTo-Json -Depth 8 | Set-Content -Path $OmegaStatePath -Encoding UTF8
+}
+
+function Load-OmegaState {
+    try {
+        if (Test-Path $OmegaStatePath) {
+            $state = Get-Content -Path $OmegaStatePath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+            if ($state.Version -eq 1) { return $state }
+        }
+    } catch {
+        Write-OmegaLog "⚠ No se pudo leer el estado guardado; se creará uno nuevo."
+    }
+    return (Get-DefaultOmegaState | ConvertTo-Json -Depth 8 | ConvertFrom-Json)
+}
+
+$OmegaState = Load-OmegaState
+
+# ------------------------------------------------------------------------------
+# FUNCIONES AUXILIARES
+# ------------------------------------------------------------------------------
+function Write-OmegaLog {
+    param([string]$message)
+    $timestamp = Get-Date -Format "HH:mm:ss"
+    $txtLog.AppendText("[$timestamp] $message`n")
+    $txtLog.ScrollToEnd()
+}
+
+function Set-OmegaStatus {
+    param([string]$Text)
+    $lblStatus.Text = "Estado: $Text"
+}
+
+function Get-OmegaSystemProfile {
+    $profile = [ordered]@{
+        ComputerName = if ([string]::IsNullOrWhiteSpace($env:COMPUTERNAME)) { 'Equipo local' } else { $env:COMPUTERNAME }
+        PowerShellVersion = if ($PSVersionTable.PSVersion) { $PSVersionTable.PSVersion.ToString() } else { 'Desconocida' }
+        PowerShellEdition = if ($PSVersionTable.PSEdition) { $PSVersionTable.PSEdition } else { 'Desktop' }
+        Architecture = if ([Environment]::Is64BitOperatingSystem) { '64 bits' } else { '32 bits' }
+        WindowsName = 'Windows'
+        WindowsVersion = ''
+        WindowsBuild = ''
+        WindowsDisplayVersion = ''
+        Components = [ordered]@{}
+    }
+
+    try {
+        $os = Get-CimInstance Win32_OperatingSystem -ErrorAction Stop
+        $profile.WindowsName = [string]$os.Caption
+        $profile.WindowsBuild = [string]$os.BuildNumber
+    } catch { }
+
+    try {
+        $cv = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction Stop
+        if ($cv.ProductName) { $profile.WindowsName = [string]$cv.ProductName }
+        if ($cv.DisplayVersion) { $profile.WindowsDisplayVersion = [string]$cv.DisplayVersion }
+        elseif ($cv.ReleaseId) { $profile.WindowsDisplayVersion = [string]$cv.ReleaseId }
+        if ($cv.CurrentBuildNumber) { $profile.WindowsBuild = [string]$cv.CurrentBuildNumber }
+        if ($cv.UBR -ne $null) { $profile.WindowsVersion = "$($profile.WindowsBuild).$($cv.UBR)" }
+    } catch { }
+
+    # Fallback para distinguir Win10/Win11 cuando el nombre del registro sea genérico.
+    if ($profile.WindowsBuild -match '^\d+$') {
+        if ([int]$profile.WindowsBuild -ge 22000) { $profile.WindowsName = 'Windows 11' }
+        elseif ($profile.WindowsName -match 'Windows 10|Windows 11') { $profile.WindowsName = 'Windows 10' }
+    }
+
+    $commands = [ordered]@{
+        'SFC' = 'sfc.exe'
+        'DISM' = 'dism.exe'
+        'CHKDSK' = 'chkdsk.exe'
+        'PowerCfg' = 'powercfg.exe'
+        'Netsh' = 'netsh.exe'
+        'IPConfig' = 'ipconfig.exe'
+        'CleanMgr' = 'cleanmgr.exe'
+    }
+    foreach ($key in $commands.Keys) {
+        $profile.Components[$key] = [bool](Get-Command $commands[$key] -ErrorAction SilentlyContinue)
+    }
+
+    $profile.Components['WPF'] = $false
+    try { [void][System.Reflection.Assembly]::LoadWithPartialName('PresentationFramework'); $profile.Components['WPF'] = $true } catch { }
+
+    return [pscustomobject]$profile
+}
+
+function Initialize-OmegaSystemProfile {
+    param([object]$Profile)
+    $lblPCName.Text = "🔹 $($Profile.ComputerName)"
+    $omegaPSEdition = if ($Profile.PowerShellEdition -eq 'Core') { 'Core' } else { 'Desktop' }
+    $lblPowerShellInfo.Text = "$($Profile.PowerShellVersion) ($omegaPSEdition)"
+
+    $winVersion = if ($Profile.WindowsDisplayVersion) { $Profile.WindowsDisplayVersion } elseif ($Profile.WindowsVersion) { $Profile.WindowsVersion } else { 'versión desconocida' }
+    $buildText = if ($Profile.WindowsBuild) { "Build $($Profile.WindowsBuild)" } else { '' }
+    $lblWindowsInfo.Text = "$($Profile.WindowsName) $winVersion $buildText".Trim()
+
+    $available = @($Profile.Components.GetEnumerator() | Where-Object { $_.Value } | ForEach-Object { $_.Key })
+    $missing = @($Profile.Components.GetEnumerator() | Where-Object { -not $_.Value } | ForEach-Object { $_.Key })
+    if ($missing.Count -eq 0) {
+        $lblComponentsInfo.Text = "✅ Todo preparado · $($available -join ', ')"
+        $lblComponentsInfo.Foreground = [System.Windows.Media.Brushes]::LightGreen
+    } else {
+        $lblComponentsInfo.Text = "⚠ Faltan: $($missing -join ', ')"
+        $lblComponentsInfo.Foreground = [System.Windows.Media.Brushes]::Khaki
+    }
+
+    Write-OmegaLog "💻 Equipo: $($Profile.ComputerName) · $($Profile.WindowsName) · PowerShell $($Profile.PowerShellVersion) · $($Profile.Architecture)."
+    Write-OmegaLog "🧩 Componentes: SFC=$($Profile.Components['SFC']); DISM=$($Profile.Components['DISM']); CHKDSK=$($Profile.Components['CHKDSK']); PowerCfg=$($Profile.Components['PowerCfg']); Netsh=$($Profile.Components['Netsh']); IPConfig=$($Profile.Components['IPConfig']); CleanMgr=$($Profile.Components['CleanMgr']); WPF=$($Profile.Components['WPF'])."
+
+    # Adaptar botones a las capacidades reales del equipo.
+    if (-not $Profile.Components['SFC']) { $btnSfc.IsEnabled = $false }
+    if (-not $Profile.Components['DISM']) { $btnDism.IsEnabled = $false; $btnLogClean.IsEnabled = $false }
+    if (-not $Profile.Components['CHKDSK']) { $btnChkDsk.IsEnabled = $false }
+    if (-not $Profile.Components['PowerCfg']) { $btnMaxPower.IsEnabled = $false; $btnDeepClean.IsEnabled = $false }
+    if (-not $Profile.Components['Netsh']) { $btnResetNet.IsEnabled = $false }
+    if (-not $Profile.Components['IPConfig']) { $btnFlushDns.IsEnabled = $false; $btnFullRepair.IsEnabled = $false }
+    if (-not $Profile.Components['CleanMgr']) { Write-OmegaLog '⚠ cleanmgr.exe no está disponible; la Limpieza Profunda omitirá ese paso.' }
+}
+
+$OmegaSystemProfile = Get-OmegaSystemProfile
+
+function Get-OmegaFolderSizeBytes {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path) -or -not (Test-Path -LiteralPath $Path)) { return [int64]0 }
+    [int64]$sum = 0
+    try {
+        foreach ($file in [System.IO.Directory]::EnumerateFiles($Path, '*', [System.IO.SearchOption]::AllDirectories)) {
+            try { $sum += [int64](Get-Item -LiteralPath $file -Force -ErrorAction Stop).Length } catch { }
+        }
+    } catch { }
+    return $sum
+}
+
+function Get-OmegaSmartDiagnostics {
+    $systemRoot = $env:SystemRoot
+    $userTemp = $env:TEMP
+    $systemTemp = Join-Path $systemRoot 'Temp'
+    $wuDownload = Join-Path $systemRoot 'SoftwareDistribution\Download'
+    $deliveryCache = Join-Path $systemRoot 'ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache'
+    $edgeCache = Join-Path $env:LOCALAPPDATA 'Microsoft\Edge\User Data\Default\Cache'
+    $chromeCache = Join-Path $env:LOCALAPPDATA 'Google\Chrome\User Data\Default\Cache'
+
+    $paths = [ordered]@{
+        'Temporales de usuario' = $userTemp
+        'Temporales de Windows' = $systemTemp
+        'Descargas Windows Update' = $wuDownload
+        'Cache Delivery Optimization' = $deliveryCache
+        'Cache Edge' = $edgeCache
+        'Cache Chrome' = $chromeCache
+    }
+
+    [int64]$junkBytes = 0
+    $breakdown = @()
+    foreach ($entry in $paths.GetEnumerator()) {
+        $size = Get-OmegaFolderSizeBytes -Path $entry.Value
+        if ($size -gt 0) {
+            $junkBytes += $size
+            $breakdown += [pscustomobject]@{ Name=$entry.Key; Bytes=$size }
+        }
+    }
+
+    $systemDisk = $null
+    try { $systemDisk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$($env:SystemDrive)'" -ErrorAction Stop } catch { }
+    $totalBytes = if ($systemDisk -and $systemDisk.Size) { [int64]$systemDisk.Size } else { [int64]0 }
+    $freeBytes = if ($systemDisk -and $systemDisk.FreeSpace) { [int64]$systemDisk.FreeSpace } else { [int64]0 }
+    $freePct = if ($totalBytes -gt 0) { [math]::Round(($freeBytes / $totalBytes) * 100, 1) } else { $null }
+
+    # Indicador orientativo: 5 GB de temporales/cachés = 100%. No representa salud del disco.
+    $referenceBytes = 5GB
+    $junkLevel = [math]::Min(100, [math]::Round(($junkBytes / $referenceBytes) * 100, 0))
+    $junkGB = [math]::Round($junkBytes / 1GB, 2)
+
+    $batteryState = 'Desktop/CA'
+    try {
+        $battery = @(Get-CimInstance Win32_Battery -ErrorAction Stop)
+        if ($battery.Count -gt 0) {
+            $discharging = $battery | Where-Object { $_.BatteryStatus -eq 1 }
+            $batteryState = if ($discharging) { 'En batería' } else { 'Con corriente' }
+        }
+    } catch { }
+
+    $activePlan = Get-ActivePowerSchemeGuid
+    $recommendations = New-Object System.Collections.Generic.List[string]
+
+    if ($freePct -ne $null -and $freePct -lt 15) {
+        [void]$recommendations.Add('⚠ Espacio libre bajo en el disco del sistema. Prioriza liberar espacio antes de aplicar optimizaciones.')
+    } elseif ($freePct -ne $null -and $freePct -lt 25) {
+        [void]$recommendations.Add('ℹ El espacio libre del sistema está algo reducido; una limpieza de temporales puede ser útil.')
+    }
+
+    if ($junkGB -ge 1) {
+        [void]$recommendations.Add("🧹 Se detectan aproximadamente $junkGB GB en temporales/cachés conocidos. La limpieza básica puede ser apropiada.")
+    } else {
+        [void]$recommendations.Add('✅ El volumen de temporales/cachés conocidos es bajo; no es necesario limpiar solo por rutina.')
+    }
+
+    if ($junkGB -ge 3) {
+        [void]$recommendations.Add('🧼 La Limpieza Profunda puede recuperar más espacio, pero revisa el manual porque elimina cachés y ciertos residuos.')
+    }
+
+    if ($OmegaSystemProfile.Components['SFC'] -and $OmegaSystemProfile.Components['DISM']) {
+        [void]$recommendations.Add('🛠️ SFC y DISM están disponibles; úsalos cuando haya síntomas de archivos/componentes de Windows dañados.')
+    }
+
+    if ($OmegaSystemProfile.Components['CHKDSK']) {
+        [void]$recommendations.Add('💽 CHKDSK está disponible para comprobar y corregir sistemas de archivos en las unidades seleccionadas.')
+    }
+
+    if ($batteryState -eq 'En batería') {
+        [void]$recommendations.Add('🔋 Estás usando batería: Alto Rendimiento es opcional y puede aumentar el consumo; no se recomienda activarlo como ajuste automático.')
+    } else {
+        [void]$recommendations.Add('⚡ Alto Rendimiento está disponible; su activación es opcional y prioriza rendimiento frente a ahorro de energía.')
+    }
+
+    [pscustomobject]@{
+        JunkBytes = $junkBytes
+        JunkGB = $junkGB
+        JunkLevel = $junkLevel
+        FreePct = $freePct
+        FreeGB = if ($freeBytes) { [math]::Round($freeBytes / 1GB, 1) } else { $null }
+        TotalGB = if ($totalBytes) { [math]::Round($totalBytes / 1GB, 1) } else { $null }
+        Breakdown = $breakdown
+        BatteryState = $batteryState
+        ActivePowerPlan = $activePlan
+        Recommendations = @($recommendations)
+    }
+}
+
+function Set-OmegaProgressAppearance {
+    param([double]$Value)
+    if ($Value -ge 70) {
+        $pbJunkLevel.Foreground = [System.Windows.Media.Brushes]::IndianRed
+        $lblJunkPercent.Foreground = [System.Windows.Media.Brushes]::LightCoral
+    } elseif ($Value -ge 35) {
+        $pbJunkLevel.Foreground = [System.Windows.Media.Brushes]::Khaki
+        $lblJunkPercent.Foreground = [System.Windows.Media.Brushes]::Khaki
+    } else {
+        $pbJunkLevel.Foreground = [System.Windows.Media.Brushes]::LightGreen
+        $lblJunkPercent.Foreground = [System.Windows.Media.Brushes]::LightGreen
+    }
+}
+
+function Start-OmegaDiagnostics {
+    $lblJunkPercent.Text = 'Analizando temporales y cachés...'
+    $lblJunkDetails.Text = 'Calculando tamaño aproximado de ubicaciones conocidas. Esto puede tardar unos segundos.'
+    $txtRecommendations.Text = 'Analizando el estado del equipo...'
+    $pbJunkLevel.Value = 0
+
+    try {
+        $diag = Get-OmegaSmartDiagnostics
+        $pbJunkLevel.Value = [double]$diag.JunkLevel
+        Set-OmegaProgressAppearance -Value $diag.JunkLevel
+
+        $freeText = if ($null -ne $diag.FreePct) { "$($diag.FreePct)% libres ($($diag.FreeGB) GB de $($diag.TotalGB) GB)" } else { 'espacio libre no disponible' }
+        $lblJunkPercent.Text = "$($diag.JunkLevel)% · nivel orientativo de residuos"
+        $lblJunkDetails.Text = "Temporales/cachés conocidos: $($diag.JunkGB) GB. Referencia del indicador: 5 GB = 100%.`nDisco del sistema: $freeText.`nEnergía: $($diag.BatteryState)."
+        $txtRecommendations.Text = ($diag.Recommendations -join "`n")
+
+        Write-OmegaLog "🔍 Diagnóstico: $($diag.JunkGB) GB aprox. de temporales/cachés conocidos · indicador $($diag.JunkLevel)% · $freeText · energía: $($diag.BatteryState)."
+        Write-OmegaLog '💡 Recomendaciones personalizadas generadas según espacio, residuos detectados y herramientas disponibles.'
+    } catch {
+        $pbJunkLevel.Value = 0
+        $lblJunkPercent.Text = 'Diagnóstico no disponible'
+        $lblJunkDetails.Text = $_.Exception.Message
+        $txtRecommendations.Text = 'No se pudo completar el análisis automático. Las funciones normales de OmegaSolver siguen disponibles.'
+        Write-OmegaLog "⚠ El diagnóstico inteligente no pudo completarse: $($_.Exception.Message)"
+    }
+}
+
+function Get-OmegaRepairDrives {
+    $results = @()
+    try {
+        $disks = Get-CimInstance Win32_LogicalDisk -ErrorAction Stop | Where-Object { $_.DriveType -in 2,3 } | Sort-Object DeviceID
+        foreach ($disk in $disks) {
+            $drive = $disk.DeviceID
+            $root = "$drive\"
+            $windowsPath = Join-Path $root "Windows\System32\config\SYSTEM"
+            $hasWindows = Test-Path $windowsPath
+            $isSystemDrive = ($drive -ieq $env:SystemDrive)
+            $sizeGB = if ($disk.Size) { [math]::Round($disk.Size / 1GB, 1) } else { 0 }
+            $freeGB = if ($disk.FreeSpace) { [math]::Round($disk.FreeSpace / 1GB, 1) } else { 0 }
+            $label = if ([string]::IsNullOrWhiteSpace($disk.VolumeName)) { "Sin etiqueta" } else { $disk.VolumeName }
+            $role = if ($isSystemDrive) { "Windows activo" } elseif ($hasWindows) { "Windows offline detectado" } else { "Datos / almacenamiento" }
+            $display = "$drive — $role — $label ($freeGB / $sizeGB GB libres)"
+            $results += [pscustomobject]@{
+                Drive = $drive
+                Root = $root
+                HasWindows = $hasWindows
+                IsSystemDrive = $isSystemDrive
+                Display = $display
+                VolumeName = $label
+                SizeGB = $sizeGB
+                FreeGB = $freeGB
+            }
+        }
+    } catch {
+        Write-OmegaLog "⚠ No se pudieron detectar los discos automáticamente: $($_.Exception.Message)"
+    }
+    return $results
+}
+
+function Get-SelectedOmegaDriveInfo {
+    if (-not $cmbRepairDrive.SelectedItem) { return $null }
+    $item = $cmbRepairDrive.SelectedItem
+    return $item.Tag
+}
+
+function Update-OmegaRepairDriveState {
+    $info = Get-SelectedOmegaDriveInfo
+    if (-not $info) {
+        $lblDiskInfo.Text = "No hay una unidad seleccionada. Pulsa '↻ Actualizar' para detectar los volúmenes."
+        $btnSfc.IsEnabled = $false
+        $btnDism.IsEnabled = $false
+        $btnChkDsk.IsEnabled = $false
+        return
+    }
+
+    if ($info.IsSystemDrive) {
+        $lblDiskInfo.Text = "$($info.Drive): es el Windows activo. SFC y DISM funcionarán en modo Online; CHKDSK puede solicitar reinicio."
+        $btnSfc.IsEnabled = [bool]$OmegaSystemProfile.Components['SFC']
+        $btnDism.IsEnabled = [bool]$OmegaSystemProfile.Components['DISM']
+    } elseif ($info.HasWindows) {
+        $lblDiskInfo.Text = "$($info.Drive): contiene una instalación de Windows. SFC y DISM se ejecutarán en modo Offline sobre esa instalación."
+        $btnSfc.IsEnabled = [bool]$OmegaSystemProfile.Components['SFC']
+        $btnDism.IsEnabled = [bool]$OmegaSystemProfile.Components['DISM']
+    } else {
+        $lblDiskInfo.Text = "$($info.Drive): no se detectó una instalación de Windows. SFC/DISM no aplican a un disco de datos; CHKDSK sí puede comprobarlo y repararlo."
+        $btnSfc.IsEnabled = $false
+        $btnDism.IsEnabled = $false
+    }
+    $btnChkDsk.IsEnabled = [bool]$OmegaSystemProfile.Components['CHKDSK']
+}
+
+function Refresh-OmegaRepairDrives {
+    $cmbRepairDrive.Items.Clear()
+    $driveInfos = @(Get-OmegaRepairDrives)
+    foreach ($info in $driveInfos) {
+        $item = New-Object System.Windows.Controls.ComboBoxItem
+        $item.Content = $info.Display
+        $item.Tag = $info
+        $cmbRepairDrive.Items.Add($item) | Out-Null
+    }
+
+    if ($driveInfos.Count -eq 0) {
+        $lblDiskInfo.Text = "No se detectaron unidades locales/removibles aptas para reparación."
+        $btnSfc.IsEnabled = $false
+        $btnDism.IsEnabled = $false
+        $btnChkDsk.IsEnabled = $false
+        return
+    }
+
+    $systemIndex = 0
+    for ($i = 0; $i -lt $driveInfos.Count; $i++) {
+        if ($driveInfos[$i].IsSystemDrive) { $systemIndex = $i; break }
+    }
+    $cmbRepairDrive.SelectedIndex = $systemIndex
+    Update-OmegaRepairDriveState
+    Write-OmegaLog "🔎 Discos detectados para reparación: $($driveInfos.Count)."
+}
+
+function Start-OmegaSfcRepair {
+    param([object]$DriveInfo)
+    if (-not $DriveInfo) { return }
+    if (-not $DriveInfo.HasWindows) {
+        Write-OmegaLog "⚠ SFC no está disponible en $($DriveInfo.Drive) porque no contiene una instalación de Windows detectada."
+        return
+    }
+
+    if ($DriveInfo.IsSystemDrive) {
+        Write-OmegaLog "🛠️ SFC: reparando la instalación de Windows activa en $($DriveInfo.Drive)..."
+        Start-Process cmd.exe -ArgumentList @('/k', 'sfc /scannow') | Out-Null
+    } else {
+        $offBoot = "$($DriveInfo.Root)"
+        $offWin = "$($DriveInfo.Root)Windows"
+        $command = "sfc /scannow /offbootdir=$offBoot /offwindir=$offWin"
+        Write-OmegaLog "🛠️ SFC: reparación offline de Windows en $($DriveInfo.Drive)..."
+        Start-Process cmd.exe -ArgumentList @('/k', $command) | Out-Null
+    }
+}
+
+function Start-OmegaDismRepair {
+    param([object]$DriveInfo)
+    if (-not $DriveInfo) { return }
+    if (-not $DriveInfo.HasWindows) {
+        Write-OmegaLog "⚠ DISM no está disponible en $($DriveInfo.Drive) porque no contiene una instalación de Windows detectada."
+        return
+    }
+
+    if ($DriveInfo.IsSystemDrive) {
+        Write-OmegaLog "🛠️ DISM: reparando la imagen de Windows activa en $($DriveInfo.Drive)..."
+        Start-Process cmd.exe -ArgumentList @('/k', 'DISM /Online /Cleanup-Image /RestoreHealth') | Out-Null
+    } else {
+        $command = "DISM /Image:$($DriveInfo.Root) /Cleanup-Image /RestoreHealth"
+        Write-OmegaLog "🛠️ DISM: reparación offline de la imagen de Windows en $($DriveInfo.Drive)..."
+        Start-Process cmd.exe -ArgumentList @('/k', $command) | Out-Null
+    }
+}
+
+function Start-OmegaChkdskRepair {
+    param([object]$DriveInfo)
+    if (-not $DriveInfo) { return }
+    $drive = $DriveInfo.Drive
+    Write-OmegaLog "💽 CHKDSK: comprobando y reparando $drive con /f..."
+    Start-Process cmd.exe -ArgumentList @('/k', "chkdsk $drive /f") | Out-Null
+}
+
+function Get-ActivePowerSchemeGuid {
+    try {
+        $output = powercfg /getactivescheme 2>&1 | Out-String
+        $match = [regex]::Match($output, '(?i)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+        if ($match.Success) { return $match.Value.ToLowerInvariant() }
+    } catch { }
+    return $null
+}
+
+function Test-HibernationEnabled {
+    try {
+        $value = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Power" -Name HibernateEnabled -ErrorAction Stop).HibernateEnabled
+        return ([int]$value -eq 1)
+    } catch {
+        return $false
+    }
+}
+
+function Get-HiberbootEnabled {
+    try {
+        return [int](Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name HiberbootEnabled -ErrorAction Stop).HiberbootEnabled
+    } catch {
+        return $null
+    }
+}
+
+function Save-ReversibleStateBeforePowerPlanChange {
+    # No sobrescribir una copia pendiente: así el primer estado original sigue siendo recuperable.
+    if ([string]::IsNullOrWhiteSpace([string]$OmegaState.PowerPlan.OriginalSchemeGuid)) {
+        $current = Get-ActivePowerSchemeGuid
+        if ($current) {
+            $OmegaState.PowerPlan.OriginalSchemeGuid = $current
+            Write-OmegaLog "↳ Plan de energía original guardado: $current"
+        } else {
+            Write-OmegaLog "⚠ No se pudo identificar el plan de energía actual."
+        }
+    } else {
+        Write-OmegaLog "↳ Se conserva el plan de energía original ya guardado para la reversión."
+    }
+    $OmegaState.PowerPlan.TargetSchemeGuid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+    Save-OmegaState $OmegaState
+}
+
+function Save-ReversibleStateBeforeDeepClean {
+    # Guardar solo si no existe una reversión pendiente.
+    if ($null -eq $OmegaState.FastStartup.OriginalHibernationEnabled) {
+        $OmegaState.FastStartup.OriginalHibernationEnabled = Test-HibernationEnabled
+    }
+    if ($null -eq $OmegaState.FastStartup.OriginalHiberbootEnabled) {
+        $OmegaState.FastStartup.OriginalHiberbootEnabled = Get-HiberbootEnabled
+    }
+
+    foreach ($name in @('wuauserv','FontCache','UsoSvc')) {
+        if ($null -eq $OmegaState.Services.$name) {
+            try {
+                $service = Get-Service -Name $name -ErrorAction Stop
+                $OmegaState.Services.$name = $service.Status.ToString()
+            } catch {
+                $OmegaState.Services.$name = $null
+            }
+        }
+    }
+
+    Save-OmegaState $OmegaState
+    Write-OmegaLog "↳ Estado de hibernación/Inicio rápido y servicios guardado para poder revertirlo."
+}
+
+function Save-ReversibleStateBeforeQoSChange {
+    # Conservar el primer valor original hasta que el usuario lo revierta.
+    if (-not [bool]$OmegaState.QoS.OriginalValueExists -and $null -eq $OmegaState.QoS.OriginalValue) {
+        $regPath = $OmegaState.QoS.RegistryPath
+        try {
+            $property = Get-ItemProperty -Path $regPath -Name NonBestEffortLimit -ErrorAction Stop
+            $OmegaState.QoS.OriginalValueExists = $true
+            $OmegaState.QoS.OriginalValue = [int]$property.NonBestEffortLimit
+        } catch {
+            $OmegaState.QoS.OriginalValueExists = $false
+            $OmegaState.QoS.OriginalValue = $null
+        }
+    } else {
+        Write-OmegaLog "↳ Se conserva el valor QoS original ya guardado para la reversión."
+    }
+    Save-OmegaState $OmegaState
+}
+
+function Confirm-OmegaAction {
+    param(
+        [string]$Title,
+        [string]$Message,
+        [System.Windows.MessageBoxImage]$Image = [System.Windows.MessageBoxImage]::Warning
+    )
+    $result = [System.Windows.MessageBox]::Show(
+        $Message,
+        $Title,
+        [System.Windows.MessageBoxButton]::YesNo,
+        $Image
+    )
+    return ($result -eq [System.Windows.MessageBoxResult]::Yes)
+}
+
+# ------------------------------------------------------------------------------
+# LIMPIEZA AVANZADA DE LOGS Y WINSXS
+# ------------------------------------------------------------------------------
+function Start-LogAndWinSxSCleanup {
+    Write-OmegaLog "[+] Iniciando limpieza profunda de archivos LOG y almacén WinSxS..."
+
+    Write-OmegaLog "[+] Vaciando registros de eventos de Windows (.evtx)..."
+    $eventLogs = Get-WinEvent -ListLog * -ErrorAction SilentlyContinue
+    foreach ($log in $eventLogs) {
+        if ($log.RecordCount -gt 0) {
+            try {
+                [Diagnostics.Eventing.Reader.EventLogSession]::GlobalSession.ClearLog($log.LogName)
+            } catch {
+                # Omitir registros protegidos del sistema.
+            }
+        }
+    }
+    Write-OmegaLog "✅ Registros de eventos de Windows depurados con éxito."
+
+    Write-OmegaLog "[+] Eliminando archivos LOG residuales..."
+    Remove-Item -Path "$env:SystemRoot\Logs\*.log" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:SystemRoot\Logs\CBS\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:SystemRoot\Panther\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:SystemRoot\SoftwareDistribution\DataStore\Logs\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Write-OmegaLog "✅ Archivos LOG residuales procesados."
+
+    Write-OmegaLog "[+] Ejecutando DISM /StartComponentCleanup /ResetBase..."
+    $dism = Start-Process DISM.exe -ArgumentList "/Online /Cleanup-Image /StartComponentCleanup /ResetBase" -NoNewWindow -Wait -PassThru
+    if ($dism.ExitCode -eq 0) {
+        Write-OmegaLog "✅ WinSxS limpiado correctamente."
+    } else {
+        Write-OmegaLog "⚠ DISM finalizó con código $($dism.ExitCode)."
+    }
+
+    Write-OmegaLog "⚠ Esta rutina contiene operaciones que no tienen deshacer general."
+}
+
+# ------------------------------------------------------------------------------
+# LIMPIEZA PROFUNDA
+# ------------------------------------------------------------------------------
+function Start-DeepCleaningRoutine {
+    Save-ReversibleStateBeforeDeepClean
+
+    Write-OmegaLog "[+] Desactivando temporalmente la hibernación para liberar hiberfil.sys..."
+    powercfg -h off | Out-Null
+
+    Write-OmegaLog "[+] Deteniendo servicios temporales (Windows Update, FontCache, UsoSvc)..."
+    Stop-Service -Name wuauserv, FontCache, UsoSvc -Force -ErrorAction SilentlyContinue
+
+    Write-OmegaLog "[+] Vaciando descargas de Windows Update y cachés de sistema..."
+    Remove-Item -Path "$env:SystemRoot\SoftwareDistribution\Download\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:SystemRoot\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\Cache\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:SystemRoot\ServiceProfiles\LocalService\AppData\Local\FontCache\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-OmegaLog "[+] Limpiando caché de navegadores Chromium (Edge y Chrome)..."
+    Remove-Item -Path "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default\Cache\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Cache\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-OmegaLog "[+] Eliminando temporales de usuario y del sistema..."
+    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:SystemRoot\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-OmegaLog "[+] Eliminando residuos de instaladores (Config.Msi y drivers AMD)..."
+    Remove-Item -Path "C:\Config.Msi" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "C:\AMD" -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-OmegaLog "[+] Vaciando Papelera de Reciclaje..."
+    Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+
+    Write-OmegaLog "[+] Restaurando servicios esenciales al estado que tenían antes de la limpieza..."
+    Restore-OmegaServiceStates
+
+    if ($OmegaSystemProfile.Components['CleanMgr']) {
+        Write-OmegaLog "[+] Ejecutando Liberador de espacio nativo..."
+        Start-Process cleanmgr.exe -ArgumentList "/sagerun:1" -NoNewWindow -Wait
+    } else {
+        Write-OmegaLog "⚠ cleanmgr.exe no está disponible; se omitió el Liberador de espacio."
+    }
+
+    Write-OmegaLog "¡Limpieza profunda completada! Usa 'Revertir cambios' para restaurar la configuración reversible guardada."
+}
+
+function Restore-OmegaServiceStates {
+    foreach ($name in @('wuauserv','FontCache','UsoSvc')) {
+        $original = $OmegaState.Services.$name
+        if (-not $original) { continue }
+        try {
+            if ($original -eq 'Running') {
+                Start-Service -Name $name -ErrorAction SilentlyContinue
+            } elseif ($original -eq 'Stopped') {
+                Stop-Service -Name $name -Force -ErrorAction SilentlyContinue
+            }
+        } catch { }
+    }
+}
+
+# ------------------------------------------------------------------------------
+# MANUAL DETALLADO
+# ------------------------------------------------------------------------------
+$manualText = @"
+OmegaSolver V3.8 — MANUAL DETALLADO
+
+¿QUÉ HACE ESTA APLICACIÓN?
+OmegaSolver reúne herramientas de Windows para diagnóstico, reparación, limpieza y algunos ajustes de configuración. Al iniciar, detecta automáticamente información del equipo para adaptar la interfaz y advertir sobre componentes disponibles. No todas las operaciones son reversibles, por lo que el botón 'Revertir cambios' solo actúa sobre configuraciones cuyo estado anterior se haya podido guardar.
+
+💻 PERFIL DEL EQUIPO Y EXPERIENCIA PERSONALIZADA
+• Nombre del PC: OmegaSolver lee el nombre del equipo desde Windows y lo muestra en la cabecera. Se utiliza para identificar localmente el equipo dentro de la interfaz.
+• Windows: detecta edición/nombre, versión visible cuando está disponible y número de compilación. El número de compilación ayuda a distinguir Windows 10 de Windows 11 cuando el nombre del sistema no es suficiente.
+• PowerShell: detecta la versión y la edición (Desktop/Core) de la sesión que está ejecutando OmegaSolver.
+• Arquitectura: identifica si el sistema operativo es de 32 o 64 bits.
+• Componentes: comprueba SFC, DISM, CHKDSK, PowerCfg, Netsh, IPConfig, CleanMgr y WPF. Cuando una herramienta requerida no está disponible, la función afectada se desactiva para evitar errores innecesarios.
+• Privacidad: esta información se obtiene de la máquina local y se muestra en la aplicación; OmegaSolver V3.8 no envía este perfil a Internet.
+
+🔍 DIAGNÓSTICO INTELIGENTE
+• Al iniciar, OmegaSolver analiza ubicaciones habituales de temporales y cachés (TEMP de usuario, TEMP de Windows, Windows Update, Delivery Optimization y cachés de Edge/Chrome).
+• La barra muestra un indicador APROXIMADO: usa 5 GB de temporales/cachés conocidos como referencia para 100%. No es una medición de salud del SSD/HDD ni significa que el sistema esté 'al 70% de basura'.
+• También revisa el espacio libre del disco del sistema y el estado de alimentación para generar recomendaciones.
+• 'Analizar PC' vuelve a ejecutar el diagnóstico después de una limpieza o si quieres actualizar los datos.
+• El análisis puede tardar unos segundos porque necesita recorrer las carpetas detectadas. Los datos se calculan localmente y no se envían a Internet.
+
+🛠️ SISTEMA Y RENDIMIENTO
+• Selector de disco: antes de utilizar SFC, DISM o CHKDSK puedes elegir C:, D:, E: u otra unidad detectada. OmegaSolver muestra si una unidad es el Windows activo, contiene otra instalación de Windows o es un disco de datos.
+• SFC /Scannow: comprueba archivos protegidos de Windows e intenta repararlos. En el Windows activo (normalmente C:) usa el modo Online. Si eliges D:, E: u otra unidad que contenga una instalación de Windows detectada, usa SFC en modo Offline sobre esa instalación. En discos que solo contienen datos, el botón se desactiva porque SFC no repara archivos de un volumen que no tiene Windows.
+• DISM /RestoreHealth: repara componentes de una imagen de Windows. En C: usa DISM /Online. En otra unidad con Windows detectado usa DISM /Image:<unidad> para reparar esa instalación Offline. En un disco de datos el botón se desactiva porque DISM necesita una imagen de Windows.
+• CHKDSK /f: comprueba y corrige errores del sistema de archivos del volumen seleccionado. Funciona tanto en C: como en D:, E: y otras unidades. Si el volumen está en uso, Windows puede ofrecer programar la reparación para el próximo reinicio.
+• Alto Rendimiento: guarda el plan de energía activo y activa el plan 'Alto rendimiento'. Esto cambia la política de energía, pero no garantiza que el procesador vaya siempre a su frecuencia máxima.
+
+💽 ¿CÓMO ELEGIR OTRO DISCO?
+1) Abre 'Disco objetivo para reparaciones'.
+2) Selecciona C:, D:, E: u otra unidad disponible.
+3) Lee el texto informativo debajo del selector: allí se indica qué reparaciones son compatibles con esa unidad.
+4) Pulsa SFC, DISM o CHKDSK según lo que necesites. El botón '↻ Actualizar' vuelve a detectar unidades si conectaste o desconectaste un disco.
+5) Para un disco con solo archivos personales, CHKDSK es la reparación aplicable; SFC y DISM se desactivan intencionalmente.
+6) La detección se realiza al iniciar y puede repetirse con '↻ Actualizar' después de conectar o desconectar unidades.
+
+🌐 RED Y CONEXIÓN
+• Limpiar Caché DNS: vacía la caché DNS local. No borra la configuración de Internet y la caché se vuelve a llenar automáticamente.
+• Restablecer Winsock / IP: restablece componentes de red de Windows. Puede solucionar determinados problemas de conectividad, pero puede requerir reiniciar el PC. No existe un deshacer universal para todo el catálogo de red, por eso esta operación no se incluye en la reversión automática.
+• QoS a 0%: guarda el valor anterior de 'NonBestEffortLimit' en la directiva de QoS y lo cambia a 0. El botón 'Revertir cambios' puede restaurar el valor original o eliminar el valor si antes no existía.
+
+🧹 MANTENIMIENTO
+• Temporales básicos: elimina archivos temporales del usuario. Los que estén en uso pueden quedar sin borrar.
+• Limpieza Profunda / WinUpdate: limpia descargas de Windows Update, cachés, temporales, la Papelera y algunos residuos. Para liberar hiberfil.sys ejecuta 'powercfg -h off'. Antes de hacerlo, OmegaSolver guarda el estado de hibernación, Inicio rápido y tres servicios para poder restaurarlos.
+• Logs y WinSxS: limpia registros de eventos y archivos LOG, y ejecuta DISM con '/ResetBase'. Esta parte puede eliminar información de diagnóstico y hace que determinadas actualizaciones de componentes anteriores dejen de poder desinstalarse. No hay deshacer automático de esos archivos eliminados.
+• Reparación 1-Clic: usa el disco seleccionado para SFC, DISM y CHKDSK, mientras que la limpieza DNS, temporales, Windows Update y WinSxS se aplica al Windows activo. Si el disco seleccionado contiene otra instalación de Windows, SFC y DISM se ejecutan Offline sobre ella. Debido a que incluye operaciones irreversibles en la limpieza de WinSxS, conviene usarla solo después de leer este manual.
+
+↩ REVERTIR CAMBIOS
+El botón intenta restaurar:
+1) El plan de energía que estaba activo antes de aplicar 'Alto Rendimiento'.
+2) El estado anterior de hibernación y de 'Inicio rápido' cuando la Limpieza Profunda lo modificó.
+3) El valor anterior de la política QoS, incluyendo su ausencia si no existía.
+4) El estado (Iniciado/Detenido) de Windows Update, FontCache y UsoSvc guardado antes de la Limpieza Profunda.
+
+IMPORTANTE
+• Revertir no recupera archivos temporales, cachés, logs, eventos ni componentes WinSxS que ya hayan sido eliminados.
+• Si el usuario cambia manualmente la configuración después de usar OmegaSolver, la reversión restaura lo que OmegaSolver guardó como estado anterior, no necesariamente la configuración que el usuario prefiera actualmente.
+• Es recomendable cerrar juegos y programas importantes antes de ejecutar rutinas de limpieza.
+"@
+
+# ------------------------------------------------------------------------------
+# INICIALIZACIÓN
+# ------------------------------------------------------------------------------
+Write-OmegaLog "OmegaSolver V3.8 iniciado."
+Initialize-OmegaSystemProfile -Profile $OmegaSystemProfile
+$lblStatus.Text = "Estado: listo para $($OmegaSystemProfile.ComputerName)"
+Write-OmegaLog "Estado reversible guardado en: $OmegaStatePath"
+Write-OmegaLog "Personalización del equipo completada."
+
+# ------------------------------------------------------------------------------
+# DETECCIÓN INICIAL DE DISCOS DE REPARACIÓN
+# ------------------------------------------------------------------------------
+Refresh-OmegaRepairDrives
+
+# Ejecutar el diagnóstico después de que la ventana haya tenido oportunidad de renderizarse.
+$window.Add_ContentRendered({
+    Start-OmegaDiagnostics
+})
+
+# ------------------------------------------------------------------------------
+# EVENTOS
+# ------------------------------------------------------------------------------
+$btnDiagnose.Add_Click({
+    Set-OmegaStatus 'Analizando el equipo...'
+    Start-OmegaDiagnostics
+    Set-OmegaStatus "Listo · diagnóstico personalizado para $($OmegaSystemProfile.ComputerName)"
+})
+
+$btnRefreshDrives.Add_Click({
+    Refresh-OmegaRepairDrives
+})
+
+$cmbRepairDrive.Add_SelectionChanged({
+    Update-OmegaRepairDriveState
+})
+
+$btnManual.Add_Click({
+    $manualWindow = New-Object System.Windows.Window
+    $manualWindow.Title = "Manual detallado - OmegaSolver V3.8"
+    $manualWindow.Width = 820
+    $manualWindow.Height = 680
+    $manualWindow.WindowStartupLocation = "CenterOwner"
+    $manualWindow.Owner = $window
+    $manualWindow.Background = "#101216"
+
+    $scroll = New-Object System.Windows.Controls.ScrollViewer
+    $scroll.VerticalScrollBarVisibility = "Auto"
+    $scroll.Margin = New-Object System.Windows.Thickness(14)
+
+    $manualBox = New-Object System.Windows.Controls.TextBox
+    $manualBox.Text = $manualText
+    $manualBox.IsReadOnly = $true
+    $manualBox.TextWrapping = "Wrap"
+    $manualBox.AcceptsReturn = $true
+    $manualBox.VerticalScrollBarVisibility = "Auto"
+    $manualBox.Background = "#0C0E12"
+    $manualBox.Foreground = "#F3F4F6"
+    $manualBox.BorderBrush = "#374151"
+    $manualBox.FontFamily = New-Object System.Windows.Media.FontFamily -ArgumentList "Segoe UI"
+    $manualBox.FontSize = 13
+    $manualBox.Padding = New-Object System.Windows.Thickness(14)
+
+    $scroll.Content = $manualBox
+    $manualWindow.Content = $scroll
+    $manualWindow.ShowDialog() | Out-Null
+})
+
+$btnRevert.Add_Click({
+    $hasPowerPlan = -not [string]::IsNullOrWhiteSpace([string]$OmegaState.PowerPlan.OriginalSchemeGuid)
+    $hasFastStartup = $null -ne $OmegaState.FastStartup.OriginalHibernationEnabled -or $null -ne $OmegaState.FastStartup.OriginalHiberbootEnabled
+    $hasQoS = [bool]$OmegaState.QoS.OriginalValueExists
+    $hasServices = $false
+    foreach ($name in @('wuauserv','FontCache','UsoSvc')) {
+        if ($null -ne $OmegaState.Services.$name) { $hasServices = $true; break }
+    }
+
+    if (-not ($hasPowerPlan -or $hasFastStartup -or $hasQoS -or $hasServices)) {
+        [System.Windows.MessageBox]::Show("No hay cambios reversibles guardados por OmegaSolver.", "Revertir cambios", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
+        return
+    }
+
+    if (-not (Confirm-OmegaAction -Title "Revertir cambios" -Message "OmegaSolver restaurará únicamente los estados de configuración que guardó antes de modificarlos.`n`nNo se recuperarán temporales, logs, eventos ni archivos eliminados.`n`n¿Continuar?")) {
+        return
+    }
+
+    Set-OmegaStatus "Revirtiendo cambios..."
+    Write-OmegaLog "↩ Iniciando reversión de cambios guardados..."
+
+    # Restaurar plan de energía.
+    if ($hasPowerPlan) {
+        try {
+            powercfg -setactive $OmegaState.PowerPlan.OriginalSchemeGuid | Out-Null
+            Write-OmegaLog "✅ Plan de energía restaurado: $($OmegaState.PowerPlan.OriginalSchemeGuid)"
+            $OmegaState.PowerPlan.OriginalSchemeGuid = $null
+        } catch {
+            Write-OmegaLog "⚠ No se pudo restaurar el plan de energía."
+        }
+    }
+
+    # Restaurar hibernación / Inicio rápido.
+    if ($hasFastStartup) {
+        try {
+            if ($null -ne $OmegaState.FastStartup.OriginalHibernationEnabled) {
+                if ([bool]$OmegaState.FastStartup.OriginalHibernationEnabled) {
+                    powercfg -h on | Out-Null
+                    Write-OmegaLog "✅ Hibernación restaurada a ACTIVADA."
+                } else {
+                    powercfg -h off | Out-Null
+                    Write-OmegaLog "✅ Hibernación restaurada a DESACTIVADA."
+                }
+            }
+            if ($null -ne $OmegaState.FastStartup.OriginalHiberbootEnabled) {
+                $hiberbootPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power"
+                Set-ItemProperty -Path $hiberbootPath -Name HiberbootEnabled -Value ([int]$OmegaState.FastStartup.OriginalHiberbootEnabled) -Type DWord
+                Write-OmegaLog "✅ Estado de Inicio rápido restaurado."
+            }
+            $OmegaState.FastStartup.OriginalHibernationEnabled = $null
+            $OmegaState.FastStartup.OriginalHiberbootEnabled = $null
+        } catch {
+            Write-OmegaLog "⚠ No se pudo restaurar por completo hibernación/Inicio rápido."
+        }
+    }
+
+    # Restaurar QoS.
+    if ($hasQoS) {
+        try {
+            $regPath = $OmegaState.QoS.RegistryPath
+            if ($OmegaState.QoS.OriginalValueExists) {
+                if (-not (Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+                Set-ItemProperty -Path $regPath -Name NonBestEffortLimit -Value ([int]$OmegaState.QoS.OriginalValue) -Type DWord
+                Write-OmegaLog "✅ Valor QoS restaurado a $($OmegaState.QoS.OriginalValue)."
+            } else {
+                Remove-ItemProperty -Path $regPath -Name NonBestEffortLimit -ErrorAction SilentlyContinue
+                Write-OmegaLog "✅ Valor QoS restaurado a 'sin definir'."
+            }
+            $OmegaState.QoS.OriginalValueExists = $false
+            $OmegaState.QoS.OriginalValue = $null
+        } catch {
+            Write-OmegaLog "⚠ No se pudo restaurar la configuración QoS."
+        }
+    }
+
+    # Restaurar estados de servicios.
+    if ($hasServices) {
+        Restore-OmegaServiceStates
+        Write-OmegaLog "✅ Estados guardados de Windows Update / FontCache / UsoSvc restaurados."
+        foreach ($name in @('wuauserv','FontCache','UsoSvc')) {
+            $OmegaState.Services.$name = $null
+        }
+    }
+
+    Save-OmegaState $OmegaState
+    Set-OmegaStatus "Listo"
+    Write-OmegaLog "↩ Reversión finalizada."
+})
+
+$btnSfc.Add_Click({
+    $driveInfo = Get-SelectedOmegaDriveInfo
+    if (-not $driveInfo) {
+        [System.Windows.MessageBox]::Show("Selecciona primero un disco de reparación.", "SFC", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
+        return
+    }
+    if (-not (Confirm-OmegaAction -Title "Reparación SFC" -Message "SFC se ejecutará sobre $($driveInfo.Drive).`n`n$($lblDiskInfo.Text)`n`n¿Continuar?" -Image ([System.Windows.MessageBoxImage]::Information))) { return }
+    Set-OmegaStatus "Ejecutando SFC en $($driveInfo.Drive)..."
+    Start-OmegaSfcRepair $driveInfo
+})
+
+$btnDism.Add_Click({
+    $driveInfo = Get-SelectedOmegaDriveInfo
+    if (-not $driveInfo) {
+        [System.Windows.MessageBox]::Show("Selecciona primero un disco de reparación.", "DISM", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
+        return
+    }
+    if (-not (Confirm-OmegaAction -Title "Reparación DISM" -Message "DISM se ejecutará sobre $($driveInfo.Drive).`n`n$($lblDiskInfo.Text)`n`n¿Continuar?" -Image ([System.Windows.MessageBoxImage]::Information))) { return }
+    Set-OmegaStatus "Ejecutando DISM en $($driveInfo.Drive)..."
+    Start-OmegaDismRepair $driveInfo
+})
+
+$btnChkDsk.Add_Click({
+    $driveInfo = Get-SelectedOmegaDriveInfo
+    if (-not $driveInfo) {
+        [System.Windows.MessageBox]::Show("Selecciona primero un disco de reparación.", "CHKDSK", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
+        return
+    }
+    if (-not (Confirm-OmegaAction -Title "Reparar disco" -Message "CHKDSK se ejecutará con /f sobre $($driveInfo.Drive).`n`nEsto corrige errores del sistema de archivos y puede requerir reinicio si el volumen está en uso.`n`n¿Continuar?")) { return }
+    Set-OmegaStatus "Ejecutando CHKDSK en $($driveInfo.Drive)..."
+    Start-OmegaChkdskRepair $driveInfo
+})
+
+$btnMaxPower.Add_Click({
+    Save-ReversibleStateBeforePowerPlanChange
+    Write-OmegaLog "Configurando plan de energía a Alto rendimiento..."
+    try {
+        powercfg -setactive $OmegaState.PowerPlan.TargetSchemeGuid | Out-Null
+        Write-OmegaLog "✅ Plan de Alto rendimiento activado. El plan anterior puede restaurarse con 'Revertir cambios'."
+    } catch {
+        Write-OmegaLog "⚠ No se pudo activar el plan de Alto rendimiento."
+    }
+})
+
+$btnFlushDns.Add_Click({
+    Write-OmegaLog "Vaciando caché DNS..."
+    ipconfig /flushdns | Out-Null
+    Write-OmegaLog "Caché DNS limpiada con éxito."
+})
+
+$btnResetNet.Add_Click({
+    if (-not (Confirm-OmegaAction -Title "Restablecer red" -Message "Esta operación restablecerá el catálogo Winsock.`n`nNo existe un deshacer general para este cambio y puede ser necesario reiniciar Windows.`n`n¿Continuar?")) { return }
+    Write-OmegaLog "Restableciendo sockets de red (Winsock)..."
+    netsh winsock reset | Out-Null
+    Write-OmegaLog "Red restablecida. Se recomienda reiniciar el equipo."
+})
+
+$btnQoS.Add_Click({
+    Save-ReversibleStateBeforeQoSChange
+    Write-OmegaLog "Configurando límite de ancho de banda reservable QoS a 0%..."
+    try {
+        $regPath = $OmegaState.QoS.RegistryPath
+        if (-not (Test-Path $regPath)) {
+            New-Item -Path $regPath -Force | Out-Null
+        }
+        Set-ItemProperty -Path $regPath -Name "NonBestEffortLimit" -Value 0 -Type DWord
+        Write-OmegaLog "✅ QoS establecido en 0%. El valor anterior puede restaurarse con 'Revertir cambios'."
+    } catch {
+        Write-OmegaLog "⚠ No se pudo modificar la configuración QoS."
+    }
+})
+
+$btnTemp.Add_Click({
+    Write-OmegaLog "Limpiando archivos temporales básicos..."
+    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Write-OmegaLog "Archivos temporales procesados."
+})
+
+$btnDeepClean.Add_Click({
+    if (-not (Confirm-OmegaAction -Title "Limpieza Profunda" -Message "Esta rutina elimina temporales y cachés, vacía la Papelera y desactiva temporalmente la hibernación para liberar hiberfil.sys.`n`nOmegaSolver guardará los estados reversibles antes de comenzar.`n`n¿Continuar?")) { return }
+    Write-OmegaLog "Iniciando secuencia de Limpieza Profunda..."
+    Set-OmegaStatus "Ejecutando Limpieza Profunda..."
+    Start-DeepCleaningRoutine
+    Set-OmegaStatus "Listo"
+})
+
+$btnLogClean.Add_Click({
+    if (-not (Confirm-OmegaAction -Title "Logs y WinSxS" -Message "Esta operación elimina registros de eventos y ejecuta DISM con /ResetBase.`n`nParte de los cambios NO es reversible y algunos componentes/actualizaciones anteriores pueden dejar de poder recuperarse.`n`n¿Continuar?")) { return }
+    Write-OmegaLog "Iniciando Limpieza Avanzada de Logs y WinSxS..."
+    Set-OmegaStatus "Limpiando Logs y WinSxS..."
+    Start-LogAndWinSxSCleanup
+    Set-OmegaStatus "Listo"
+})
+
+$btnFullRepair.Add_Click({
+    $driveInfo = Get-SelectedOmegaDriveInfo
+    if (-not $driveInfo) {
+        [System.Windows.MessageBox]::Show("Selecciona primero un disco de reparación.", "Reparación 1-Clic", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
+        return
+    }
+    $message = "Reparación 1-Clic usará $($driveInfo.Drive) como disco objetivo para SFC/DISM/CHKDSK.`n`nLa limpieza DNS, temporales, Windows Update, logs y WinSxS seguirá aplicándose al Windows activo (normalmente C:).`n`nIncluye DISM /ResetBase en la limpieza WinSxS, que no tiene un deshacer general.`n`n¿Continuar?"
+    if (-not (Confirm-OmegaAction -Title "Reparación 1-Clic" -Message $message)) { return }
+
+    Write-OmegaLog "⚡ Iniciando rutina de Reparación 1-Clic para $($driveInfo.Drive)..."
+    Set-OmegaStatus "Reparación 1-Clic en progreso..."
+
+    ipconfig /flushdns | Out-Null
+    Write-OmegaLog "1/5: Caché DNS vaciada en el Windows activo."
+
+    Start-DeepCleaningRoutine
+    Write-OmegaLog "2/5: Limpieza profunda finalizada en el Windows activo."
+
+    Start-LogAndWinSxSCleanup
+    Write-OmegaLog "3/5: Limpieza de Logs y WinSxS finalizada en el Windows activo."
+
+    Write-OmegaLog "4/6: Lanzando reparación SFC en $($driveInfo.Drive)..."
+    Start-OmegaSfcRepair $driveInfo
+
+    Write-OmegaLog "5/6: Lanzando reparación DISM en $($driveInfo.Drive)..."
+    Start-OmegaDismRepair $driveInfo
+
+    Write-OmegaLog "6/6: Lanzando reparación CHKDSK en $($driveInfo.Drive)..."
+    Start-OmegaChkdskRepair $driveInfo
+    Set-OmegaStatus "Listo"
+})
+
+# Lanzar ventana
+$window.ShowDialog() | Out-Null
+
