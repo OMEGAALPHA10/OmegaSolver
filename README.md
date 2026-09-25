@@ -4,19 +4,38 @@
 
 > 🇻🇪 Proyecto personal de código abierto desarrollado desde Venezuela.
 
-CODIGO .PS1 EN LA CARPETA DE "OPEN SOURCE" (sera temporal mientras los codigos son agregados a sus respectivos assets)
+---
+
+## 🛠️ Código Abierto y Compilación Universal
+
+Los scripts en PowerShell se encuentran organizados dentro de la carpeta [`open source`](open%20source). Para transformar manualmente los archivos `.ps1` en ejecutables `.exe` independientes utilizando la terminal de Windows en cualquier versión actual o futura del proyecto, sigue estos pasos:
+
+1. **Instalar el compilador**: Abre una consola de PowerShell como Administrador y ejecuta el siguiente comando para instalar el módulo necesario:
+
+   ```powershell
+   Install-Module -Name ps2exe -Scope CurrentUser -Force
+   ```
+
+2. **Compilar el script**: Utiliza la herramienta indicando la ruta del script fuente y el nombre del ejecutable que deseas generar:
+
+   ```powershell
+   Invoke-PS2EXE -InputFile "open source\OmegaSolver.ps1" -OutputFile "OmegaSolver.exe" -Title "OmegaSolver" -Company "OMEGA_ALPHA"
+   ```
+
 ---
 
 ## 🆕 Última versión: V4.3 — "Multilingual & Network"
 
-![Tag V4.3](https://img.shields.io/badge/-V4.3-E11D48?style=flat-square)
-![Novedad principal](https://img.shields.io/badge/-Multilenguaje%20ES%2FEN%2FPT-F43F5E?style=flat-square)
-![Novedad](https://img.shields.io/badge/-Easy%20Context%20Menu-F43F5E?style=flat-square)
-![Novedad](https://img.shields.io/badge/-Auto--Update-F43F5E?style=flat-square)
-![Novedad](https://img.shields.io/badge/-Compartir%20Archivos-F43F5E?style=flat-square)
+![Tag V4.3](https://shields.io)
+![Novedad principal](https://shields.io)
+![Novedad](https://shields.io)
+![Novedad](https://shields.io)
+![Novedad](https://shields.io)
 
 ### 🌐 Sistema multilenguaje (ES / EN / PT)
+
 Menú desplegable en la barra superior para cambiar el idioma **en caliente, sin reiniciar**:
+
 - 🇪🇸 **Español** (idioma por defecto)
 - 🇺🇸 **English**
 - 🇧🇷 **Português**
@@ -24,21 +43,27 @@ Menú desplegable en la barra superior para cambiar el idioma **en caliente, sin
 El idioma se **persiste** en `%ProgramData%\OmegaSolver\language.txt`.
 
 ### 📖 Manual de usuario en 3 columnas (Bilingüe + Técnico)
+
 Ventana modal que muestra **los 3 idiomas en paralelo**, con dos niveles de explicación por cada función:
+
 - **`BAS`** — Explicación amigable para usuarios sin experiencia técnica.
 - **`TEC`** — Explicación técnica (parámetros, comandos, registro, GUIDs).
 
 Se adapta automáticamente al **Modo Básico** o **Modo Avanzado**.
 
 ### 📡 Compartir Archivos por Red (exclusivo modo Avanzado)
+
 Nueva ventana independiente para transferir archivos entre tu PC y:
+
 - Otra **PC con Windows** (vía **Robocopy / SMB**).
 - **Móviles Android / iOS** o **Smart TV** (vía **FTP**).
 
 Detecta automáticamente tus IPs locales, permite copiar al portapapeles, seleccionar carpeta local, y elegir dirección (Enviar / Recibir). Registro de progreso en vivo.
 
 ### 🔄 Auto-Update Checker (GitHub Releases)
+
 Al iniciar, la app consulta la API de GitHub para verificar si hay una nueva versión publicada:
+
 - Si hay nueva versión → badge naranja con link directo al release.
 - Si estás actualizado → aviso confirmando versión actual.
 - Si no hay internet → aviso amigable, sin bloquear la app.
@@ -46,17 +71,22 @@ Al iniciar, la app consulta la API de GitHub para verificar si hay una nueva ver
 También puedes forzar la comprobación manual con el icono **🔄** en la barra superior.
 
 ### 🐢 Modo Low (bajos recursos)
+
 Pensado para PCs con hardware limitado (Celeron, 4GB RAM, gráficos integrados):
+
 - Desactiva los efectos `DropShadowEffect` (costosos en WPF).
 - Reduce el grosor de bordes.
 - Se **persiste** entre sesiones.
 
 ### 🧩 Integración con Easy Context Menu
+
 Al iniciar, la app detecta si tienes **Easy Context Menu** (Sordum) instalado:
+
 - **Si está instalado** → te guía paso a paso para agregar OmegaSolver al menú contextual.
 - **Si NO está instalado** → te ofrece abrir la página oficial de descarga.
 
 ### 🛠️ Herramientas inspiradas en Dism++
+
 - **Crear Punto de Restauración** — `Checkpoint-Computer` vía VSS.
 - **Gestionar Programas de Inicio** — `Win32_StartupCommand`.
 - **Analizar Actualizaciones** — `Win32_QuickFixEngineering`.
@@ -64,7 +94,9 @@ Al iniciar, la app detecta si tienes **Easy Context Menu** (Sordum) instalado:
 - **Limpiar Controladores Obsoletos** — `pnputil + DISM /StartComponentCleanup`.
 
 ### 🧹 Limpieza en 1-Clic
+
 Botón verde separado de la Reparación Completa:
+
 - Temporales de usuario y sistema.
 - Prefetch.
 - Caché DNS.
@@ -72,7 +104,9 @@ Botón verde separado de la Reparación Completa:
 - Papelera de reciclaje.
 
 ### 🖥️ Detección de resolución robusta (DPI Adaptive)
+
 Sistema de 3 fallbacks para detectar la resolución real (útil en TVs, monitores 4K, o PCs con DPI escalado):
+
 1. `SystemParameters.WorkArea`
 2. `PrimaryScreenWidth/Height`
 3. `System.Windows.Forms.Screen`
@@ -83,13 +117,15 @@ La ventana se posiciona manualmente centrada y **nunca queda cortada por arriba*
 
 ## 🎨 Versión anterior: V4.2 — "Balanced UX & Neon"
 
-![Tag V4.2](https://img.shields.io/badge/-V4.2-8B5CF6?style=flat-square)
-![Novedad principal](https://img.shields.io/badge/-OMEGASOLVER%20style-A855F7?style=flat-square)
-![Novedad](https://img.shields.io/badge/-Custom%20Chrome-A855F7?style=flat-square)
-![Novedad](https://img.shields.io/badge/-Layout%20Balanceado-A855F7?style=flat-square)
+![Tag V4.2](https://shields.io)
+![Novedad principal](https://shields.io)
+![Novedad](https://shields.io)
+![Novedad](https://shields.io)
 
 ### 🎨 Tema "OMEGASOLVER style"
+
 Tema alienígena inspirado en *Murder Drones* con **6 sub-paletas neón**:
+
 - 🟡 Amarillo (Cyn & N)
 - 🟡 Amarillo (V)
 - 🔴 Rojo (Doll)
@@ -100,26 +136,33 @@ Tema alienígena inspirado en *Murder Drones* con **6 sub-paletas neón**:
 Aplica fuente `Rajdhani / Orbitron` con fallback a `Consolas`, título con glow neón (`◤ OMEGASOLVER ◢`), y borde con `DropShadowEffect`.
 
 ### 🖼️ Custom Chrome
+
 Ventana sin decoración nativa de Windows (`WindowStyle="None"`):
+
 - Barra de título personalizada que respeta el tema activo.
 - Arrastre desde cualquier zona de la barra.
 - Botones de minimizar / maximizar / cerrar con hover.
 - Máximo → esquinas cuadradas. Normal → esquinas redondeadas.
 
 ### ⚖️ Layout balanceado en Modo Básico (2 columnas)
+
 Reorganización del modo simple:
+
 - **Columna izquierda**: 🛠️ Reparar mi PC + 🛡️ Seguridad.
 - **Columna derecha**: 🧹 Limpieza + 🌐 Arreglar Internet.
 
 Elimina el hueco visual y equilibra el contenido. El **Modo Avanzado** mantiene las 3 columnas por categoría.
 
 ### 🔧 Instancia única (Mutex)
+
 Imposible abrir dos OmegaSolver simultáneamente. Si lo intentas, te avisa que ya hay una ejecución en curso.
 
 ### 🛡️ Protección SSD (heredada de V4.0)
+
 El botón de desfragmentación se **bloquea automáticamente** si el disco objetivo es un SSD (`Get-PhysicalDisk.MediaType`).
 
 ### 🎯 Enumeración rápida de archivos
+
 Diagnóstico inicial **10-50x más rápido** gracias a `DirectoryInfo.EnumerateFiles` en lugar de `Get-Item` por archivo.
 
 ---
@@ -155,7 +198,7 @@ Diagnóstico inicial **10-50x más rápido** gracias a `DirectoryInfo.EnumerateF
 
 ### Opción 1 — Ejecución directa (recomendado)
 
-1. Descarga **`OmegaSolver V4.3.exe`** desde la sección [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest).
+1. Descarga **`OmegaSolver V4.3.exe`** desde la sección [Releases](https://github.com).
 2. Clic derecho sobre el archivo → **Ejecutar como administrador**.
 3. Acepta la solicitud de elevación de UAC.
 4. La interfaz se abrirá automáticamente.
@@ -212,7 +255,7 @@ Get-AuthenticodeSignature "OmegaSolver V4.3.exe" |
 Resultado esperado:
 
 ```
-Status      : Valid
+Status : Valid
 Firmado por : CN=OMEGA_ALPHA
 ```
 
@@ -232,13 +275,13 @@ Firmado por : CN=OMEGA_ALPHA
 ## 🗂️ Estructura de archivos generados
 
 ```
-%ProgramData%\OmegaSolver\
-├── reversible-state.json    # Estado para reversión de cambios
-├── theme.txt                # Tema visual seleccionado
-├── omega-subcolor.txt       # Sub-paleta de OMEGASOLVER style
-├── low-mode.txt             # Estado del Modo Low
-├── language.txt             # Idioma seleccionado (ES/EN/PT)
-└── omega-warning.ack        # Confirmación de advertencia OMEGASOLVER
+%ProgramData%\OmegaSolver
+├── reversible-state.json      # Estado para reversión de cambios
+├── theme.txt                  # Tema visual seleccionado
+├── omega-subcolor.txt         # Sub-paleta de OMEGASOLVER style
+├── low-mode.txt               # Estado del Modo Low
+├── language.txt               # Idioma seleccionado (ES/EN/PT)
+└── omega-warning.ack          # Confirmación de advertencia OMEGASOLVER
 ```
 
 OmegaSolver es **100% offline y privado**: no recolecta, transmite ni envía telemetría a servidores externos. La única conexión a internet es la comprobación de actualizaciones en GitHub (puedes ignorarla si no hay red).
@@ -275,30 +318,33 @@ Consulta el [CHANGELOG](CHANGELOG.md) para detalles completos.
 ## 🤝 Contribuciones
 
 Las contribuciones son bienvenidas:
-- 🐛 [Reportar un bug](https://github.com/OMEGAALPHA10/OmegaSolver/issues)
-- 💡 [Sugerir una mejora](https://github.com/OMEGAALPHA10/OmegaSolver/issues)
+
+- 🐛 [Reportar un bug](https://github.com)
+- 💡 [Sugerir una mejora](https://github.com)
 - 🔧 Enviar un Pull Request
 
 ---
 
 ## ⚖ Licencia
 
-Este proyecto se distribuye bajo la licencia **GNU General Public License v3 (GPLv3)**. Consulta el archivo [LICENSE](LICENSE) para conocer los términos legales completos. 
+Este proyecto se distribuye bajo la licencia **GNU General Public License v3 (GPLv3)**. Consulta el archivo [LICENSE](LICENSE) para conocer los términos legales completos.
 
 Esta licencia garantiza tu libertad para usar, modificar y compartir el software, siempre y cuando cualquier versión derivada se mantenga bajo esta misma licencia de código abierto.
 
+---
+
+## 📢 Nota sobre el uso del código y atribución
+
+Con base en los términos de la licencia **GNU GPLv3**, cualquier persona es libre de estudiar, modificar y redistribuir este software. Sin embargo, se **exige estrictamente** que:
+
+1. Se mantengan intactos todos los encabezados de créditos y avisos de Copyright (`© OMEGA_ALPHA`) en los archivos fuentes originales.
+2. Si el proyecto modificado incluye una interfaz gráfica, se debe conservar de forma visible y accesible la atribución original al autor de OmegaSolver.
 
 ---
 
 ## 🔗 Enlaces rápidos
 
-- 📦 [Última versión (V4.3)](https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest)
+- 📦 [Última versión (V4.3)](https://github.com)
 - 🗃️ [Todas las releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases)
 - 📄 [CHANGELOG](CHANGELOG.md)
-- 🐛 [Reportar un bug](https://github.com/OMEGAALPHA10/OmegaSolver/issues)
-
----
-### 📢 Nota sobre el uso del código y atribución
-Con base en los términos de la licencia **GNU GPLv3**, cualquier persona es libre de estudiar, modificar y redistribuir este software. Sin embargo, se **exige estrictamente** que:
-1. Se mantengan intactos todos los encabezados de créditos y avisos de Copyright (`© OMEGA_ALPHA`) en los archivos fuentes originales.
-2. Si el proyecto modificado incluye una interfaz gráfica, se debe conservar de forma visible y accesible la atribución original al autor de OmegaSolver.
+- 🐛 [Reportar un bug](https://github.com)
