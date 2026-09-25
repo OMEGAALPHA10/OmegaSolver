@@ -280,9 +280,12 @@ Las contribuciones son bienvenidas:
 
 ---
 
-## ⚖️ Licencia
+## ⚖ Licencia
 
-Este proyecto se distribuye bajo la **Licencia MIT**. Consulta el archivo [LICENSE](LICENSE) para los términos legales.
+Este proyecto se distribuye bajo la licencia **GNU General Public License v3 (GPLv3)**. Consulta el archivo [LICENSE](LICENSE) para conocer los términos legales completos. 
+
+Esta licencia garantiza tu libertad para usar, modificar y compartir el software, siempre y cuando cualquier versión derivada se mantenga bajo esta misma licencia de código abierto.
+
 
 ---
 
