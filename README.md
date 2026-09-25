@@ -4,6 +4,7 @@
 
 > 🇻🇪 Proyecto personal de código abierto desarrollado desde Venezuela.
 
+CODIGO .PS1 EN LA CARPETA DE "OPEN SOURCE" (sera temporal mientras los codigos son agregados a sus respectivos assets)
 ---
 
 ## 🆕 Última versión: V4.3 — "Multilingual & Network"
