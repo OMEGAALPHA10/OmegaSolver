@@ -295,3 +295,9 @@ Esta licencia garantiza tu libertad para usar, modificar y compartir el software
 - 🗃️ [Todas las releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases)
 - 📄 [CHANGELOG](CHANGELOG.md)
 - 🐛 [Reportar un bug](https://github.com/OMEGAALPHA10/OmegaSolver/issues)
+
+---
+### 📢 Nota sobre el uso del código y atribución
+Con base en los términos de la licencia **GNU GPLv3**, cualquier persona es libre de estudiar, modificar y redistribuir este software. Sin embargo, se **exige estrictamente** que:
+1. Se mantengan intactos todos los encabezados de créditos y avisos de Copyright (`© OMEGA_ALPHA`) en los archivos fuentes originales.
+2. Si el proyecto modificado incluye una interfaz gráfica, se debe conservar de forma visible y accesible la atribución original al autor de OmegaSolver.
