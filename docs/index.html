@@ -125,7 +125,7 @@
     /* ===== HERO ===== */
     header.hero {
         position: relative;
-        padding: 90px 20px 80px;
+        padding: 60px 20px 80px; /* Reduje un poco el padding superior para que el banner resalte */
         text-align: center;
         overflow: hidden;
         background:
@@ -168,72 +168,37 @@
         50%  { transform: translate(-50%, -50%) rotate(180deg) scale(1.05); }
         100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
     }
-    .hero-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
+    .hero-inner { position: relative; z-index: 2; max-width: 1000px; margin: 0 auto; }
 
-    /* ===== LOGO HERO ANIMADO ===== */
-    .hero-logo-wrap {
-        position: relative;
-        width: 160px;
-        height: 160px;
-        margin: 0 auto 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    /* Halo radial pulsante detrás del logo */
-    .hero-logo-wrap::before {
-        content: '';
-        position: absolute;
-        inset: -25px;
-        border-radius: 50%;
-        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 65%);
-        opacity: 0.5;
-        animation: haloPulse 5s ease-in-out infinite;
-        pointer-events: none;
-        z-index: 1;
-    }
-    @keyframes haloPulse {
-        0%, 100% { opacity: 0.35; transform: scale(0.95); }
-        50%      { opacity: 0.65; transform: scale(1.1); }
-    }
-    .hero-logo-img {
+    /* ===== NUEVO: BANNER HERO ===== */
+    .hero-banner-wrap {
+        margin: 0 auto 30px;
         width: 100%;
-        height: 100%;
-        object-fit: contain;
-        position: relative;
-        z-index: 3;
-        border-radius: 50%;
-        background: linear-gradient(120deg, transparent 30%, rgba(255,235,59,0.35) 50%, transparent 70%);
-        background-size: 250% 100%;
-        background-position: 200% 0;
-        animation: logoPulse 4s ease-in-out infinite,
-                   logoShimmer 6s ease-in-out infinite;
+        max-width: 1000px;
     }
-    @keyframes logoPulse {
-        0%, 100% { transform: scale(1);     filter: drop-shadow(0 0 18px var(--accent-glow-strong)) drop-shadow(0 0 40px rgba(255,212,0,0.25)); }
-        50%      { transform: scale(1.04);  filter: drop-shadow(0 0 26px var(--accent)) drop-shadow(0 0 60px rgba(255,212,0,0.4)); }
+    .hero-banner-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 12px;
+        box-shadow: 0 0 40px var(--accent-glow);
+        border: 1px solid var(--border);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    @keyframes logoShimmer {
-        0%, 100% { background-position: 200% 0; }
-        50%      { background-position: -100% 0; }
+    .hero-banner-img:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 60px var(--accent-glow-strong);
     }
-    /* Anillos pulsantes alrededor del logo */
-    .hero-logo-ring {
-        position: absolute;
-        inset: 0;
-        border: 1px solid var(--accent);
-        border-radius: 50%;
-        opacity: 0;
-        animation: ringExpand 3.5s ease-out infinite;
-        pointer-events: none;
-        z-index: 2;
-    }
-    .hero-logo-ring:nth-child(2) { animation-delay: 1.16s; }
-    .hero-logo-ring:nth-child(3) { animation-delay: 2.33s; }
-    @keyframes ringExpand {
-        0%   { transform: scale(0.7);  opacity: 0.55; }
-        100% { transform: scale(1.75); opacity: 0; }
-    }
+
+    /* (Opcional) Si en el futuro quieres volver a usar el logo animado, descomenta estas líneas */
+    /*
+    .hero-logo-wrap { ... }
+    .hero-logo-img { ... }
+    .hero-logo-ring { ... }
+    h1.hero-title { ... }
+    .hero-version { ... }
+    .hero-sub { ... }
+    */
 
     .badges-row {
         display: flex;
@@ -269,33 +234,12 @@
         0%, 100% { opacity: 1; }
         50% { opacity: 0.4; }
     }
-    h1.hero-title {
-        font-size: clamp(2.2rem, 6vw, 4rem);
-        font-weight: 900;
-        letter-spacing: 4px;
-        color: var(--accent);
-        text-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(255,212,0,0.2);
-        margin-bottom: 12px;
-        text-transform: uppercase;
-    }
-    .hero-version {
-        font-family: 'Consolas', monospace;
-        color: var(--text-muted);
-        font-size: 1rem;
-        letter-spacing: 2px;
-        margin-bottom: 28px;
-    }
-    .hero-sub {
-        font-size: clamp(1rem, 2vw, 1.18rem);
-        color: var(--text-dim);
-        max-width: 720px;
-        margin: 0 auto 40px;
-    }
     .hero-cta {
         display: flex;
         gap: 14px;
         justify-content: center;
         flex-wrap: wrap;
+        margin-bottom: 40px;
     }
     .btn {
         display: inline-flex;
@@ -335,7 +279,7 @@
     /* ===== STATS BAR ===== */
     .stats-bar {
         max-width: 1000px;
-        margin: 50px auto 0;
+        margin: 0 auto;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 1px;
@@ -803,9 +747,10 @@
         .nav-logo .nav-logo-text { font-size: 1rem; }
         .nav-links { gap: 14px; font-size: 0.85rem; }
         .nav-links a { font-size: 0.8rem; }
-        header.hero { padding: 70px 16px 60px; }
+        header.hero { padding: 40px 16px 60px; }
         .hero::after { width: 550px; height: 550px; }
-        .hero-logo-wrap { width: 120px; height: 120px; margin-bottom: 18px; }
+        .hero-banner-wrap { margin-bottom: 20px; }
+        .hero-banner-img { border-radius: 8px; }
         .hero-cta .btn { width: 100%; justify-content: center; }
         section { padding: 60px 0; }
         .story { padding: 28px 22px; }
@@ -843,26 +788,25 @@
 <!-- ============ HERO ============ -->
 <header class="hero">
     <div class="hero-inner">
-        <div class="hero-logo-wrap">
-            <div class="hero-logo-ring"></div>
-            <div class="hero-logo-ring"></div>
-            <div class="hero-logo-ring"></div>
-            <img src="./screenshots/logo.png" alt="OmegaSolver" class="hero-logo-img">
+        
+        <!-- NUEVO: Banner principal integrado -->
+        <div class="hero-banner-wrap fade-in">
+            <img src="./screenshots/banner-hero.jpg" alt="OmegaSolver - El principio, no el final" class="hero-banner-img">
         </div>
+
+        <!-- Badges -->
         <div class="badges-row">
             <span class="badge"><span class="dot"></span><span data-i18n="hero_badge">Disponible en Winget</span></span>
             <span class="badge venezuela">🇻🇪 <span data-i18n="hero_venezuela">Hecho en Venezuela</span></span>
         </div>
-        <h1 class="hero-title">OmegaSolver</h1>
-        <div class="hero-version">// v4.3 // <span data-i18n="hero_subtitle">Suite de Optimización para Windows</span></div>
-        <p class="hero-sub" data-i18n="hero_desc">
-            Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell con interfaz WPF. Diseñada para usuarios básicos y técnicos por igual.
-        </p>
+
+        <!-- Botones de acción -->
         <div class="hero-cta">
             <a href="#install" class="btn btn-primary" data-i18n="hero_cta_install">📥 Instalar ahora</a>
             <a href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener" class="btn btn-outline" data-i18n="hero_cta_github">Ver en GitHub</a>
         </div>
 
+        <!-- Barra de estadísticas -->
         <div class="stats-bar">
             <div class="stat-item">
                 <div class="stat-value">4.3</div>
