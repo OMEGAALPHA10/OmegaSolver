@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OmegaSolver — Suite de Optimización para Windows</title>
 <meta name="description" content="OmegaSolver: Suite de diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado, i18n, seguridad inteligente SSD/HDD. Disponible en Winget.">
-<meta name="author" content="OMEGA_ALPHA">
-<meta name="keywords" content="OmegaSolver, Windows, optimización, PowerShell, WPF, Winget, SFC, DISM, CHKDSK, limpieza">
+<meta name="author" content="Fabian — OMEGA_ALPHA">
+<meta name="keywords" content="OmegaSolver, Windows, optimización, PowerShell, WPF, Winget, SFC, DISM, CHKDSK, limpieza, Venezuela">
 <meta property="og:title" content="OmegaSolver — Suite de Optimización para Windows">
-<meta property="og:description" content="Diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado.">
+<meta property="og:description" content="Diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado. Disponible en Winget.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://OMEGAALPHA10.github.io/OmegaSolver/">
-<meta property="og:image" content="https://OMEGAALPHA10.github.io/OmegaSolver/docs/screenshots/advanced-mode.png">
+<meta property="og:image" content="https://OMEGAALPHA10.github.io/OmegaSolver/docs/screenshots/logo.png">
 <meta name="theme-color" content="#FFD400">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%230a0800'/%3E%3Cg fill='none' stroke='%23FFD400' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'%3E%3Ccircle cx='100' cy='100' r='86' stroke-width='4' stroke-dasharray='130 12 130 12' stroke-dashoffset='40'/%3E%3Cpath d='M 100 24 L 108 40 L 92 40 Z' fill='%23FFD400'/%3E%3Cpath d='M 100 176 L 108 160 L 92 160 Z' fill='%23FFD400'/%3E%3Cpath d='M 62 72 L 100 60 L 138 72 L 138 94 L 100 82 L 62 94 Z'/%3E%3Cpath d='M 138 128 L 100 140 L 62 128 L 62 106 L 100 118 L 138 106 Z'/%3E%3C/g%3E%3C/svg%3E">
 <style>
     :root {
         --bg: #030200;
@@ -22,6 +22,7 @@
         --accent: #FFD400;
         --accent-alt: #FFEB3B;
         --accent-glow: rgba(255, 212, 0, 0.35);
+        --accent-glow-strong: rgba(255, 212, 0, 0.6);
         --text: #FFFBE6;
         --text-dim: #D1D5DB;
         --text-muted: #8A7500;
@@ -37,15 +38,17 @@
         line-height: 1.6;
         overflow-x: hidden;
     }
+
+    /* ===== NAV ===== */
     nav {
         position: sticky;
         top: 0;
         z-index: 1000;
-        background: rgba(10, 8, 0, 0.85);
+        background: rgba(10, 8, 0, 0.88);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--border);
-        padding: 12px 20px;
+        padding: 10px 20px;
     }
     .nav-inner {
         max-width: 1200px;
@@ -57,12 +60,25 @@
         flex-wrap: wrap;
     }
     .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        transition: transform 0.25s;
+    }
+    .nav-logo:hover { transform: scale(1.03); }
+    .nav-logo img {
+        height: 36px;
+        width: 36px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 8px var(--accent-glow));
+    }
+    .nav-logo .nav-logo-text {
         font-weight: 900;
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         color: var(--accent);
         letter-spacing: 2px;
         text-shadow: 0 0 15px var(--accent-glow);
-        text-decoration: none;
     }
     .nav-links {
         display: flex;
@@ -98,45 +114,116 @@
         transition: all 0.2s;
         font-family: inherit;
     }
-    .lang-switch button.active {
-        background: var(--accent);
-        color: #000;
-    }
+    .lang-switch button.active { background: var(--accent); color: #000; }
     .lang-switch button:hover:not(.active) { color: var(--accent); }
 
+    /* ===== HERO ===== */
     header.hero {
         position: relative;
-        padding: 100px 20px 80px;
+        padding: 90px 20px 80px;
         text-align: center;
         overflow: hidden;
         background:
-            radial-gradient(circle at 50% 0%, rgba(255,212,0,0.12) 0%, transparent 55%),
+            radial-gradient(circle at 50% 20%, rgba(255,212,0,0.15) 0%, transparent 55%),
             radial-gradient(circle at 80% 80%, rgba(255,212,0,0.06) 0%, transparent 50%);
     }
+    /* Patrón de fondo con motivo angular del logo */
     .hero::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
         background-image:
-            linear-gradient(rgba(255,212,0,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,212,0,0.04) 1px, transparent 1px);
+            linear-gradient(rgba(255,212,0,0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,212,0,0.035) 1px, transparent 1px);
         background-size: 60px 60px;
-        mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
-        -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+        mask-image: radial-gradient(ellipse at center, black 20%, transparent 78%);
+        -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 78%);
         pointer-events: none;
     }
-    .hero-inner { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+    /* Watermark: logo gigante muy tenue en el fondo del hero */
+    .hero::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 900px;
+        height: 900px;
+        transform: translate(-50%, -50%);
+        background-image: url("./screenshots/logo.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        opacity: 0.028;
+        pointer-events: none;
+        filter: blur(1px);
+        z-index: 0;
+        animation: watermarkRotate 120s linear infinite;
+    }
+    @keyframes watermarkRotate {
+        0%   { transform: translate(-50%, -50%) rotate(0deg)   scale(1); }
+        50%  { transform: translate(-50%, -50%) rotate(180deg) scale(1.05); }
+        100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+    }
+    .hero-inner { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
+
+    /* ===== LOGO HERO ANIMADO ===== */
+    .hero-logo-wrap {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .hero-logo-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        position: relative;
+        z-index: 3;
+        filter: drop-shadow(0 0 18px var(--accent-glow-strong)) drop-shadow(0 0 40px rgba(255,212,0,0.25));
+        animation: logoPulse 4s ease-in-out infinite;
+    }
+    @keyframes logoPulse {
+        0%, 100% { transform: scale(1);     filter: drop-shadow(0 0 18px var(--accent-glow-strong)) drop-shadow(0 0 40px rgba(255,212,0,0.25)); }
+        50%      { transform: scale(1.04);  filter: drop-shadow(0 0 26px var(--accent)) drop-shadow(0 0 60px rgba(255,212,0,0.4)); }
+    }
+    /* Anillos pulsantes alrededor del logo */
+    .hero-logo-ring {
+        position: absolute;
+        inset: 0;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        opacity: 0;
+        animation: ringExpand 3.5s ease-out infinite;
+        pointer-events: none;
+    }
+    .hero-logo-ring:nth-child(2) { animation-delay: 1.16s; }
+    .hero-logo-ring:nth-child(3) { animation-delay: 2.33s; }
+    @keyframes ringExpand {
+        0%   { transform: scale(0.7);  opacity: 0.55; }
+        100% { transform: scale(1.75); opacity: 0; }
+    }
+
+    .badges-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
     .badge {
-        display: inline-block;
-        padding: 6px 16px;
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
         border: 1px solid var(--border-hover);
         border-radius: 999px;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 700;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
         color: var(--accent);
         background: rgba(255,212,0,0.05);
-        margin-bottom: 22px;
         text-transform: uppercase;
     }
     .badge .dot {
@@ -148,6 +235,7 @@
         box-shadow: 0 0 10px #4ADE80;
         animation: pulse 2s infinite;
     }
+    .badge.venezuela { color: #FFD400; border-color: #7A6800; background: rgba(255,212,0,0.08); }
     @keyframes pulse {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.4; }
@@ -215,7 +303,45 @@
         transform: translateY(-2px);
     }
 
-    main { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+        max-width: 1000px;
+        margin: 50px auto 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+    }
+    .stat-item {
+        background: var(--panel);
+        padding: 22px 16px;
+        text-align: center;
+        transition: background 0.25s;
+    }
+    .stat-item:hover { background: var(--card); }
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--accent);
+        font-family: 'Consolas', monospace;
+        line-height: 1;
+        margin-bottom: 6px;
+    }
+    .stat-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    /* ===== SECCIONES ===== */
+    main { max-width: 1200px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
     section { padding: 80px 0; }
     .section-title {
         text-align: center;
@@ -231,8 +357,56 @@
         color: var(--text-muted);
         margin-bottom: 50px;
         font-size: 1rem;
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
+    /* ===== STORY ===== */
+    .story {
+        max-width: 820px;
+        margin: 0 auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 40px 36px;
+        position: relative;
+        overflow: hidden;
+    }
+    .story::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 4px; height: 100%;
+        background: linear-gradient(180deg, var(--accent), transparent);
+    }
+    .story p {
+        color: var(--text-dim);
+        font-size: 1.02rem;
+        line-height: 1.85;
+        margin-bottom: 18px;
+    }
+    .story p:last-child { margin-bottom: 0; }
+    .story strong { color: var(--accent); font-weight: 700; }
+    .story .signature {
+        margin-top: 26px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        font-style: italic;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .story .signature img {
+        height: 32px;
+        width: 32px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 6px var(--accent-glow));
+    }
+
+    /* ===== FEATURES ===== */
     .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -268,18 +442,10 @@
         display: block;
         filter: drop-shadow(0 0 12px var(--accent-glow));
     }
-    .card h3 {
-        color: var(--accent);
-        font-size: 1.15rem;
-        margin-bottom: 10px;
-        font-weight: 800;
-    }
-    .card p {
-        color: var(--text-dim);
-        font-size: 0.94rem;
-        line-height: 1.6;
-    }
+    .card h3 { color: var(--accent); font-size: 1.15rem; margin-bottom: 10px; font-weight: 800; }
+    .card p { color: var(--text-dim); font-size: 0.94rem; line-height: 1.6; }
 
+    /* ===== SCREENSHOTS ===== */
     .shots {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -291,17 +457,14 @@
         overflow: hidden;
         background: var(--card);
         transition: all 0.3s;
+        cursor: zoom-in;
     }
     .shot:hover {
         border-color: var(--accent);
         transform: scale(1.02);
         box-shadow: 0 0 30px var(--accent-glow);
     }
-    .shot img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
+    .shot img { width: 100%; height: auto; display: block; }
     .shot-caption {
         padding: 14px 18px;
         font-size: 0.85rem;
@@ -310,6 +473,40 @@
         font-family: 'Consolas', monospace;
     }
 
+    /* ===== LIGHTBOX ===== */
+    .lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.92);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        padding: 40px 20px;
+        cursor: zoom-out;
+        animation: fadeIn 0.25s ease;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+        max-width: 95%;
+        max-height: 90vh;
+        border-radius: 12px;
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 60px var(--accent-glow);
+    }
+    .lightbox-close {
+        position: absolute;
+        top: 20px; right: 30px;
+        font-size: 2rem;
+        color: var(--accent);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 900;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ===== INSTALL ===== */
     .install-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -330,6 +527,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
     }
     .install-card .tag {
         display: inline-block;
@@ -362,10 +560,7 @@
         gap: 10px;
         overflow-x: auto;
     }
-    .code-block code {
-        white-space: nowrap;
-        overflow-x: auto;
-    }
+    .code-block code { white-space: nowrap; overflow-x: auto; }
     .copy-btn {
         background: transparent;
         border: 1px solid var(--border-hover);
@@ -379,17 +574,10 @@
         font-family: inherit;
         flex-shrink: 0;
     }
-    .copy-btn:hover {
-        background: var(--accent);
-        color: #000;
-        border-color: var(--accent);
-    }
-    .copy-btn.copied {
-        background: #4ADE80;
-        color: #000;
-        border-color: #4ADE80;
-    }
+    .copy-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+    .copy-btn.copied { background: #4ADE80; color: #000; border-color: #4ADE80; }
 
+    /* ===== REQUIREMENTS ===== */
     .req-list {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -420,10 +608,54 @@
         font-family: 'Consolas', monospace;
     }
 
-    .faq {
-        max-width: 820px;
+    /* ===== CHANGELOG ===== */
+    .changelog {
+        max-width: 720px;
         margin: 0 auto;
+        position: relative;
+        padding-left: 30px;
     }
+    .changelog::before {
+        content: '';
+        position: absolute;
+        left: 8px; top: 10px; bottom: 10px;
+        width: 2px;
+        background: linear-gradient(180deg, var(--accent), var(--border));
+    }
+    .cl-item {
+        position: relative;
+        margin-bottom: 28px;
+    }
+    .cl-item::before {
+        content: '';
+        position: absolute;
+        left: -30px; top: 6px;
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        background: var(--card);
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 15px var(--accent-glow);
+    }
+    .cl-version {
+        font-family: 'Consolas', monospace;
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+    }
+    .cl-date {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+    .cl-desc {
+        color: var(--text-dim);
+        font-size: 0.92rem;
+        line-height: 1.6;
+    }
+
+    /* ===== FAQ ===== */
+    .faq { max-width: 820px; margin: 0 auto; }
     details {
         background: var(--card);
         border: 1px solid var(--border);
@@ -460,56 +692,107 @@
         line-height: 1.65;
     }
 
+    /* ===== FOOTER ===== */
     footer {
         border-top: 1px solid var(--border);
-        padding: 40px 20px;
+        padding: 50px 20px 40px;
         text-align: center;
         color: var(--text-muted);
         font-size: 0.88rem;
         background: var(--panel);
         margin-top: 60px;
+        position: relative;
+    }
+    footer .footer-logo {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+        margin-bottom: 16px;
+        opacity: 0.75;
+        filter: drop-shadow(0 0 12px var(--accent-glow));
+        transition: all 0.3s;
+    }
+    footer .footer-logo:hover {
+        opacity: 1;
+        filter: drop-shadow(0 0 20px var(--accent));
+        transform: scale(1.08);
     }
     footer .footer-links {
         display: flex;
         gap: 22px;
         justify-content: center;
         flex-wrap: wrap;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
     }
-    footer a {
-        color: var(--text-dim);
-        text-decoration: none;
-        transition: color 0.2s;
-    }
+    footer a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
     footer a:hover { color: var(--accent); }
     footer .copyright { font-size: 0.82rem; opacity: 0.8; }
+    footer .made-with { margin-top: 12px; font-size: 0.82rem; color: var(--text-muted); }
 
+    /* ===== SCROLL TOP ===== */
+    .scroll-top {
+        position: fixed;
+        bottom: 30px; right: 30px;
+        width: 48px; height: 48px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #000;
+        border: none;
+        cursor: pointer;
+        font-size: 1.4rem;
+        font-weight: 900;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 25px var(--accent-glow);
+        transition: all 0.25s;
+        z-index: 999;
+    }
+    .scroll-top.visible { display: flex; }
+    .scroll-top:hover {
+        background: var(--accent-alt);
+        transform: translateY(-4px);
+        box-shadow: 0 0 40px var(--accent);
+    }
+
+    /* ===== ANIMACIONES ===== */
     .fade-in {
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 640px) {
         nav { padding: 10px 14px; }
+        .nav-logo img { height: 30px; width: 30px; }
+        .nav-logo .nav-logo-text { font-size: 1rem; }
         .nav-links { gap: 14px; font-size: 0.85rem; }
         .nav-links a { font-size: 0.8rem; }
         header.hero { padding: 70px 16px 60px; }
+        .hero::after { width: 550px; height: 550px; }
+        .hero-logo-wrap { width: 110px; height: 110px; margin-bottom: 18px; }
         .hero-cta .btn { width: 100%; justify-content: center; }
         section { padding: 60px 0; }
+        .story { padding: 28px 22px; }
+        .stat-value { font-size: 1.5rem; }
+        .scroll-top { bottom: 20px; right: 20px; width: 42px; height: 42px; }
+        footer .footer-logo { width: 44px; height: 44px; }
     }
 </style>
 </head>
 <body>
 
+<!-- ============ NAV ============ -->
 <nav>
     <div class="nav-inner">
-        <a href="#" class="nav-logo">◤ OMEGASOLVER</a>
+        <a href="#" class="nav-logo">
+            <img src="./screenshots/logo.png" alt="OmegaSolver Logo">
+            <span class="nav-logo-text">OMEGASOLVER</span>
+        </a>
         <div class="nav-links">
+            <a href="#story" data-i18n="nav_story">Historia</a>
             <a href="#features" data-i18n="nav_features">Características</a>
             <a href="#screenshots" data-i18n="nav_screens">Capturas</a>
             <a href="#install" data-i18n="nav_install">Instalación</a>
@@ -524,9 +807,19 @@
     </div>
 </nav>
 
+<!-- ============ HERO ============ -->
 <header class="hero">
     <div class="hero-inner">
-        <span class="badge"><span class="dot"></span><span data-i18n="hero_badge">Disponible en Winget</span></span>
+        <div class="hero-logo-wrap">
+            <div class="hero-logo-ring"></div>
+            <div class="hero-logo-ring"></div>
+            <div class="hero-logo-ring"></div>
+            <img src="./screenshots/logo.png" alt="OmegaSolver" class="hero-logo-img">
+        </div>
+        <div class="badges-row">
+            <span class="badge"><span class="dot"></span><span data-i18n="hero_badge">Disponible en Winget</span></span>
+            <span class="badge venezuela">🇻🇪 <span data-i18n="hero_venezuela">Hecho en Venezuela</span></span>
+        </div>
         <h1 class="hero-title">OmegaSolver</h1>
         <div class="hero-version">// v4.3 // <span data-i18n="hero_subtitle">Suite de Optimización para Windows</span></div>
         <p class="hero-sub" data-i18n="hero_desc">
@@ -536,11 +829,56 @@
             <a href="#install" class="btn btn-primary" data-i18n="hero_cta_install">📥 Instalar ahora</a>
             <a href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener" class="btn btn-outline" data-i18n="hero_cta_github">Ver en GitHub</a>
         </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value">4.3</div>
+                <div class="stat-label" data-i18n="stat_version">Versión</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-stars">—</div>
+                <div class="stat-label" data-i18n="stat_stars">Stars</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-forks">—</div>
+                <div class="stat-label" data-i18n="stat_forks">Forks</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">3</div>
+                <div class="stat-label" data-i18n="stat_langs">Idiomas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">GPLv3</div>
+                <div class="stat-label" data-i18n="stat_license">Licencia</div>
+            </div>
+        </div>
     </div>
 </header>
 
 <main>
 
+<!-- ============ STORY ============ -->
+<section id="story">
+    <h2 class="section-title fade-in" data-i18n="story_title">Sobre el proyecto</h2>
+    <p class="section-sub fade-in" data-i18n="story_sub">La historia detrás de OmegaSolver.</p>
+    <div class="story fade-in">
+        <p data-i18n="story_p1">
+            OmegaSolver nació de una frustración concreta: las herramientas de optimización para Windows que existen hoy son o demasiado simples para ser útiles, o tan técnicas que espantan al usuario común. Yo quería algo intermedio. Algo que un usuario sin conocimientos pudiera abrir sin miedo, pero que también tuviera la profundidad que un técnico necesita.
+        </p>
+        <p data-i18n="story_p2">
+            Así nació la idea de los <strong>dos modos</strong>: un Modo Básico con acciones seguras y claras, y un Modo Avanzado con acceso a herramientas como SFC, DISM o CHKDSK. Todo con <strong>confirmaciones claras</strong>, protección automática contra desfragmentar SSD, y un sistema de <strong>cambios reversibles</strong> por si algo sale mal.
+        </p>
+        <p data-i18n="story_p3">
+            El proyecto está desarrollado íntegramente en <strong>PowerShell + WPF</strong> por una sola persona, desde Venezuela, en ratos libres. Es open source bajo GPLv3 y está disponible oficialmente en Winget. No pretende ser perfecto, pero sí útil. Y mientras haya gente que lo use, seguirá creciendo.
+        </p>
+        <p class="signature">
+            <img src="./screenshots/logo.png" alt="">
+            <span data-i18n="story_sig">— Fabian (OMEGA_ALPHA), desarrollador independiente</span>
+        </p>
+    </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
 <section id="features">
     <h2 class="section-title fade-in" data-i18n="features_title">Características</h2>
     <p class="section-sub fade-in" data-i18n="features_sub">Todo lo que necesitas para mantener tu PC como nuevo.</p>
@@ -578,37 +916,39 @@
     </div>
 </section>
 
+<!-- ============ SCREENSHOTS ============ -->
 <section id="screenshots">
     <h2 class="section-title fade-in" data-i18n="screens_title">Capturas</h2>
-    <p class="section-sub fade-in" data-i18n="screens_sub">Un vistazo a la interfaz de OmegaSolver.</p>
+    <p class="section-sub fade-in" data-i18n="screens_sub">Haz clic en cualquier imagen para ampliarla.</p>
     <div class="shots">
-        <div class="shot fade-in">
+        <div class="shot fade-in" data-full="./screenshots/basic-mode.png">
             <img src="./screenshots/basic-mode.png" alt="Modo Básico" loading="lazy">
             <div class="shot-caption" data-i18n="shot_basic">Modo Básico — 2 columnas balanceadas</div>
         </div>
-        <div class="shot fade-in">
+        <div class="shot fade-in" data-full="./screenshots/advanced-mode.png">
             <img src="./screenshots/advanced-mode.png" alt="Modo Avanzado" loading="lazy">
             <div class="shot-caption" data-i18n="shot_advanced">Modo Avanzado — 3 columnas técnicas</div>
         </div>
-        <div class="shot fade-in">
+        <div class="shot fade-in" data-full="./screenshots/omega-style.png">
             <img src="./screenshots/omega-style.png" alt="Estilo OMEGASOLVER" loading="lazy">
             <div class="shot-caption" data-i18n="shot_omega">Estilo OMEGASOLVER con gradientes</div>
         </div>
-        <div class="shot fade-in">
+        <div class="shot fade-in" data-full="./screenshots/manual.png">
             <img src="./screenshots/manual.png" alt="Manual" loading="lazy">
             <div class="shot-caption" data-i18n="shot_manual">Manual trilingüe detallado</div>
         </div>
-        <div class="shot fade-in">
+        <div class="shot fade-in" data-full="./screenshots/share-files.png">
             <img src="./screenshots/share-files.png" alt="Compartir Archivos por Red" loading="lazy">
             <div class="shot-caption" data-i18n="shot_share">Compartir archivos por red — Robocopy y FTP</div>
         </div>
-        <div class="shot fade-in">
+        <div class="shot fade-in" data-full="./screenshots/loading.png">
             <img src="./screenshots/loading.png" alt="Pantalla de Carga" loading="lazy">
             <div class="shot-caption" data-i18n="shot_loading">Pantalla de carga animada</div>
         </div>
     </div>
 </section>
 
+<!-- ============ INSTALL ============ -->
 <section id="install">
     <h2 class="section-title fade-in" data-i18n="install_title">Instalación</h2>
     <p class="section-sub fade-in" data-i18n="install_sub">Elige el método que prefieras.</p>
@@ -634,6 +974,7 @@
     </div>
 </section>
 
+<!-- ============ REQUIREMENTS ============ -->
 <section id="requirements">
     <h2 class="section-title fade-in" data-i18n="req_title">Requisitos</h2>
     <p class="section-sub fade-in" data-i18n="req_sub">OmegaSolver funciona en cualquier PC con Windows moderno.</p>
@@ -665,6 +1006,30 @@
     </div>
 </section>
 
+<!-- ============ CHANGELOG ============ -->
+<section id="changelog">
+    <h2 class="section-title fade-in" data-i18n="cl_title">Historial</h2>
+    <p class="section-sub fade-in" data-i18n="cl_sub">Últimas versiones publicadas.</p>
+    <div class="changelog">
+        <div class="cl-item fade-in">
+            <div class="cl-version">v4.3</div>
+            <div class="cl-date">2026 · Actual</div>
+            <div class="cl-desc" data-i18n="cl_43">Compartición de archivos por red con Robocopy y FTP. Integración con Easy Context Menu. Correcciones en detección de DPI y ventanas. Añadida comprobación automática de actualizaciones vía GitHub.</div>
+        </div>
+        <div class="cl-item fade-in">
+            <div class="cl-version">v4.2.1</div>
+            <div class="cl-date">2026</div>
+            <div class="cl-desc" data-i18n="cl_421">Versión estable con i18n completo (ES/EN/PT), temas OMEGASOLVER, Modo Low y doble enfoque UX.</div>
+        </div>
+        <div class="cl-item fade-in">
+            <div class="cl-version">v4.0</div>
+            <div class="cl-date">2025</div>
+            <div class="cl-desc" data-i18n="cl_40">Reescritura completa en WPF. Sistema de cambios reversibles. Detección SSD/HDD. Modo Básico y Avanzado.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FAQ ============ -->
 <section id="faq">
     <h2 class="section-title fade-in" data-i18n="faq_title">Preguntas Frecuentes</h2>
     <p class="section-sub fade-in" data-i18n="faq_sub">Todo lo que necesitas saber antes de instalarlo.</p>
@@ -698,7 +1063,9 @@
 
 </main>
 
+<!-- ============ FOOTER ============ -->
 <footer>
+    <img src="./screenshots/logo.png" alt="OmegaSolver" class="footer-logo">
     <div class="footer-links">
         <a href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener">GitHub</a>
         <a href="https://github.com/OMEGAALPHA10/OmegaSolver/releases" target="_blank" rel="noopener" data-i18n="footer_releases">Releases</a>
@@ -706,16 +1073,30 @@
         <a href="https://github.com/OMEGAALPHA10/OmegaSolver/issues" target="_blank" rel="noopener" data-i18n="footer_issues">Reportar Issue</a>
     </div>
     <p class="copyright">© 2026 OMEGA_ALPHA · <span data-i18n="footer_license_text">Distribuido libremente bajo la Licencia GNU GPLv3.</span></p>
+    <p class="made-with" data-i18n="footer_made">Hecho con esfuerzo desde Venezuela 🇻🇪</p>
 </footer>
+
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">↑</button>
+
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">×</button>
+    <img src="" alt="Zoom" id="lightboxImg">
+</div>
 
 <script>
     const i18n = {
         es: {
-            nav_features: "Características", nav_screens: "Capturas", nav_install: "Instalación", nav_faq: "FAQ", nav_github: "GitHub",
-            hero_badge: "Disponible en Winget",
+            nav_story: "Historia", nav_features: "Características", nav_screens: "Capturas", nav_install: "Instalación", nav_faq: "FAQ", nav_github: "GitHub",
+            hero_badge: "Disponible en Winget", hero_venezuela: "Hecho en Venezuela",
             hero_subtitle: "Suite de Optimización para Windows",
             hero_desc: "Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell con interfaz WPF. Diseñada para usuarios básicos y técnicos por igual.",
             hero_cta_install: "📥 Instalar ahora", hero_cta_github: "Ver en GitHub",
+            stat_version: "Versión", stat_stars: "Stars", stat_forks: "Forks", stat_langs: "Idiomas", stat_license: "Licencia",
+            story_title: "Sobre el proyecto", story_sub: "La historia detrás de OmegaSolver.",
+            story_p1: "OmegaSolver nació de una frustración concreta: las herramientas de optimización para Windows que existen hoy son o demasiado simples para ser útiles, o tan técnicas que espantan al usuario común. Yo quería algo intermedio. Algo que un usuario sin conocimientos pudiera abrir sin miedo, pero que también tuviera la profundidad que un técnico necesita.",
+            story_p2: "Así nació la idea de los dos modos: un Modo Básico con acciones seguras y claras, y un Modo Avanzado con acceso a herramientas como SFC, DISM o CHKDSK. Todo con confirmaciones claras, protección automática contra desfragmentar SSD, y un sistema de cambios reversibles por si algo sale mal.",
+            story_p3: "El proyecto está desarrollado íntegramente en PowerShell + WPF por una sola persona, desde Venezuela, en ratos libres. Es open source bajo GPLv3 y está disponible oficialmente en Winget. No pretende ser perfecto, pero sí útil. Y mientras haya gente que lo use, seguirá creciendo.",
+            story_sig: "— Fabian (OMEGA_ALPHA), desarrollador independiente",
             features_title: "Características", features_sub: "Todo lo que necesitas para mantener tu PC como nuevo.",
             f1_title: "Soporte Internacional", f1_desc: "Localización completa en tiempo real para Español, Inglés y Portugués. Interfaz, logs, diálogos y manual traducidos.",
             f2_title: "Seguridad Inteligente", f2_desc: "Detecta automáticamente si tus unidades son SSD o HDD y bloquea tareas perjudiciales como la desfragmentación en SSD.",
@@ -723,7 +1104,7 @@
             f4_title: "Compartición de Red", f4_desc: "Transferencia LAN integrada con soporte FTP para móviles y flujos estructurados mediante Robocopy SMB.",
             f5_title: "18 Temas Visuales", f5_desc: "Desde Spotify Neon hasta el exclusivo estilo OMEGASOLVER inspirado en Murder Drones, con sub-paletas dinámicas.",
             f6_title: "Cambios Reversibles", f6_desc: "Todas las modificaciones de energía, QoS y servicios se guardan y pueden revertirse con un solo clic.",
-            screens_title: "Capturas", screens_sub: "Un vistazo a la interfaz de OmegaSolver.",
+            screens_title: "Capturas", screens_sub: "Haz clic en cualquier imagen para ampliarla.",
             shot_basic: "Modo Básico — 2 columnas balanceadas", shot_advanced: "Modo Avanzado — 3 columnas técnicas",
             shot_omega: "Estilo OMEGASOLVER con gradientes", shot_manual: "Manual trilingüe detallado",
             shot_share: "Compartir archivos por red — Robocopy y FTP", shot_loading: "Pantalla de carga animada",
@@ -737,6 +1118,10 @@
             req_title: "Requisitos", req_sub: "OmegaSolver funciona en cualquier PC con Windows moderno.",
             req_os: "Sistema Operativo", req_ps: "PowerShell", req_ram: "Memoria RAM", req_disk: "Espacio en disco",
             req_arch: "Arquitectura", req_admin: "Permisos", req_admin_val: "Administrador",
+            cl_title: "Historial", cl_sub: "Últimas versiones publicadas.",
+            cl_43: "Compartición de archivos por red con Robocopy y FTP. Integración con Easy Context Menu. Correcciones en detección de DPI y ventanas. Añadida comprobación automática de actualizaciones vía GitHub.",
+            cl_421: "Versión estable con i18n completo (ES/EN/PT), temas OMEGASOLVER, Modo Low y doble enfoque UX.",
+            cl_40: "Reescritura completa en WPF. Sistema de cambios reversibles. Detección SSD/HDD. Modo Básico y Avanzado.",
             faq_title: "Preguntas Frecuentes", faq_sub: "Todo lo que necesitas saber antes de instalarlo.",
             faq1_q: "¿OmegaSolver es gratis?", faq1_a: "Sí. OmegaSolver es y será siempre gratuito y de código abierto bajo la licencia GNU GPLv3.",
             faq2_q: "¿Es seguro usarlo?", faq2_a: "Sí. Todas las acciones críticas requieren confirmación, y los cambios reversibles se guardan y pueden restaurarse con un clic. Además, bloquea automáticamente la desfragmentación en SSD.",
@@ -746,14 +1131,21 @@
             faq6_q: "¿Dónde guarda mis datos?", faq6_a: "Todo se guarda localmente en %ProgramData%\\OmegaSolver\\. No se envían datos a servidores externos, salvo la comprobación de actualizaciones contra la API de GitHub.",
             footer_releases: "Releases", footer_license: "Licencia GPLv3", footer_issues: "Reportar Issue",
             footer_license_text: "Distribuido libremente bajo la Licencia GNU GPLv3.",
+            footer_made: "Hecho con esfuerzo desde Venezuela 🇻🇪",
             copy: "Copiar", copied: "¡Copiado!"
         },
         en: {
-            nav_features: "Features", nav_screens: "Screenshots", nav_install: "Install", nav_faq: "FAQ", nav_github: "GitHub",
-            hero_badge: "Available on Winget",
+            nav_story: "Story", nav_features: "Features", nav_screens: "Screenshots", nav_install: "Install", nav_faq: "FAQ", nav_github: "GitHub",
+            hero_badge: "Available on Winget", hero_venezuela: "Made in Venezuela",
             hero_subtitle: "Windows Optimization Suite",
             hero_desc: "Diagnostics, maintenance and optimization suite for Windows. Built in PowerShell with a WPF interface. Designed for both basic and technical users.",
             hero_cta_install: "📥 Install now", hero_cta_github: "View on GitHub",
+            stat_version: "Version", stat_stars: "Stars", stat_forks: "Forks", stat_langs: "Languages", stat_license: "License",
+            story_title: "About the project", story_sub: "The story behind OmegaSolver.",
+            story_p1: "OmegaSolver was born from a specific frustration: today's Windows optimization tools are either too simple to be useful, or so technical they scare off the average user. I wanted something in between. Something a non-technical user could open without fear, but that also had the depth a technician needs.",
+            story_p2: "That's how the idea of two modes was born: a Basic Mode with safe and clear actions, and an Advanced Mode with access to tools like SFC, DISM or CHKDSK. All with clear confirmations, automatic protection against defragmenting SSDs, and a system of reversible changes in case something goes wrong.",
+            story_p3: "The project is developed entirely in PowerShell + WPF by a single person, from Venezuela, in spare time. It's open source under GPLv3 and is officially available on Winget. It doesn't aim to be perfect, but useful. And as long as people use it, it will keep growing.",
+            story_sig: "— Fabian (OMEGA_ALPHA), independent developer",
             features_title: "Features", features_sub: "Everything you need to keep your PC running like new.",
             f1_title: "International Support", f1_desc: "Full real-time localization for Spanish, English, and Portuguese. UI, logs, dialogs, and manual translated.",
             f2_title: "Smart Safety", f2_desc: "Automatically detects whether your drives are SSD or HDD and blocks harmful tasks like defragmentation on SSDs.",
@@ -761,7 +1153,7 @@
             f4_title: "Network Sharing", f4_desc: "Built-in LAN transfer with FTP support for mobiles and structured flows via Robocopy SMB.",
             f5_title: "18 Visual Themes", f5_desc: "From Spotify Neon to the exclusive OMEGASOLVER style inspired by Murder Drones, with dynamic sub-palettes.",
             f6_title: "Reversible Changes", f6_desc: "All power, QoS and service modifications are saved and can be reverted with a single click.",
-            screens_title: "Screenshots", screens_sub: "A look at the OmegaSolver interface.",
+            screens_title: "Screenshots", screens_sub: "Click any image to enlarge it.",
             shot_basic: "Basic Mode — 2 balanced columns", shot_advanced: "Advanced Mode — 3 technical columns",
             shot_omega: "OMEGASOLVER style with gradients", shot_manual: "Detailed trilingual manual",
             shot_share: "Share files over network — Robocopy and FTP", shot_loading: "Animated loading screen",
@@ -775,6 +1167,10 @@
             req_title: "Requirements", req_sub: "OmegaSolver runs on any modern Windows PC.",
             req_os: "Operating System", req_ps: "PowerShell", req_ram: "RAM Memory", req_disk: "Disk Space",
             req_arch: "Architecture", req_admin: "Permissions", req_admin_val: "Administrator",
+            cl_title: "Changelog", cl_sub: "Latest published versions.",
+            cl_43: "Network file sharing with Robocopy and FTP. Easy Context Menu integration. DPI and window detection fixes. Added automatic update check via GitHub.",
+            cl_421: "Stable version with full i18n (ES/EN/PT), OMEGASOLVER themes, Low Mode and dual UX approach.",
+            cl_40: "Full rewrite in WPF. Reversible changes system. SSD/HDD detection. Basic and Advanced modes.",
             faq_title: "Frequently Asked Questions", faq_sub: "Everything you need to know before installing.",
             faq1_q: "Is OmegaSolver free?", faq1_a: "Yes. OmegaSolver is and will always be free and open source under the GNU GPLv3 license.",
             faq2_q: "Is it safe to use?", faq2_a: "Yes. All critical actions require confirmation, and reversible changes are saved and can be restored with one click. It also auto-blocks defragmentation on SSDs.",
@@ -784,14 +1180,21 @@
             faq6_q: "Where does it store my data?", faq6_a: "Everything is stored locally in %ProgramData%\\OmegaSolver\\. No data is sent to external servers, except the update check against the GitHub API.",
             footer_releases: "Releases", footer_license: "GPLv3 License", footer_issues: "Report Issue",
             footer_license_text: "Freely distributed under the GNU GPLv3 License.",
+            footer_made: "Made with effort from Venezuela 🇻🇪",
             copy: "Copy", copied: "Copied!"
         },
         pt: {
-            nav_features: "Recursos", nav_screens: "Capturas", nav_install: "Instalação", nav_faq: "FAQ", nav_github: "GitHub",
-            hero_badge: "Disponível no Winget",
+            nav_story: "História", nav_features: "Recursos", nav_screens: "Capturas", nav_install: "Instalação", nav_faq: "FAQ", nav_github: "GitHub",
+            hero_badge: "Disponível no Winget", hero_venezuela: "Feito na Venezuela",
             hero_subtitle: "Suíte de Otimização para Windows",
             hero_desc: "Suíte de diagnóstico, manutenção e otimização para Windows. Construída em PowerShell com interface WPF. Projetada para usuários básicos e técnicos.",
             hero_cta_install: "📥 Instalar agora", hero_cta_github: "Ver no GitHub",
+            stat_version: "Versão", stat_stars: "Stars", stat_forks: "Forks", stat_langs: "Idiomas", stat_license: "Licença",
+            story_title: "Sobre o projeto", story_sub: "A história por trás do OmegaSolver.",
+            story_p1: "O OmegaSolver nasceu de uma frustração concreta: as ferramentas de otimização para Windows que existem hoje são ou simples demais para serem úteis, ou tão técnicas que assustam o usuário comum. Eu queria algo intermediário. Algo que um usuário sem conhecimento pudesse abrir sem medo, mas que também tivesse a profundidade que um técnico precisa.",
+            story_p2: "Assim nasceu a ideia dos dois modos: um Modo Básico com ações seguras e claras, e um Modo Avançado com acesso a ferramentas como SFC, DISM ou CHKDSK. Tudo com confirmações claras, proteção automática contra desfragmentação em SSD, e um sistema de mudanças reversíveis caso algo dê errado.",
+            story_p3: "O projeto é desenvolvido inteiramente em PowerShell + WPF por uma única pessoa, da Venezuela, em tempo livre. É open source sob GPLv3 e está oficialmente disponível no Winget. Não pretende ser perfeito, mas útil. E enquanto houver gente que o use, continuará crescendo.",
+            story_sig: "— Fabian (OMEGA_ALPHA), desenvolvedor independente",
             features_title: "Recursos", features_sub: "Tudo o que você precisa para manter seu PC como novo.",
             f1_title: "Suporte Internacional", f1_desc: "Localização completa em tempo real para Espanhol, Inglês e Português. Interface, logs, diálogos e manual traduzidos.",
             f2_title: "Segurança Inteligente", f2_desc: "Detecta automaticamente se suas unidades são SSD ou HDD e bloqueia tarefas prejudiciais como desfragmentação em SSD.",
@@ -799,7 +1202,7 @@
             f4_title: "Compartilhamento de Rede", f4_desc: "Transferência LAN integrada com suporte FTP para celulares e fluxos estruturados via Robocopy SMB.",
             f5_title: "18 Temas Visuais", f5_desc: "De Spotify Neon ao exclusivo estilo OMEGASOLVER inspirado em Murder Drones, com sub-paletas dinâmicas.",
             f6_title: "Mudanças Reversíveis", f6_desc: "Todas as modificações de energia, QoS e serviços são salvas e podem ser revertidas com um clique.",
-            screens_title: "Capturas", screens_sub: "Uma olhada na interface do OmegaSolver.",
+            screens_title: "Capturas", screens_sub: "Clique em qualquer imagem para ampliá-la.",
             shot_basic: "Modo Básico — 2 colunas balanceadas", shot_advanced: "Modo Avançado — 3 colunas técnicas",
             shot_omega: "Estilo OMEGASOLVER com gradientes", shot_manual: "Manual trilíngue detalhado",
             shot_share: "Compartilhar arquivos pela rede — Robocopy e FTP", shot_loading: "Tela de carregamento animada",
@@ -813,6 +1216,10 @@
             req_title: "Requisitos", req_sub: "OmegaSolver funciona em qualquer PC Windows moderno.",
             req_os: "Sistema Operacional", req_ps: "PowerShell", req_ram: "Memória RAM", req_disk: "Espaço em disco",
             req_arch: "Arquitetura", req_admin: "Permissões", req_admin_val: "Administrador",
+            cl_title: "Histórico", cl_sub: "Últimas versões publicadas.",
+            cl_43: "Compartilhamento de arquivos pela rede com Robocopy e FTP. Integração com Easy Context Menu. Correções na detecção de DPI e janelas. Adicionada verificação automática de atualizações via GitHub.",
+            cl_421: "Versão estável com i18n completo (ES/EN/PT), temas OMEGASOLVER, Modo Low e abordagem UX dupla.",
+            cl_40: "Reescrita completa em WPF. Sistema de mudanças reversíveis. Detecção SSD/HDD. Modos Básico e Avançado.",
             faq_title: "Perguntas Frequentes", faq_sub: "Tudo o que você precisa saber antes de instalar.",
             faq1_q: "O OmegaSolver é gratuito?", faq1_a: "Sim. O OmegaSolver é e sempre será gratuito e de código aberto sob a licença GNU GPLv3.",
             faq2_q: "É seguro usá-lo?", faq2_a: "Sim. Todas as ações críticas exigem confirmação, e as mudanças reversíveis são salvas e podem ser restauradas com um clique. Também bloqueia automaticamente a desfragmentação em SSDs.",
@@ -822,6 +1229,7 @@
             faq6_q: "Onde armazena meus dados?", faq6_a: "Tudo é armazenado localmente em %ProgramData%\\OmegaSolver\\. Nenhum dado é enviado a servidores externos, exceto a verificação de atualizações na API do GitHub.",
             footer_releases: "Releases", footer_license: "Licença GPLv3", footer_issues: "Reportar Issue",
             footer_license_text: "Distribuído livremente sob a Licença GNU GPLv3.",
+            footer_made: "Feito com esforço da Venezuela 🇻🇪",
             copy: "Copiar", copied: "Copiado!"
         }
     };
@@ -830,9 +1238,7 @@
         document.documentElement.lang = lang;
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (i18n[lang] && i18n[lang][key]) {
-                el.textContent = i18n[lang][key];
-            }
+            if (i18n[lang] && i18n[lang][key]) el.textContent = i18n[lang][key];
         });
         document.querySelectorAll('.lang-switch button').forEach(b => {
             b.classList.toggle('active', b.dataset.lang === lang);
@@ -864,13 +1270,8 @@
                 const lang = document.documentElement.lang || 'es';
                 btn.textContent = i18n[lang] ? i18n[lang].copied : '✓';
                 btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.textContent = original;
-                    btn.classList.remove('copied');
-                }, 1600);
-            } catch (e) {
-                alert('No se pudo copiar. Copia manualmente:\n' + text);
-            }
+                setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1600);
+            } catch (e) { alert('No se pudo copiar:\n' + text); }
         });
     });
 
@@ -882,8 +1283,39 @@
             }
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    document.querySelectorAll('.shot').forEach(shot => {
+        shot.addEventListener('click', () => {
+            const full = shot.getAttribute('data-full');
+            if (full) {
+                lightboxImg.src = full;
+                lightbox.classList.add('open');
+            }
+        });
+    });
+    lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+    document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('open'));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+
+    const scrollTop = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => {
+        scrollTop.classList.toggle('visible', window.scrollY > 400);
+    });
+    scrollTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    async function loadStats() {
+        try {
+            const res = await fetch('https://api.github.com/repos/OMEGAALPHA10/OmegaSolver');
+            if (!res.ok) throw new Error('API error');
+            const data = await res.json();
+            document.getElementById('stat-stars').textContent = data.stargazers_count ?? '—';
+            document.getElementById('stat-forks').textContent = data.forks_count ?? '—';
+        } catch (e) {}
+    }
+    loadStats();
 </script>
 
 </body>
