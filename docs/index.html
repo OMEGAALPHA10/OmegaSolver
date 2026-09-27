@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmegaSolver — Suite de Optimización para Windows</title>
+<meta name="description" content="OmegaSolver: Suite de diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado, i18n, seguridad inteligente SSD/HDD. Disponible en Winget.">
+<meta name="author" content="OMEGA_ALPHA">
+<meta name="keywords" content="OmegaSolver, Windows, optimización, PowerShell, WPF, Winget, SFC, DISM, CHKDSK, limpieza">
+<meta property="og:title" content="OmegaSolver — Suite de Optimización para Windows">
+<meta property="og:description" content="Diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://OMEGAALPHA10.github.io/OmegaSolver/">
+<meta property="og:image" content="https://OMEGAALPHA10.github.io/OmegaSolver/docs/screenshots/advanced-mode.png">
+<meta name="theme-color" content="#FFD400">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+<style>
+    :root {
+        --bg: #030200;
+        --panel: #0A0800;
+        --card: #141000;
+        --accent: #FFD400;
+        --accent-alt: #FFEB3B;
+        --accent-glow: rgba(255, 212, 0, 0.35);
+        --text: #FFFBE6;
+        --text-dim: #D1D5DB;
+        --text-muted: #8A7500;
+        --border: #4A3F00;
+        --border-hover: #7A6800;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(10, 8, 0, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 20px;
+    }
+    .nav-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .nav-logo {
+        font-weight: 900;
+        font-size: 1.2rem;
+        color: var(--accent);
+        letter-spacing: 2px;
+        text-shadow: 0 0 15px var(--accent-glow);
+        text-decoration: none;
+    }
+    .nav-links {
+        display: flex;
+        gap: 22px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .nav-links a {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .lang-switch {
+        display: flex;
+        gap: 4px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 3px;
+        background: var(--card);
+    }
+    .lang-switch button {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.75rem;
+        padding: 5px 10px;
+        border-radius: 4px;
+        transition: all 0.2s;
+        font-family: inherit;
+    }
+    .lang-switch button.active {
+        background: var(--accent);
+        color: #000;
+    }
+    .lang-switch button:hover:not(.active) { color: var(--accent); }
+
+    header.hero {
+        position: relative;
+        padding: 100px 20px 80px;
+        text-align: center;
+        overflow: hidden;
+        background:
+            radial-gradient(circle at 50% 0%, rgba(255,212,0,0.12) 0%, transparent 55%),
+            radial-gradient(circle at 80% 80%, rgba(255,212,0,0.06) 0%, transparent 50%);
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-image:
+            linear-gradient(rgba(255,212,0,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,212,0,0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+        mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+        -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+        pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+    .badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border: 1px solid var(--border-hover);
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: var(--accent);
+        background: rgba(255,212,0,0.05);
+        margin-bottom: 22px;
+        text-transform: uppercase;
+    }
+    .badge .dot {
+        display: inline-block;
+        width: 7px; height: 7px;
+        background: #4ADE80;
+        border-radius: 50%;
+        margin-right: 8px;
+        box-shadow: 0 0 10px #4ADE80;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+    h1.hero-title {
+        font-size: clamp(2.2rem, 6vw, 4rem);
+        font-weight: 900;
+        letter-spacing: 4px;
+        color: var(--accent);
+        text-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(255,212,0,0.2);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+    }
+    .hero-version {
+        font-family: 'Consolas', monospace;
+        color: var(--text-muted);
+        font-size: 1rem;
+        letter-spacing: 2px;
+        margin-bottom: 28px;
+    }
+    .hero-sub {
+        font-size: clamp(1rem, 2vw, 1.18rem);
+        color: var(--text-dim);
+        max-width: 720px;
+        margin: 0 auto 40px;
+    }
+    .hero-cta {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 30px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.25s;
+        cursor: pointer;
+        border: 1px solid transparent;
+        font-family: inherit;
+    }
+    .btn-primary {
+        background: var(--accent);
+        color: #000;
+        box-shadow: 0 0 25px var(--accent-glow);
+    }
+    .btn-primary:hover {
+        background: var(--accent-alt);
+        transform: translateY(-2px);
+        box-shadow: 0 0 40px var(--accent);
+    }
+    .btn-outline {
+        background: transparent;
+        color: var(--accent);
+        border: 1px solid var(--border-hover);
+    }
+    .btn-outline:hover {
+        background: rgba(255,212,0,0.08);
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    section { padding: 80px 0; }
+    .section-title {
+        text-align: center;
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+        font-weight: 900;
+        color: var(--accent);
+        letter-spacing: 2px;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+    }
+    .section-sub {
+        text-align: center;
+        color: var(--text-muted);
+        margin-bottom: 50px;
+        font-size: 1rem;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 22px;
+    }
+    .card {
+        background: linear-gradient(160deg, var(--card) 0%, #0D0A00 100%);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 28px 24px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-6px);
+        border-color: var(--border-hover);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 25px var(--accent-glow);
+    }
+    .card:hover::before { opacity: 1; }
+    .card-icon {
+        font-size: 2rem;
+        margin-bottom: 14px;
+        display: block;
+        filter: drop-shadow(0 0 12px var(--accent-glow));
+    }
+    .card h3 {
+        color: var(--accent);
+        font-size: 1.15rem;
+        margin-bottom: 10px;
+        font-weight: 800;
+    }
+    .card p {
+        color: var(--text-dim);
+        font-size: 0.94rem;
+        line-height: 1.6;
+    }
+
+    .shots {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 22px;
+    }
+    .shot {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--card);
+        transition: all 0.3s;
+    }
+    .shot:hover {
+        border-color: var(--accent);
+        transform: scale(1.02);
+        box-shadow: 0 0 30px var(--accent-glow);
+    }
+    .shot img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    .shot-caption {
+        padding: 14px 18px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+        font-family: 'Consolas', monospace;
+    }
+
+    .install-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .install-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 26px 22px;
+        transition: border-color 0.25s;
+    }
+    .install-card:hover { border-color: var(--border-hover); }
+    .install-card h3 {
+        color: var(--accent);
+        font-size: 1.05rem;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .install-card .tag {
+        display: inline-block;
+        font-size: 0.68rem;
+        padding: 3px 9px;
+        background: rgba(255,212,0,0.12);
+        color: var(--accent);
+        border-radius: 999px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-left: 8px;
+        text-transform: uppercase;
+    }
+    .install-card p {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        margin-bottom: 14px;
+    }
+    .code-block {
+        background: #000;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 16px;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: var(--accent);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        overflow-x: auto;
+    }
+    .code-block code {
+        white-space: nowrap;
+        overflow-x: auto;
+    }
+    .copy-btn {
+        background: transparent;
+        border: 1px solid var(--border-hover);
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        transition: all 0.2s;
+        font-family: inherit;
+        flex-shrink: 0;
+    }
+    .copy-btn:hover {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+    }
+    .copy-btn.copied {
+        background: #4ADE80;
+        color: #000;
+        border-color: #4ADE80;
+    }
+
+    .req-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .req-item {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px;
+        text-align: center;
+        transition: border-color 0.25s;
+    }
+    .req-item:hover { border-color: var(--accent); }
+    .req-item .label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+    }
+    .req-item .value {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--accent);
+        font-family: 'Consolas', monospace;
+    }
+
+    .faq {
+        max-width: 820px;
+        margin: 0 auto;
+    }
+    details {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        transition: border-color 0.25s;
+    }
+    details[open] { border-color: var(--accent); }
+    details summary {
+        cursor: pointer;
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 1rem;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+    }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::after {
+        content: '+';
+        font-size: 1.5rem;
+        color: var(--accent);
+        transition: transform 0.25s;
+        flex-shrink: 0;
+    }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p {
+        color: var(--text-dim);
+        font-size: 0.92rem;
+        margin-top: 12px;
+        line-height: 1.65;
+    }
+
+    footer {
+        border-top: 1px solid var(--border);
+        padding: 40px 20px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        background: var(--panel);
+        margin-top: 60px;
+    }
+    footer .footer-links {
+        display: flex;
+        gap: 22px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+    }
+    footer a {
+        color: var(--text-dim);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    footer a:hover { color: var(--accent); }
+    footer .copyright { font-size: 0.82rem; opacity: 0.8; }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (max-width: 640px) {
+        nav { padding: 10px 14px; }
+        .nav-links { gap: 14px; font-size: 0.85rem; }
+        .nav-links a { font-size: 0.8rem; }
+        header.hero { padding: 70px 16px 60px; }
+        .hero-cta .btn { width: 100%; justify-content: center; }
+        section { padding: 60px 0; }
+    }
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">◤ OMEGASOLVER</a>
+        <div class="nav-links">
+            <a href="#features" data-i18n="nav_features">Características</a>
+            <a href="#screenshots" data-i18n="nav_screens">Capturas</a>
+            <a href="#install" data-i18n="nav_install">Instalación</a>
+            <a href="#faq" data-i18n="nav_faq">FAQ</a>
+            <a href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener" data-i18n="nav_github">GitHub</a>
+            <div class="lang-switch" role="group" aria-label="Language">
+                <button data-lang="es" class="active">ES</button>
+                <button data-lang="en">EN</button>
+                <button data-lang="pt">PT</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-inner">
+        <span class="badge"><span class="dot"></span><span data-i18n="hero_badge">Disponible en Winget</span></span>
+        <h1 class="hero-title">OmegaSolver</h1>
+        <div class="hero-version">// v4.3 // <span data-i18n="hero_subtitle">Suite de Optimización para Windows</span></div>
+        <p class="hero-sub" data-i18n="hero_desc">
+            Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell con interfaz WPF. Diseñada para usuarios básicos y técnicos por igual.
+        </p>
+        <div class="hero-cta">
+            <a href="#install" class="btn btn-primary" data-i18n="hero_cta_install">📥 Instalar ahora</a>
+            <a href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener" class="btn btn-outline" data-i18n="hero_cta_github">Ver en GitHub</a>
+        </div>
+    </div>
+</header>
+
+<main>
+
+<section id="features">
+    <h2 class="section-title fade-in" data-i18n="features_title">Características</h2>
+    <p class="section-sub fade-in" data-i18n="features_sub">Todo lo que necesitas para mantener tu PC como nuevo.</p>
+    <div class="grid">
+        <div class="card fade-in">
+            <span class="card-icon">🌐</span>
+            <h3 data-i18n="f1_title">Soporte Internacional</h3>
+            <p data-i18n="f1_desc">Localización completa en tiempo real para Español, Inglés y Portugués. Interfaz, logs, diálogos y manual traducidos.</p>
+        </div>
+        <div class="card fade-in">
+            <span class="card-icon">🛡️</span>
+            <h3 data-i18n="f2_title">Seguridad Inteligente</h3>
+            <p data-i18n="f2_desc">Detecta automáticamente si tus unidades son SSD o HDD y bloquea tareas perjudiciales como la desfragmentación en SSD.</p>
+        </div>
+        <div class="card fade-in">
+            <span class="card-icon">🚀</span>
+            <h3 data-i18n="f3_title">Doble Enfoque UX</h3>
+            <p data-i18n="f3_desc">Modo Básico intuitivo para limpiezas en un clic y Modo Avanzado de 3 columnas para tareas técnicas rigurosas.</p>
+        </div>
+        <div class="card fade-in">
+            <span class="card-icon">📂</span>
+            <h3 data-i18n="f4_title">Compartición de Red</h3>
+            <p data-i18n="f4_desc">Transferencia LAN integrada con soporte FTP para móviles y flujos estructurados mediante Robocopy SMB.</p>
+        </div>
+        <div class="card fade-in">
+            <span class="card-icon">🎨</span>
+            <h3 data-i18n="f5_title">18 Temas Visuales</h3>
+            <p data-i18n="f5_desc">Desde Spotify Neon hasta el exclusivo estilo OMEGASOLVER inspirado en Murder Drones, con sub-paletas dinámicas.</p>
+        </div>
+        <div class="card fade-in">
+            <span class="card-icon">🔄</span>
+            <h3 data-i18n="f6_title">Cambios Reversibles</h3>
+            <p data-i18n="f6_desc">Todas las modificaciones de energía, QoS y servicios se guardan y pueden revertirse con un solo clic.</p>
+        </div>
+    </div>
+</section>
+
+<section id="screenshots">
+    <h2 class="section-title fade-in" data-i18n="screens_title">Capturas</h2>
+    <p class="section-sub fade-in" data-i18n="screens_sub">Un vistazo a la interfaz de OmegaSolver.</p>
+    <div class="shots">
+        <div class="shot fade-in">
+            <img src="./docs/screenshots/basic-mode.png" alt="Modo Básico" loading="lazy">
+            <div class="shot-caption" data-i18n="shot_basic">Modo Básico — 2 columnas balanceadas</div>
+        </div>
+        <div class="shot fade-in">
+            <img src="./docs/screenshots/advanced-mode.png" alt="Modo Avanzado" loading="lazy">
+            <div class="shot-caption" data-i18n="shot_advanced">Modo Avanzado — 3 columnas técnicas</div>
+        </div>
+        <div class="shot fade-in">
+            <img src="./docs/screenshots/omega-style.png" alt="Estilo OMEGASOLVER" loading="lazy">
+            <div class="shot-caption" data-i18n="shot_omega">Estilo OMEGASOLVER con gradientes</div>
+        </div>
+        <div class="shot fade-in">
+            <img src="./docs/screenshots/manual.png" alt="Manual" loading="lazy">
+            <div class="shot-caption" data-i18n="shot_manual">Manual trilingüe detallado</div>
+        </div>
+        <div class="shot fade-in">
+            <img src="./docs/screenshots/share-files.png" alt="Compartir Archivos por Red" loading="lazy">
+            <div class="shot-caption" data-i18n="shot_share">Compartir archivos por red — Robocopy y FTP</div>
+        </div>
+        <div class="shot fade-in">
+            <img src="./docs/screenshots/loading.png" alt="Pantalla de Carga" loading="lazy">
+            <div class="shot-caption" data-i18n="shot_loading">Pantalla de carga animada</div>
+        </div>
+    </div>
+</section>
+
+<section id="install">
+    <h2 class="section-title fade-in" data-i18n="install_title">Instalación</h2>
+    <p class="section-sub fade-in" data-i18n="install_sub">Elige el método que prefieras.</p>
+    <div class="install-grid">
+        <div class="install-card fade-in">
+            <h3>⚡ Winget <span class="tag" data-i18n="tag_recommended">Recomendado</span></h3>
+            <p data-i18n="install_winget_desc">Instala OmegaSolver con un solo comando desde la terminal.</p>
+            <div class="code-block">
+                <code>winget install OMEGAALPHA10.OmegaSolver</code>
+                <button class="copy-btn" data-copy="winget install OMEGAALPHA10.OmegaSolver" data-i18n="copy">Copiar</button>
+            </div>
+        </div>
+        <div class="install-card fade-in">
+            <h3>🛒 Microsoft Store</h3>
+            <p data-i18n="install_store_desc">Próximamente disponible en la Microsoft Store. Instalación y actualizaciones automáticas.</p>
+            <a href="#" class="btn btn-outline" style="width:100%; justify-content:center;" data-i18n="install_store_btn">Próximamente</a>
+        </div>
+        <div class="install-card fade-in">
+            <h3>📦 GitHub Releases</h3>
+            <p data-i18n="install_github_desc">Descarga el instalador directamente desde la página de releases.</p>
+            <a href="https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest" target="_blank" rel="noopener" class="btn btn-outline" style="width:100%; justify-content:center;" data-i18n="install_github_btn">Ir a Releases</a>
+        </div>
+    </div>
+</section>
+
+<section id="requirements">
+    <h2 class="section-title fade-in" data-i18n="req_title">Requisitos</h2>
+    <p class="section-sub fade-in" data-i18n="req_sub">OmegaSolver funciona en cualquier PC con Windows moderno.</p>
+    <div class="req-list">
+        <div class="req-item fade-in">
+            <div class="label" data-i18n="req_os">Sistema Operativo</div>
+            <div class="value">Windows 10 / 11</div>
+        </div>
+        <div class="req-item fade-in">
+            <div class="label" data-i18n="req_ps">PowerShell</div>
+            <div class="value">5.1+</div>
+        </div>
+        <div class="req-item fade-in">
+            <div class="label" data-i18n="req_ram">Memoria RAM</div>
+            <div class="value">2 GB</div>
+        </div>
+        <div class="req-item fade-in">
+            <div class="label" data-i18n="req_disk">Espacio en disco</div>
+            <div class="value">~50 MB</div>
+        </div>
+        <div class="req-item fade-in">
+            <div class="label" data-i18n="req_arch">Arquitectura</div>
+            <div class="value">x64</div>
+        </div>
+        <div class="req-item fade-in">
+            <div class="label" data-i18n="req_admin">Permisos</div>
+            <div class="value" data-i18n="req_admin_val">Administrador</div>
+        </div>
+    </div>
+</section>
+
+<section id="faq">
+    <h2 class="section-title fade-in" data-i18n="faq_title">Preguntas Frecuentes</h2>
+    <p class="section-sub fade-in" data-i18n="faq_sub">Todo lo que necesitas saber antes de instalarlo.</p>
+    <div class="faq">
+        <details class="fade-in">
+            <summary data-i18n="faq1_q">¿OmegaSolver es gratis?</summary>
+            <p data-i18n="faq1_a">Sí. OmegaSolver es y será siempre gratuito y de código abierto bajo la licencia GNU GPLv3.</p>
+        </details>
+        <details class="fade-in">
+            <summary data-i18n="faq2_q">¿Es seguro usarlo?</summary>
+            <p data-i18n="faq2_a">Sí. Todas las acciones críticas requieren confirmación, y los cambios reversibles (energía, QoS, servicios) se guardan en un archivo JSON que puedes restaurar con un clic. Además, bloquea automáticamente la desfragmentación en SSD.</p>
+        </details>
+        <details class="fade-in">
+            <summary data-i18n="faq3_q">¿Funciona en SSD?</summary>
+            <p data-i18n="faq3_a">Sí. OmegaSolver detecta automáticamente el tipo de disco y bloquea la desfragmentación en SSD para proteger su vida útil. Todo lo demás (SFC, DISM, limpieza) funciona perfectamente.</p>
+        </details>
+        <details class="fade-in">
+            <summary data-i18n="faq4_q">¿Puedo contribuir al proyecto?</summary>
+            <p data-i18n="faq4_a">¡Por supuesto! El proyecto está en GitHub. Puedes reportar bugs, proponer ideas, enviar Pull Requests o traducir la app a nuevos idiomas.</p>
+        </details>
+        <details class="fade-in">
+            <summary data-i18n="faq5_q">¿Por qué pide permisos de administrador?</summary>
+            <p data-i18n="faq5_a">Porque realiza tareas que requieren elevación, como reparar el sistema con SFC/DISM, limpiar cachés protegidas o modificar configuraciones de red. Sin permisos de admin, la mayoría de las funciones no podrían ejecutarse.</p>
+        </details>
+        <details class="fade-in">
+            <summary data-i18n="faq6_q">¿Dónde guarda mis datos?</summary>
+            <p data-i18n="faq6_a">Todo se guarda localmente en %ProgramData%\OmegaSolver\. No se envían datos a servidores externos, salvo la comprobación de actualizaciones contra la API pública de GitHub.</p>
+        </details>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    <div class="footer-links">
+        <a href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/OMEGAALPHA10/OmegaSolver/releases" target="_blank" rel="noopener" data-i18n="footer_releases">Releases</a>
+        <a href="https://github.com/OMEGAALPHA10/OmegaSolver/blob/main/LICENSE" target="_blank" rel="noopener" data-i18n="footer_license">Licencia GPLv3</a>
+        <a href="https://github.com/OMEGAALPHA10/OmegaSolver/issues" target="_blank" rel="noopener" data-i18n="footer_issues">Reportar Issue</a>
+    </div>
+    <p class="copyright">© 2026 OMEGA_ALPHA · <span data-i18n="footer_license_text">Distribuido libremente bajo la Licencia GNU GPLv3.</span></p>
+</footer>
+
+<script>
+    const i18n = {
+        es: {
+            nav_features: "Características", nav_screens: "Capturas", nav_install: "Instalación", nav_faq: "FAQ", nav_github: "GitHub",
+            hero_badge: "Disponible en Winget",
+            hero_subtitle: "Suite de Optimización para Windows",
+            hero_desc: "Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell con interfaz WPF. Diseñada para usuarios básicos y técnicos por igual.",
+            hero_cta_install: "📥 Instalar ahora", hero_cta_github: "Ver en GitHub",
+            features_title: "Características", features_sub: "Todo lo que necesitas para mantener tu PC como nuevo.",
+            f1_title: "Soporte Internacional", f1_desc: "Localización completa en tiempo real para Español, Inglés y Portugués. Interfaz, logs, diálogos y manual traducidos.",
+            f2_title: "Seguridad Inteligente", f2_desc: "Detecta automáticamente si tus unidades son SSD o HDD y bloquea tareas perjudiciales como la desfragmentación en SSD.",
+            f3_title: "Doble Enfoque UX", f3_desc: "Modo Básico intuitivo para limpiezas en un clic y Modo Avanzado de 3 columnas para tareas técnicas rigurosas.",
+            f4_title: "Compartición de Red", f4_desc: "Transferencia LAN integrada con soporte FTP para móviles y flujos estructurados mediante Robocopy SMB.",
+            f5_title: "18 Temas Visuales", f5_desc: "Desde Spotify Neon hasta el exclusivo estilo OMEGASOLVER inspirado en Murder Drones, con sub-paletas dinámicas.",
+            f6_title: "Cambios Reversibles", f6_desc: "Todas las modificaciones de energía, QoS y servicios se guardan y pueden revertirse con un solo clic.",
+            screens_title: "Capturas", screens_sub: "Un vistazo a la interfaz de OmegaSolver.",
+            shot_basic: "Modo Básico — 2 columnas balanceadas", shot_advanced: "Modo Avanzado — 3 columnas técnicas",
+            shot_omega: "Estilo OMEGASOLVER con gradientes", shot_manual: "Manual trilingüe detallado",
+            shot_share: "Compartir archivos por red — Robocopy y FTP", shot_loading: "Pantalla de carga animada",
+            install_title: "Instalación", install_sub: "Elige el método que prefieras.",
+            tag_recommended: "Recomendado",
+            install_winget_desc: "Instala OmegaSolver con un solo comando desde la terminal.",
+            install_store_desc: "Próximamente disponible en la Microsoft Store. Instalación y actualizaciones automáticas.",
+            install_store_btn: "Próximamente",
+            install_github_desc: "Descarga el instalador directamente desde la página de releases.",
+            install_github_btn: "Ir a Releases",
+            req_title: "Requisitos", req_sub: "OmegaSolver funciona en cualquier PC con Windows moderno.",
+            req_os: "Sistema Operativo", req_ps: "PowerShell", req_ram: "Memoria RAM", req_disk: "Espacio en disco",
+            req_arch: "Arquitectura", req_admin: "Permisos", req_admin_val: "Administrador",
+            faq_title: "Preguntas Frecuentes", faq_sub: "Todo lo que necesitas saber antes de instalarlo.",
+            faq1_q: "¿OmegaSolver es gratis?", faq1_a: "Sí. OmegaSolver es y será siempre gratuito y de código abierto bajo la licencia GNU GPLv3.",
+            faq2_q: "¿Es seguro usarlo?", faq2_a: "Sí. Todas las acciones críticas requieren confirmación, y los cambios reversibles se guardan y pueden restaurarse con un clic. Además, bloquea automáticamente la desfragmentación en SSD.",
+            faq3_q: "¿Funciona en SSD?", faq3_a: "Sí. OmegaSolver detecta el tipo de disco y bloquea la desfragmentación en SSD para proteger su vida útil. Todo lo demás funciona perfectamente.",
+            faq4_q: "¿Puedo contribuir al proyecto?", faq4_a: "¡Por supuesto! El proyecto está en GitHub. Puedes reportar bugs, proponer ideas, enviar Pull Requests o traducir la app.",
+            faq5_q: "¿Por qué pide permisos de administrador?", faq5_a: "Porque realiza tareas que requieren elevación, como reparar el sistema con SFC/DISM, limpiar cachés protegidas o modificar configuraciones de red.",
+            faq6_q: "¿Dónde guarda mis datos?", faq6_a: "Todo se guarda localmente en %ProgramData%\\OmegaSolver\\. No se envían datos a servidores externos, salvo la comprobación de actualizaciones contra la API de GitHub.",
+            footer_releases: "Releases", footer_license: "Licencia GPLv3", footer_issues: "Reportar Issue",
+            footer_license_text: "Distribuido libremente bajo la Licencia GNU GPLv3.",
+            copy: "Copiar", copied: "¡Copiado!"
+        },
+        en: {
+            nav_features: "Features", nav_screens: "Screenshots", nav_install: "Install", nav_faq: "FAQ", nav_github: "GitHub",
+            hero_badge: "Available on Winget",
+            hero_subtitle: "Windows Optimization Suite",
+            hero_desc: "Diagnostics, maintenance and optimization suite for Windows. Built in PowerShell with a WPF interface. Designed for both basic and technical users.",
+            hero_cta_install: "📥 Install now", hero_cta_github: "View on GitHub",
+            features_title: "Features", features_sub: "Everything you need to keep your PC running like new.",
+            f1_title: "International Support", f1_desc: "Full real-time localization for Spanish, English, and Portuguese. UI, logs, dialogs, and manual translated.",
+            f2_title: "Smart Safety", f2_desc: "Automatically detects whether your drives are SSD or HDD and blocks harmful tasks like defragmentation on SSDs.",
+            f3_title: "Dual UX Approach", f3_desc: "Intuitive Basic Mode for one-click cleanups and a 3-column Advanced Mode for rigorous technical tasks.",
+            f4_title: "Network Sharing", f4_desc: "Built-in LAN transfer with FTP support for mobiles and structured flows via Robocopy SMB.",
+            f5_title: "18 Visual Themes", f5_desc: "From Spotify Neon to the exclusive OMEGASOLVER style inspired by Murder Drones, with dynamic sub-palettes.",
+            f6_title: "Reversible Changes", f6_desc: "All power, QoS and service modifications are saved and can be reverted with a single click.",
+            screens_title: "Screenshots", screens_sub: "A look at the OmegaSolver interface.",
+            shot_basic: "Basic Mode — 2 balanced columns", shot_advanced: "Advanced Mode — 3 technical columns",
+            shot_omega: "OMEGASOLVER style with gradients", shot_manual: "Detailed trilingual manual",
+            shot_share: "Share files over network — Robocopy and FTP", shot_loading: "Animated loading screen",
+            install_title: "Installation", install_sub: "Choose your preferred method.",
+            tag_recommended: "Recommended",
+            install_winget_desc: "Install OmegaSolver with a single command from the terminal.",
+            install_store_desc: "Coming soon to the Microsoft Store. Automatic install and updates.",
+            install_store_btn: "Coming soon",
+            install_github_desc: "Download the installer directly from the releases page.",
+            install_github_btn: "Go to Releases",
+            req_title: "Requirements", req_sub: "OmegaSolver runs on any modern Windows PC.",
+            req_os: "Operating System", req_ps: "PowerShell", req_ram: "RAM Memory", req_disk: "Disk Space",
+            req_arch: "Architecture", req_admin: "Permissions", req_admin_val: "Administrator",
+            faq_title: "Frequently Asked Questions", faq_sub: "Everything you need to know before installing.",
+            faq1_q: "Is OmegaSolver free?", faq1_a: "Yes. OmegaSolver is and will always be free and open source under the GNU GPLv3 license.",
+            faq2_q: "Is it safe to use?", faq2_a: "Yes. All critical actions require confirmation, and reversible changes are saved and can be restored with one click. It also auto-blocks defragmentation on SSDs.",
+            faq3_q: "Does it work on SSD?", faq3_a: "Yes. OmegaSolver detects the disk type and blocks defragmentation on SSDs to protect their lifespan. Everything else works perfectly.",
+            faq4_q: "Can I contribute to the project?", faq4_a: "Of course! The project is on GitHub. You can report bugs, suggest ideas, submit Pull Requests, or translate the app.",
+            faq5_q: "Why does it ask for administrator permissions?", faq5_a: "Because it performs tasks that require elevation, such as repairing the system with SFC/DISM, cleaning protected caches, or modifying network settings.",
+            faq6_q: "Where does it store my data?", faq6_a: "Everything is stored locally in %ProgramData%\\OmegaSolver\\. No data is sent to external servers, except the update check against the GitHub API.",
+            footer_releases: "Releases", footer_license: "GPLv3 License", footer_issues: "Report Issue",
+            footer_license_text: "Freely distributed under the GNU GPLv3 License.",
+            copy: "Copy", copied: "Copied!"
+        },
+        pt: {
+            nav_features: "Recursos", nav_screens: "Capturas", nav_install: "Instalação", nav_faq: "FAQ", nav_github: "GitHub",
+            hero_badge: "Disponível no Winget",
+            hero_subtitle: "Suíte de Otimização para Windows",
+            hero_desc: "Suíte de diagnóstico, manutenção e otimização para Windows. Construída em PowerShell com interface WPF. Projetada para usuários básicos e técnicos.",
+            hero_cta_install: "📥 Instalar agora", hero_cta_github: "Ver no GitHub",
+            features_title: "Recursos", features_sub: "Tudo o que você precisa para manter seu PC como novo.",
+            f1_title: "Suporte Internacional", f1_desc: "Localização completa em tempo real para Espanhol, Inglês e Português. Interface, logs, diálogos e manual traduzidos.",
+            f2_title: "Segurança Inteligente", f2_desc: "Detecta automaticamente se suas unidades são SSD ou HDD e bloqueia tarefas prejudiciais como desfragmentação em SSD.",
+            f3_title: "Abordagem UX Dupla", f3_desc: "Modo Básico intuitivo para limpezas em um clique e Modo Avançado de 3 colunas para tarefas técnicas rigorosas.",
+            f4_title: "Compartilhamento de Rede", f4_desc: "Transferência LAN integrada com suporte FTP para celulares e fluxos estruturados via Robocopy SMB.",
+            f5_title: "18 Temas Visuais", f5_desc: "De Spotify Neon ao exclusivo estilo OMEGASOLVER inspirado em Murder Drones, com sub-paletas dinâmicas.",
+            f6_title: "Mudanças Reversíveis", f6_desc: "Todas as modificações de energia, QoS e serviços são salvas e podem ser revertidas com um clique.",
+            screens_title: "Capturas", screens_sub: "Uma olhada na interface do OmegaSolver.",
+            shot_basic: "Modo Básico — 2 colunas balanceadas", shot_advanced: "Modo Avançado — 3 colunas técnicas",
+            shot_omega: "Estilo OMEGASOLVER com gradientes", shot_manual: "Manual trilíngue detalhado",
+            shot_share: "Compartilhar arquivos pela rede — Robocopy e FTP", shot_loading: "Tela de carregamento animada",
+            install_title: "Instalação", install_sub: "Escolha o método que preferir.",
+            tag_recommended: "Recomendado",
+            install_winget_desc: "Instale o OmegaSolver com um único comando no terminal.",
+            install_store_desc: "Em breve na Microsoft Store. Instalação e atualizações automáticas.",
+            install_store_btn: "Em breve",
+            install_github_desc: "Baixe o instalador diretamente da página de releases.",
+            install_github_btn: "Ir para Releases",
+            req_title: "Requisitos", req_sub: "OmegaSolver funciona em qualquer PC Windows moderno.",
+            req_os: "Sistema Operacional", req_ps: "PowerShell", req_ram: "Memória RAM", req_disk: "Espaço em disco",
+            req_arch: "Arquitetura", req_admin: "Permissões", req_admin_val: "Administrador",
+            faq_title: "Perguntas Frequentes", faq_sub: "Tudo o que você precisa saber antes de instalar.",
+            faq1_q: "O OmegaSolver é gratuito?", faq1_a: "Sim. O OmegaSolver é e sempre será gratuito e de código aberto sob a licença GNU GPLv3.",
+            faq2_q: "É seguro usá-lo?", faq2_a: "Sim. Todas as ações críticas exigem confirmação, e as mudanças reversíveis são salvas e podem ser restauradas com um clique. Também bloqueia automaticamente a desfragmentação em SSDs.",
+            faq3_q: "Funciona em SSD?", faq3_a: "Sim. O OmegaSolver detecta o tipo de disco e bloqueia a desfragmentação em SSDs para proteger sua vida útil. Todo o resto funciona perfeitamente.",
+            faq4_q: "Posso contribuir com o projeto?", faq4_a: "Claro! O projeto está no GitHub. Você pode reportar bugs, sugerir ideias, enviar Pull Requests ou traduzir o app.",
+            faq5_q: "Por que pede permissões de administrador?", faq5_a: "Porque realiza tarefas que exigem elevação, como reparar o sistema com SFC/DISM, limpar caches protegidos ou modificar configurações de rede.",
+            faq6_q: "Onde armazena meus dados?", faq6_a: "Tudo é armazenado localmente em %ProgramData%\\OmegaSolver\\. Nenhum dado é enviado a servidores externos, exceto a verificação de atualizações na API do GitHub.",
+            footer_releases: "Releases", footer_license: "Licença GPLv3", footer_issues: "Reportar Issue",
+            footer_license_text: "Distribuído livremente sob a Licença GNU GPLv3.",
+            copy: "Copiar", copied: "Copiado!"
+        }
+    };
+
+    function setLang(lang) {
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (i18n[lang] && i18n[lang][key]) {
+                el.textContent = i18n[lang][key];
+            }
+        });
+        document.querySelectorAll('.lang-switch button').forEach(b => {
+            b.classList.toggle('active', b.dataset.lang === lang);
+        });
+        try { localStorage.setItem('omega_lang', lang); } catch (e) {}
+    }
+
+    document.querySelectorAll('.lang-switch button').forEach(btn => {
+        btn.addEventListener('click', () => setLang(btn.dataset.lang));
+    });
+
+    let initialLang = 'es';
+    try {
+        const saved = localStorage.getItem('omega_lang');
+        if (saved && i18n[saved]) initialLang = saved;
+        else {
+            const nav = (navigator.language || 'es').slice(0, 2).toLowerCase();
+            if (i18n[nav]) initialLang = nav;
+        }
+    } catch (e) {}
+    setLang(initialLang);
+
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const text = btn.getAttribute('data-copy');
+            try {
+                await navigator.clipboard.writeText(text);
+                const original = btn.textContent;
+                const lang = document.documentElement.lang || 'es';
+                btn.textContent = i18n[lang] ? i18n[lang].copied : '✓';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = original;
+                    btn.classList.remove('copied');
+                }, 1600);
+            } catch (e) {
+                alert('No se pudo copiar. Copia manualmente:\n' + text);
+            }
+        });
+    });
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
