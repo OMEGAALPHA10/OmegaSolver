@@ -11,9 +11,10 @@
 <meta property="og:description" content="Diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado. Disponible en Winget.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://OMEGAALPHA10.github.io/OmegaSolver/">
-<meta property="og:image" content="https://OMEGAALPHA10.github.io/OmegaSolver/docs/screenshots/logo.png">
+<meta property="og:image" content="https://OMEGAALPHA10.github.io/OmegaSolver/docs/screenshots/logo-bg.png">
 <meta name="theme-color" content="#FFD400">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%230a0800'/%3E%3Cg fill='none' stroke='%23FFD400' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'%3E%3Ccircle cx='100' cy='100' r='86' stroke-width='4' stroke-dasharray='130 12 130 12' stroke-dashoffset='40'/%3E%3Cpath d='M 100 24 L 108 40 L 92 40 Z' fill='%23FFD400'/%3E%3Cpath d='M 100 176 L 108 160 L 92 160 Z' fill='%23FFD400'/%3E%3Cpath d='M 62 72 L 100 60 L 138 72 L 138 94 L 100 82 L 62 94 Z'/%3E%3Cpath d='M 138 128 L 100 140 L 62 128 L 62 106 L 100 118 L 138 106 Z'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="./screenshots/logo.png">
+<link rel="apple-touch-icon" href="./screenshots/logo.png">
 <style>
     :root {
         --bg: #030200;
@@ -66,12 +67,16 @@
         text-decoration: none;
         transition: transform 0.25s;
     }
-    .nav-logo:hover { transform: scale(1.03); }
     .nav-logo img {
-        height: 36px;
-        width: 36px;
+        height: 38px;
+        width: 38px;
         object-fit: contain;
         filter: drop-shadow(0 0 8px var(--accent-glow));
+        transition: transform 0.4s ease, filter 0.4s ease;
+    }
+    .nav-logo:hover img {
+        transform: rotate(-8deg) scale(1.1);
+        filter: drop-shadow(0 0 14px var(--accent));
     }
     .nav-logo .nav-logo-text {
         font-weight: 900;
@@ -127,7 +132,6 @@
             radial-gradient(circle at 50% 20%, rgba(255,212,0,0.15) 0%, transparent 55%),
             radial-gradient(circle at 80% 80%, rgba(255,212,0,0.06) 0%, transparent 50%);
     }
-    /* Patrón de fondo con motivo angular del logo */
     .hero::before {
         content: '';
         position: absolute;
@@ -140,7 +144,7 @@
         -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 78%);
         pointer-events: none;
     }
-    /* Watermark: logo gigante muy tenue en el fondo del hero */
+    /* Watermark con el logo detallado (llave + circuitos) */
     .hero::after {
         content: '';
         position: absolute;
@@ -149,13 +153,13 @@
         width: 900px;
         height: 900px;
         transform: translate(-50%, -50%);
-        background-image: url("./screenshots/logo.png");
+        background-image: url("./screenshots/logo-detail.png");
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
-        opacity: 0.028;
+        opacity: 0.05;
         pointer-events: none;
-        filter: blur(1px);
+        filter: blur(0.5px) drop-shadow(0 0 40px rgba(255,212,0,0.15));
         z-index: 0;
         animation: watermarkRotate 120s linear infinite;
     }
@@ -169,12 +173,28 @@
     /* ===== LOGO HERO ANIMADO ===== */
     .hero-logo-wrap {
         position: relative;
-        width: 150px;
-        height: 150px;
+        width: 160px;
+        height: 160px;
         margin: 0 auto 24px;
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    /* Halo radial pulsante detrás del logo */
+    .hero-logo-wrap::before {
+        content: '';
+        position: absolute;
+        inset: -25px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 65%);
+        opacity: 0.5;
+        animation: haloPulse 5s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+    @keyframes haloPulse {
+        0%, 100% { opacity: 0.35; transform: scale(0.95); }
+        50%      { opacity: 0.65; transform: scale(1.1); }
     }
     .hero-logo-img {
         width: 100%;
@@ -182,12 +202,20 @@
         object-fit: contain;
         position: relative;
         z-index: 3;
-        filter: drop-shadow(0 0 18px var(--accent-glow-strong)) drop-shadow(0 0 40px rgba(255,212,0,0.25));
-        animation: logoPulse 4s ease-in-out infinite;
+        border-radius: 50%;
+        background: linear-gradient(120deg, transparent 30%, rgba(255,235,59,0.35) 50%, transparent 70%);
+        background-size: 250% 100%;
+        background-position: 200% 0;
+        animation: logoPulse 4s ease-in-out infinite,
+                   logoShimmer 6s ease-in-out infinite;
     }
     @keyframes logoPulse {
         0%, 100% { transform: scale(1);     filter: drop-shadow(0 0 18px var(--accent-glow-strong)) drop-shadow(0 0 40px rgba(255,212,0,0.25)); }
         50%      { transform: scale(1.04);  filter: drop-shadow(0 0 26px var(--accent)) drop-shadow(0 0 60px rgba(255,212,0,0.4)); }
+    }
+    @keyframes logoShimmer {
+        0%, 100% { background-position: 200% 0; }
+        50%      { background-position: -100% 0; }
     }
     /* Anillos pulsantes alrededor del logo */
     .hero-logo-ring {
@@ -198,6 +226,7 @@
         opacity: 0;
         animation: ringExpand 3.5s ease-out infinite;
         pointer-events: none;
+        z-index: 2;
     }
     .hero-logo-ring:nth-child(2) { animation-delay: 1.16s; }
     .hero-logo-ring:nth-child(3) { animation-delay: 2.33s; }
@@ -400,10 +429,11 @@
         gap: 12px;
     }
     .story .signature img {
-        height: 32px;
-        width: 32px;
+        height: 36px;
+        width: 36px;
         object-fit: contain;
         filter: drop-shadow(0 0 6px var(--accent-glow));
+        border-radius: 50%;
     }
 
     /* ===== FEATURES ===== */
@@ -704,18 +734,21 @@
         position: relative;
     }
     footer .footer-logo {
-        width: 52px;
-        height: 52px;
+        width: 56px;
+        height: 56px;
         object-fit: contain;
         margin-bottom: 16px;
-        opacity: 0.75;
+        border-radius: 50%;
         filter: drop-shadow(0 0 12px var(--accent-glow));
-        transition: all 0.3s;
+        animation: footerBeat 3.5s ease-in-out infinite;
+        transition: filter 0.3s;
     }
     footer .footer-logo:hover {
-        opacity: 1;
         filter: drop-shadow(0 0 20px var(--accent));
-        transform: scale(1.08);
+    }
+    @keyframes footerBeat {
+        0%, 100% { transform: scale(1);    opacity: 0.85; }
+        50%      { transform: scale(1.06); opacity: 1; }
     }
     footer .footer-links {
         display: flex;
@@ -766,19 +799,19 @@
     /* ===== RESPONSIVE ===== */
     @media (max-width: 640px) {
         nav { padding: 10px 14px; }
-        .nav-logo img { height: 30px; width: 30px; }
+        .nav-logo img { height: 32px; width: 32px; }
         .nav-logo .nav-logo-text { font-size: 1rem; }
         .nav-links { gap: 14px; font-size: 0.85rem; }
         .nav-links a { font-size: 0.8rem; }
         header.hero { padding: 70px 16px 60px; }
         .hero::after { width: 550px; height: 550px; }
-        .hero-logo-wrap { width: 110px; height: 110px; margin-bottom: 18px; }
+        .hero-logo-wrap { width: 120px; height: 120px; margin-bottom: 18px; }
         .hero-cta .btn { width: 100%; justify-content: center; }
         section { padding: 60px 0; }
         .story { padding: 28px 22px; }
         .stat-value { font-size: 1.5rem; }
         .scroll-top { bottom: 20px; right: 20px; width: 42px; height: 42px; }
-        footer .footer-logo { width: 44px; height: 44px; }
+        footer .footer-logo { width: 46px; height: 46px; }
     }
 </style>
 </head>
@@ -1014,7 +1047,7 @@
         <div class="cl-item fade-in">
             <div class="cl-version">v4.3</div>
             <div class="cl-date">2026 · Actual</div>
-            <div class="cl-desc" data-i18n="cl_43">Compartición de archivos por red con Robocopy y FTP. Integración con Easy Context Menu. Correcciones en detección de DPI y ventanas. Añadida comprobación automática de actualizaciones vía GitHub.</div>
+            <div class="cl-desc" data-i18n="cl_43">Compartición de archivos por red con Robocopy y FTP. Integración con Easy Context Menu. Correcciones en detección de DPI y ventanas. Añadida comprobación automática de actualizaciones vía GitHub. Firma digital integrada con certificado público.</div>
         </div>
         <div class="cl-item fade-in">
             <div class="cl-version">v4.2.1</div>
@@ -1119,7 +1152,7 @@
             req_os: "Sistema Operativo", req_ps: "PowerShell", req_ram: "Memoria RAM", req_disk: "Espacio en disco",
             req_arch: "Arquitectura", req_admin: "Permisos", req_admin_val: "Administrador",
             cl_title: "Historial", cl_sub: "Últimas versiones publicadas.",
-            cl_43: "Compartición de archivos por red con Robocopy y FTP. Integración con Easy Context Menu. Correcciones en detección de DPI y ventanas. Añadida comprobación automática de actualizaciones vía GitHub.",
+            cl_43: "Compartición de archivos por red con Robocopy y FTP. Integración con Easy Context Menu. Correcciones en detección de DPI y ventanas. Añadida comprobación automática de actualizaciones vía GitHub. Firma digital integrada con certificado público.",
             cl_421: "Versión estable con i18n completo (ES/EN/PT), temas OMEGASOLVER, Modo Low y doble enfoque UX.",
             cl_40: "Reescritura completa en WPF. Sistema de cambios reversibles. Detección SSD/HDD. Modo Básico y Avanzado.",
             faq_title: "Preguntas Frecuentes", faq_sub: "Todo lo que necesitas saber antes de instalarlo.",
@@ -1168,7 +1201,7 @@
             req_os: "Operating System", req_ps: "PowerShell", req_ram: "RAM Memory", req_disk: "Disk Space",
             req_arch: "Architecture", req_admin: "Permissions", req_admin_val: "Administrator",
             cl_title: "Changelog", cl_sub: "Latest published versions.",
-            cl_43: "Network file sharing with Robocopy and FTP. Easy Context Menu integration. DPI and window detection fixes. Added automatic update check via GitHub.",
+            cl_43: "Network file sharing with Robocopy and FTP. Easy Context Menu integration. DPI and window detection fixes. Added automatic update check via GitHub. Integrated digital signature with public certificate.",
             cl_421: "Stable version with full i18n (ES/EN/PT), OMEGASOLVER themes, Low Mode and dual UX approach.",
             cl_40: "Full rewrite in WPF. Reversible changes system. SSD/HDD detection. Basic and Advanced modes.",
             faq_title: "Frequently Asked Questions", faq_sub: "Everything you need to know before installing.",
@@ -1217,7 +1250,7 @@
             req_os: "Sistema Operacional", req_ps: "PowerShell", req_ram: "Memória RAM", req_disk: "Espaço em disco",
             req_arch: "Arquitetura", req_admin: "Permissões", req_admin_val: "Administrador",
             cl_title: "Histórico", cl_sub: "Últimas versões publicadas.",
-            cl_43: "Compartilhamento de arquivos pela rede com Robocopy e FTP. Integração com Easy Context Menu. Correções na detecção de DPI e janelas. Adicionada verificação automática de atualizações via GitHub.",
+            cl_43: "Compartilhamento de arquivos pela rede com Robocopy e FTP. Integração com Easy Context Menu. Correções na detecção de DPI e janelas. Adicionada verificação automática de atualizações via GitHub. Assinatura digital integrada com certificado público.",
             cl_421: "Versão estável com i18n completo (ES/EN/PT), temas OMEGASOLVER, Modo Low e abordagem UX dupla.",
             cl_40: "Reescrita completa em WPF. Sistema de mudanças reversíveis. Detecção SSD/HDD. Modos Básico e Avançado.",
             faq_title: "Perguntas Frequentes", faq_sub: "Tudo o que você precisa saber antes de instalar.",
