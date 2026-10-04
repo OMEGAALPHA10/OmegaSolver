@@ -1773,9 +1773,9 @@
     <div class="hero-watermark"></div>
     <div class="hero-inner">
 
-        <div class="hero-banner-wrap fade-in">
+        <div class="hero-banner-wrap fade-in" id="heroBannerWrap">
             <span class="hero-ribbon">✨ V4.4</span>
-            <img id="heroBanner" src="./screenshots/banner-cyn.jpg" alt="OmegaSolver" class="hero-banner-img" onerror="this.parentElement.style.display='none'">
+            <img id="heroBanner" src="./screenshots/banner-cyn.jpg" alt="OmegaSolver" class="hero-banner-img">
         </div>
 
         <div class="badges-row">
@@ -2450,19 +2450,36 @@
         });
 
         const banner = document.getElementById('heroBanner');
+        const wrap = banner ? banner.parentElement : null;
         if (banner && bannerMap[theme]) {
+            // Asegurar que el wrap NO este oculto (fix del onerror viejo)
+            if (wrap) {
+                wrap.style.display = '';
+                wrap.style.visibility = 'visible';
+            }
             const newSrc = bannerMap[theme];
             const currentSrc = banner.getAttribute('src') || '';
             if (!currentSrc.includes(newSrc.replace('./', ''))) {
                 banner.style.opacity = '0';
+                // SIEMPRE restaurar opacity cuando cargue o falle
+                banner.onload = () => { banner.style.opacity = '1'; };
+                banner.onerror = () => { banner.style.opacity = '1'; };
                 setTimeout(() => {
                     banner.src = newSrc;
-                    if (banner.complete) {
+                    // Si ya estaba en cache, mostrar inmediatamente
+                    if (banner.complete && banner.naturalWidth > 0) {
                         banner.style.opacity = '1';
-                    } else {
-                        banner.onload = () => { banner.style.opacity = '1'; };
                     }
+                    // Timeout de seguridad: si a los 1.5s sigue en 0, forzar
+                    setTimeout(() => {
+                        if (banner.style.opacity === '0') {
+                            banner.style.opacity = '1';
+                        }
+                    }, 1500);
                 }, 180);
+            } else {
+                // No cambio el src pero igual asegurar visible
+                banner.style.opacity = '1';
             }
         }
 
