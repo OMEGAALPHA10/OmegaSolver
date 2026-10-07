@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://omegaalpha10.github.io/OmegaSolver/sitemap.xml
