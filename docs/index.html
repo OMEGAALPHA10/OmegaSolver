@@ -3,19 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Optimizador y Limpiador para Windows | OmegaSolver V4.4</title>
-<meta name="description" content="OmegaSolver V4.4: Suite de diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado, i18n, protección SSD, PS12EXE y firma SHA256.">
+<title>OmegaSolver V4.4 | Limpiador Y optimizador para Windows</title>
+<meta name="description" content="OmegaSolver V4.4: Suite de diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado, i18n, protección SSD, PS12EXE y firma SHA256. Open source bajo GPLv3.">
 <meta name="author" content="Fabian — OMEGA_ALPHA">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://OMEGAALPHA10.github.io/OmegaSolver/">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="keywords" content="optimizador windows, limpiador windows, mantenimiento windows, reparar windows, SFC DISM CHKDSK, powershell wpf, open source, GPLv3, omegasolver, optimizar pc, limpiar pc windows, winget">
+<meta name="rating" content="general">
+<meta name="distribution" content="global">
+<meta name="revisit-after" content="7 days">
+<link rel="canonical" href="https://omegaalpha10.github.io/OmegaSolver/">
+<link rel="license" href="https://www.gnu.org/licenses/gpl-3.0.html">
+<link rel="alternate" hreflang="es" href="https://omegaalpha10.github.io/OmegaSolver/">
+<link rel="alternate" hreflang="en" href="https://omegaalpha10.github.io/OmegaSolver/">
+<link rel="alternate" hreflang="pt" href="https://omegaalpha10.github.io/OmegaSolver/">
+<link rel="alternate" hreflang="x-default" href="https://omegaalpha10.github.io/OmegaSolver/">
+
+<!-- Open Graph -->
 <meta property="og:title" content="OmegaSolver V4.4 — Suite de Optimización para Windows">
-<meta property="og:description" content="Diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado.">
+<meta property="og:description" content="Diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado. Open source bajo GPLv3.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://OMEGAALPHA10.github.io/OmegaSolver/">
-<meta property="og:image" content="https://OMEGAALPHA10.github.io/OmegaSolver/screenshots/banner-cyn.jpg">
+<meta property="og:url" content="https://omegaalpha10.github.io/OmegaSolver/">
+<meta property="og:image" content="https://omegaalpha10.github.io/OmegaSolver/screenshots/banner-cyn.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="OmegaSolver V4.4 — Suite de Optimización para Windows">
+<meta property="og:site_name" content="OmegaSolver">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="pt_BR">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OmegaSolver V4.4 — Suite de Optimización para Windows">
+<meta name="twitter:description" content="Diagnóstico, mantenimiento y optimización para Windows. Open source bajo GPLv3.">
+<meta name="twitter:image" content="https://omegaalpha10.github.io/OmegaSolver/screenshots/banner-cyn.jpg">
+<meta name="twitter:image:alt" content="OmegaSolver V4.4">
+
 <meta name="theme-color" content="#FFD400">
 <link rel="icon" type="image/png" href="./screenshots/logo.png">
+<link rel="apple-touch-icon" href="./screenshots/logo.png">
 <link rel="preload" as="image" href="./screenshots/banner-cyn.jpg">
+<link rel="preconnect" href="https://api.github.com">
+<link rel="preconnect" href="https://github.com">
+<link rel="dns-prefetch" href="https://api.github.com">
+
+<!-- Structured Data — SoftwareApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "OmegaSolver",
+  "alternateName": "OmegaSolver V4.4",
+  "softwareVersion": "4.4",
+  "operatingSystem": "Windows 10, Windows 11",
+  "applicationCategory": "UtilitiesApplication",
+  "applicationSubCategory": "System Optimization",
+  "description": "Suite gráfica de diagnóstico, mantenimiento y optimización para Windows, desarrollada en PowerShell + WPF. Open source bajo GPLv3.",
+  "url": "https://omegaalpha10.github.io/OmegaSolver/",
+  "downloadUrl": "https://github.com/OMEGAALPHA10/OmegaSolver/releases/latest",
+  "installUrl": "https://github.com/OMEGAALPHA10/OmegaSolver",
+  "softwareHelp": "https://omegaalpha10.github.io/OmegaSolver/",
+  "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+  "isAccessibleForFree": true,
+  "inLanguage": ["es", "en", "pt"],
+  "author": {
+    "@type": "Person",
+    "name": "Fabian",
+    "alternateName": "OMEGA_ALPHA",
+    "url": "https://github.com/OMEGAALPHA10"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "screenshot": "https://omegaalpha10.github.io/OmegaSolver/screenshots/banner-cyn.jpg",
+  "softwareRequirements": "Windows 10 build 1809+ o Windows 11 (x64), .NET Framework 4.7.2+, permisos de administrador",
+  "fileSize": "50MB",
+  "codeRepository": "https://github.com/OMEGAALPHA10/OmegaSolver"
+}
+</script>
 <style>
     :root {
         --bg: #030200;
@@ -504,6 +572,12 @@
         backdrop-filter: blur(10px);
         border: 1px solid var(--border-hover);
         transition: all 0.4s ease;
+        text-decoration: none;
+    }
+    .badge:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--accent-glow);
     }
     [data-theme="gradient"] .badge {
         color: #000;
@@ -1732,8 +1806,8 @@
 
 <nav>
     <div class="nav-inner">
-        <a href="#" class="nav-logo">
-            <img src="./screenshots/logo.png" alt="OmegaSolver">
+        <a href="#" class="nav-logo" aria-label="OmegaSolver — Inicio">
+            <img src="./screenshots/logo.png" alt="OmegaSolver" width="36" height="36">
             <span class="nav-logo-text">OMEGASOLVER</span>
             <span class="nav-version">V4.4</span>
         </a>
@@ -1775,13 +1849,15 @@
 
         <div class="hero-banner-wrap fade-in" id="heroBannerWrap">
             <span class="hero-ribbon">✨ V4.4</span>
-            <img id="heroBanner" src="./screenshots/banner-cyn.jpg" alt="OmegaSolver" class="hero-banner-img">
+            <img id="heroBanner" src="./screenshots/banner-cyn.jpg" alt="OmegaSolver V4.4 — Suite de Optimización para Windows" class="hero-banner-img">
         </div>
 
         <div class="badges-row">
             <span class="badge"><span class="dot"></span><span data-i18n="hero_badge">Disponible en Winget</span></span>
             <span class="badge venezuela">🇻🇪 <span data-i18n="hero_venezuela">Hecho en Venezuela</span></span>
-            <span class="badge">GPLv3</span>
+            <a class="badge" href="https://github.com/OMEGAALPHA10/OmegaSolver/blob/main/LICENSE" target="_blank" rel="noopener license" title="GNU General Public License v3.0">
+                <span data-i18n="hero_badge_license">Código abierto · GPLv3</span>
+            </a>
         </div>
 
         <h1 class="hero-h1">
@@ -1790,7 +1866,7 @@
         </h1>
 
         <p class="hero-sub" data-i18n="hero_desc">
-            Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell + WPF. Diseñada para usuarios básicos y técnicos por igual.
+            Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell + WPF. Diseñada para usuarios básicos y técnicos por igual. Libre, auditable y gratuito.
         </p>
 
         <div class="hero-cta">
@@ -1848,9 +1924,49 @@
         <p data-i18n="story_p2">Así nació la idea de los <strong>dos modos</strong>: un Modo Básico con acciones seguras y claras, y un Modo Avanzado con acceso a herramientas como SFC, DISM o CHKDSK. Todo con <strong>confirmaciones claras</strong>, protección automática contra desfragmentar SSD, y un sistema de <strong>cambios reversibles</strong> por si algo sale mal.</p>
         <p data-i18n="story_p3">El proyecto está desarrollado íntegramente en <strong>PowerShell + WPF</strong> por una sola persona, desde Venezuela, en ratos libres. Es open source bajo GPLv3 y está disponible oficialmente en Winget. No pretende ser perfecto, pero sí útil. Y mientras haya gente que lo use, seguirá creciendo.</p>
         <p class="signature">
-            <img src="./screenshots/logo.png" alt="" onerror="this.style.display='none'">
+            <img src="./screenshots/logo.png" alt="" width="36" height="36" loading="lazy" onerror="this.style.display='none'">
             <span data-i18n="story_sig">— Fabian (OMEGA_ALPHA), desarrollador independiente</span>
         </p>
+    </div>
+</section>
+
+<section id="opensource">
+    <div class="section-header fade-in">
+        <span class="section-eyebrow" data-i18n="os_eyebrow">Libertad</span>
+        <h2 class="section-title"><span data-i18n="os_title">Código abierto</span> <span class="highlight" data-i18n="os_title_b">bajo GPLv3</span></h2>
+        <p class="section-sub" data-i18n="os_sub">OmegaSolver es software libre. Léelo, audítalo, modifícalo y redistribúyelo con las cuatro libertades garantizadas por la GNU GPLv3.</p>
+    </div>
+    <div class="dual-ux">
+        <div class="ux-card basic fade-in">
+            <span class="ux-tag" data-i18n="os_guarantee">Garantías del usuario</span>
+            <h3 data-i18n="os_g1_t">Ejecutar y estudiar</h3>
+            <p data-i18n="os_g1_d">Puedes ejecutar OmegaSolver para cualquier propósito y estudiar cómo funciona. El código fuente completo está disponible para auditar qué hace cada acción.</p>
+            <ul>
+                <li data-i18n="os_g1_l1">Ejecución libre, sin restricciones de uso</li>
+                <li data-i18n="os_g1_l2">Código fuente completo en GitHub</li>
+                <li data-i18n="os_g1_l3">Sin telemetría, sin servidores ocultos</li>
+            </ul>
+        </div>
+        <div class="ux-card advanced fade-in">
+            <span class="ux-tag" data-i18n="os_contribute">Contribuye</span>
+            <h3 data-i18n="os_g2_t">Modificar y redistribuir</h3>
+            <p data-i18n="os_g2_d">Puedes modificar OmegaSolver y redistribuir tus versiones. Solo pedimos que se mantengan los créditos originales y la licencia GPLv3 en cualquier derivado.</p>
+            <ul>
+                <li data-i18n="os_g2_l1">Forks y PRs bienvenidos en GitHub</li>
+                <li data-i18n="os_g2_l2">Traducciones a nuevos idiomas abiertas</li>
+                <li data-i18n="os_g2_l3">Reportes de bugs y sugerencias activas</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="tech-strip fade-in" style="margin-top: 30px;">
+        <div class="tech-strip-label" data-i18n="os_links_label">Enlaces del proyecto</div>
+        <div class="tech-items">
+            <a class="tech-item" href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener" style="text-decoration:none;"><span class="bullet"></span><span data-i18n="os_link_repo">Repositorio en GitHub</span></a>
+            <a class="tech-item" href="https://github.com/OMEGAALPHA10/OmegaSolver/blob/main/LICENSE" target="_blank" rel="noopener license" style="text-decoration:none;"><span class="bullet"></span>GPLv3</a>
+            <a class="tech-item" href="https://github.com/OMEGAALPHA10/OmegaSolver/issues" target="_blank" rel="noopener" style="text-decoration:none;"><span class="bullet"></span><span data-i18n="os_link_issues">Reportar Issue</span></a>
+            <a class="tech-item" href="https://github.com/OMEGAALPHA10/OmegaSolver/tree/main" target="_blank" rel="noopener" style="text-decoration:none;"><span class="bullet"></span><span data-i18n="os_link_source">Código fuente</span></a>
+        </div>
     </div>
 </section>
 
@@ -2145,11 +2261,12 @@
 </main>
 
 <footer>
-    <img src="./screenshots/logo.png" alt="OmegaSolver" class="footer-logo" onerror="this.style.display='none'">
+    <img src="./screenshots/logo.png" alt="OmegaSolver" class="footer-logo" width="60" height="60" loading="lazy" onerror="this.style.display='none'">
     <div class="footer-links">
         <a href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/OMEGAALPHA10/OmegaSolver/tree/main" target="_blank" rel="noopener" data-i18n="footer_source">Código fuente</a>
         <a href="https://github.com/OMEGAALPHA10/OmegaSolver/releases" target="_blank" rel="noopener" data-i18n="footer_releases">Releases</a>
-        <a href="https://github.com/OMEGAALPHA10/OmegaSolver/blob/main/LICENSE" target="_blank" rel="noopener" data-i18n="footer_license">Licencia GPLv3</a>
+        <a href="https://github.com/OMEGAALPHA10/OmegaSolver/blob/main/LICENSE" target="_blank" rel="noopener license" data-i18n="footer_license">Licencia GPLv3</a>
         <a href="https://github.com/OMEGAALPHA10/OmegaSolver/issues" target="_blank" rel="noopener" data-i18n="footer_issues">Reportar Issue</a>
     </div>
     <p class="copyright">© 2026 OMEGA_ALPHA · <span data-i18n="footer_license_text">Distribuido libremente bajo la Licencia GNU GPLv3.</span></p>
@@ -2172,9 +2289,9 @@
     const i18n = {
         es: {
             nav_story:"Historia", nav_features:"Features", nav_screens:"Capturas", nav_install:"Instalar", nav_faq:"FAQ",
-            hero_badge:"Disponible en Winget", hero_venezuela:"Hecho en Venezuela",
+            hero_badge:"Disponible en Winget", hero_venezuela:"Hecho en Venezuela", hero_badge_license:"Código abierto · GPLv3",
             hero_h1_a:"El trabajo de limpieza", hero_h1_b:"nunca termina.",
-            hero_desc:"Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell + WPF. Diseñada para usuarios básicos y técnicos por igual.",
+            hero_desc:"Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell + WPF. Diseñada para usuarios básicos y técnicos por igual. Libre, auditable y gratuito.",
             hero_cta_install:"📥 Instalar ahora", hero_cta_github:"Ver en GitHub",
             stat_version:"Versión", stat_stars:"Stars", stat_forks:"Forks", stat_langs:"Idiomas", stat_updated:"Actualizado",
             tech_label:"Construido con", theme_btn:"Tema",
@@ -2183,6 +2300,19 @@
             story_p2:"Así nació la idea de los dos modos: un Modo Básico con acciones seguras y claras, y un Modo Avanzado con acceso a herramientas como SFC, DISM o CHKDSK. Todo con confirmaciones claras, protección automática contra desfragmentar SSD, y un sistema de cambios reversibles por si algo sale mal.",
             story_p3:"El proyecto está desarrollado íntegramente en PowerShell + WPF por una sola persona, desde Venezuela, en ratos libres. Es open source bajo GPLv3 y está disponible oficialmente en Winget.",
             story_sig:"— Fabian (OMEGA_ALPHA), desarrollador independiente",
+            os_eyebrow:"Libertad", os_title:"Código abierto", os_title_b:"bajo GPLv3",
+            os_sub:"OmegaSolver es software libre. Léelo, audítalo, modifícalo y redistribúyelo con las cuatro libertades garantizadas por la GNU GPLv3.",
+            os_guarantee:"Garantías del usuario", os_contribute:"Contribuye",
+            os_g1_t:"Ejecutar y estudiar", os_g1_d:"Puedes ejecutar OmegaSolver para cualquier propósito y estudiar cómo funciona. El código fuente completo está disponible para auditar qué hace cada acción.",
+            os_g1_l1:"Ejecución libre, sin restricciones de uso",
+            os_g1_l2:"Código fuente completo en GitHub",
+            os_g1_l3:"Sin telemetría, sin servidores ocultos",
+            os_g2_t:"Modificar y redistribuir", os_g2_d:"Puedes modificar OmegaSolver y redistribuir tus versiones. Solo pedimos que se mantengan los créditos originales y la licencia GPLv3 en cualquier derivado.",
+            os_g2_l1:"Forks y PRs bienvenidos en GitHub",
+            os_g2_l2:"Traducciones a nuevos idiomas abiertas",
+            os_g2_l3:"Reportes de bugs y sugerencias activas",
+            os_links_label:"Enlaces del proyecto",
+            os_link_repo:"Repositorio en GitHub", os_link_issues:"Reportar Issue", os_link_source:"Código fuente",
             dual_eyebrow:"Para todos", dual_title:"Un programa, dos audiencias", dual_sub:"Diseñado tanto para quien nunca tocó Windows como para quien lo desarma por diversión.",
             ux_basic_tag:"Modo Básico", ux_basic_title:"Para usuarios cotidianos",
             ux_basic_desc:"Botones claros, explicaciones simples, nada técnico que asuste.",
@@ -2240,16 +2370,16 @@
             faq4_q:"¿Puedo contribuir?", faq4_a:"¡Por supuesto! El proyecto está en GitHub. Reporta bugs, propón ideas o traduce la app.",
             faq5_q:"¿Por qué pide permisos de administrador?", faq5_a:"Porque realiza tareas que requieren elevación: SFC/DISM, cachés protegidas, configuración de red.",
             faq6_q:"¿Dónde guarda mis datos?", faq6_a:"Localmente en %ProgramData%\\OmegaSolver\\. No se envían datos a servidores externos.",
-            footer_releases:"Releases", footer_license:"Licencia GPLv3", footer_issues:"Reportar Issue",
+            footer_source:"Código fuente", footer_releases:"Releases", footer_license:"Licencia GPLv3", footer_issues:"Reportar Issue",
             footer_license_text:"Distribuido libremente bajo GNU GPLv3.",
             footer_made:"Hecho con esfuerzo desde Venezuela",
             copy:"Copiar", copied:"¡Copiado!", link_copied:"¡Enlace copiado!"
         },
         en: {
             nav_story:"Story", nav_features:"Features", nav_screens:"Screenshots", nav_install:"Install", nav_faq:"FAQ",
-            hero_badge:"Available on Winget", hero_venezuela:"Made in Venezuela",
+            hero_badge:"Available on Winget", hero_venezuela:"Made in Venezuela", hero_badge_license:"Open source · GPLv3",
             hero_h1_a:"The cleanup work", hero_h1_b:"never ends.",
-            hero_desc:"Diagnostics, maintenance and optimization suite for Windows. Built in PowerShell + WPF. Designed for both basic and technical users.",
+            hero_desc:"Diagnostics, maintenance and optimization suite for Windows. Built in PowerShell + WPF. Designed for both basic and technical users. Free, auditable, and libre.",
             hero_cta_install:"📥 Install now", hero_cta_github:"View on GitHub",
             stat_version:"Version", stat_stars:"Stars", stat_forks:"Forks", stat_langs:"Languages", stat_updated:"Updated",
             tech_label:"Built with", theme_btn:"Theme",
@@ -2258,6 +2388,19 @@
             story_p2:"That's how the two modes were born: a Basic Mode with safe and clear actions, and an Advanced Mode with access to tools like SFC, DISM or CHKDSK.",
             story_p3:"The project is developed entirely in PowerShell + WPF by a single person, from Venezuela, in spare time. It's open source under GPLv3 and is officially available on Winget.",
             story_sig:"— Fabian (OMEGA_ALPHA), independent developer",
+            os_eyebrow:"Freedom", os_title:"Open source", os_title_b:"under GPLv3",
+            os_sub:"OmegaSolver is free software. Read it, audit it, modify it, and redistribute it under the four freedoms guaranteed by the GNU GPLv3.",
+            os_guarantee:"User guarantees", os_contribute:"Contribute",
+            os_g1_t:"Run and study", os_g1_d:"You can run OmegaSolver for any purpose and study how it works. The full source code is available to audit what each action does.",
+            os_g1_l1:"Free execution, no usage restrictions",
+            os_g1_l2:"Complete source code on GitHub",
+            os_g1_l3:"No telemetry, no hidden servers",
+            os_g2_t:"Modify and redistribute", os_g2_d:"You can modify OmegaSolver and redistribute your versions. We only ask that original credits and the GPLv3 license remain on any derivative.",
+            os_g2_l1:"Forks and PRs welcome on GitHub",
+            os_g2_l2:"Translations to new languages open",
+            os_g2_l3:"Bug reports and suggestions active",
+            os_links_label:"Project links",
+            os_link_repo:"GitHub repository", os_link_issues:"Report Issue", os_link_source:"Source code",
             dual_eyebrow:"For everyone", dual_title:"One program, two audiences", dual_sub:"Designed both for those who never touched Windows and those who take it apart for fun.",
             ux_basic_tag:"Basic Mode", ux_basic_title:"For everyday users",
             ux_basic_desc:"Clear buttons, simple explanations, nothing technical to scare you.",
@@ -2315,16 +2458,16 @@
             faq4_q:"Can I contribute?", faq4_a:"Of course! The project is on GitHub. Report bugs, suggest ideas, or translate the app.",
             faq5_q:"Why does it ask for administrator permissions?", faq5_a:"Because it performs tasks that require elevation: SFC/DISM, protected caches, network settings.",
             faq6_q:"Where does it store my data?", faq6_a:"Locally in %ProgramData%\\OmegaSolver\\. No data is sent to external servers.",
-            footer_releases:"Releases", footer_license:"GPLv3 License", footer_issues:"Report Issue",
+            footer_source:"Source code", footer_releases:"Releases", footer_license:"GPLv3 License", footer_issues:"Report Issue",
             footer_license_text:"Freely distributed under GNU GPLv3.",
             footer_made:"Made with effort from Venezuela",
             copy:"Copy", copied:"Copied!", link_copied:"Link copied!"
         },
         pt: {
             nav_story:"História", nav_features:"Recursos", nav_screens:"Capturas", nav_install:"Instalar", nav_faq:"FAQ",
-            hero_badge:"Disponível no Winget", hero_venezuela:"Feito na Venezuela",
+            hero_badge:"Disponível no Winget", hero_venezuela:"Feito na Venezuela", hero_badge_license:"Código aberto · GPLv3",
             hero_h1_a:"O trabalho de limpeza", hero_h1_b:"nunca termina.",
-            hero_desc:"Suíte de diagnóstico, manutenção e otimização para Windows. Construída em PowerShell + WPF. Projetada para usuários básicos e técnicos.",
+            hero_desc:"Suíte de diagnóstico, manutenção e otimização para Windows. Construída em PowerShell + WPF. Projetada para usuários básicos e técnicos. Livre, auditável e gratuita.",
             hero_cta_install:"📥 Instalar agora", hero_cta_github:"Ver no GitHub",
             stat_version:"Versão", stat_stars:"Stars", stat_forks:"Forks", stat_langs:"Idiomas", stat_updated:"Atualizado",
             tech_label:"Construído com", theme_btn:"Tema",
@@ -2333,6 +2476,19 @@
             story_p2:"Assim nasceu a ideia dos dois modos: um Modo Básico com ações seguras, e um Modo Avançado com acesso a ferramentas como SFC, DISM ou CHKDSK.",
             story_p3:"O projeto é desenvolvido inteiramente em PowerShell + WPF por uma única pessoa, da Venezuela, em tempo livre. É open source sob GPLv3 e está oficialmente disponível no Winget.",
             story_sig:"— Fabian (OMEGA_ALPHA), desenvolvedor independente",
+            os_eyebrow:"Liberdade", os_title:"Código aberto", os_title_b:"sob GPLv3",
+            os_sub:"O OmegaSolver é software livre. Leia, audite, modifique e redistribua sob as quatro liberdades garantidas pela GNU GPLv3.",
+            os_guarantee:"Garantias do usuário", os_contribute:"Contribua",
+            os_g1_t:"Executar e estudar", os_g1_d:"Você pode executar o OmegaSolver para qualquer propósito e estudar como funciona. O código-fonte completo está disponível para auditar cada ação.",
+            os_g1_l1:"Execução livre, sem restrições de uso",
+            os_g1_l2:"Código-fonte completo no GitHub",
+            os_g1_l3:"Sem telemetria, sem servidores ocultos",
+            os_g2_t:"Modificar e redistribuir", os_g2_d:"Você pode modificar o OmegaSolver e redistribuir suas versões. Pedimos apenas que os créditos originais e a licença GPLv3 sejam mantidos em qualquer derivado.",
+            os_g2_l1:"Forks e PRs bem-vindos no GitHub",
+            os_g2_l2:"Traduções para novos idiomas abertas",
+            os_g2_l3:"Relatos de bugs e sugestões ativas",
+            os_links_label:"Links do projeto",
+            os_link_repo:"Repositório no GitHub", os_link_issues:"Reportar Issue", os_link_source:"Código-fonte",
             dual_eyebrow:"Para todos", dual_title:"Um programa, dois públicos", dual_sub:"Projetado tanto para quem nunca tocou no Windows quanto para quem o desmonta por diversão.",
             ux_basic_tag:"Modo Básico", ux_basic_title:"Para usuários cotidianos",
             ux_basic_desc:"Botões claros, explicações simples, nada técnico para assustar.",
@@ -2390,7 +2546,7 @@
             faq4_q:"Posso contribuir?", faq4_a:"Claro! O projeto está no GitHub. Reporte bugs, sugira ideias ou traduza o app.",
             faq5_q:"Por que pede permissões de administrador?", faq5_a:"Porque realiza tarefas que exigem elevação: SFC/DISM, caches protegidos, configurações de rede.",
             faq6_q:"Onde armazena meus dados?", faq6_a:"Localmente em %ProgramData%\\OmegaSolver\\. Nenhum dado é enviado para servidores externos.",
-            footer_releases:"Releases", footer_license:"Licença GPLv3", footer_issues:"Reportar Issue",
+            footer_source:"Código-fonte", footer_releases:"Releases", footer_license:"Licença GPLv3", footer_issues:"Reportar Issue",
             footer_license_text:"Distribuído livremente sob GNU GPLv3.",
             footer_made:"Feito com esforço da Venezuela",
             copy:"Copiar", copied:"Copiado!", link_copied:"Link copiado!"
@@ -2581,7 +2737,7 @@
         card.className = 'carousel-card';
         card.dataset.index = i;
         card.innerHTML = `
-            <img src="${slide.src}" alt="${slide.caption}" onerror="this.style.opacity=0.2">
+            <img src="${slide.src}" alt="${slide.caption}" loading="lazy" decoding="async" onerror="this.style.opacity=0.2">
             <div class="card-caption">${slide.caption}</div>
         `;
         card.addEventListener('click', () => {
