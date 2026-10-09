@@ -2016,6 +2016,53 @@
         .float-chip, .code-rain { display: none; }
         body[data-umode="bas"]::before { font-size: 70vw; top: 22vh; }
     }
+
+    /* ============================================================
+       V4.4.3 — Personalidad por tema: guiños a la serie inspiradora
+       Cada tema de color evoca a su personaje sin nombrarlo
+       ============================================================ */
+
+    /* --- Orbes con la paleta de cada personaje --- */
+    [data-theme="cyn"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(255,212,0,0.16) 0%, transparent 70%); }
+    [data-theme="cyn"] .ambient-orb.o3 { background: radial-gradient(circle, rgba(255,160,0,0.10) 0%, transparent 70%); }
+    [data-theme="v"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(255,120,0,0.15) 0%, transparent 70%); }
+    [data-theme="v"] .ambient-orb.o3 { background: radial-gradient(circle, rgba(255,60,0,0.10) 0%, transparent 70%); }
+    [data-theme="doll"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(255,42,42,0.16) 0%, transparent 70%); }
+    [data-theme="doll"] .ambient-orb.o3 { background: radial-gradient(circle, rgba(120,0,0,0.13) 0%, transparent 70%); }
+    [data-theme="lizzy"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(236,72,153,0.14) 0%, transparent 70%); }
+    [data-theme="lizzy"] .ambient-orb.o3 { background: radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%); }
+    [data-theme="uzi"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(217,70,239,0.16) 0%, transparent 70%); }
+    [data-theme="uzi"] .ambient-orb.o3 { background: radial-gradient(circle, rgba(88,28,135,0.14) 0%, transparent 70%); }
+
+    /* --- Sello del personaje: glifo fijo abajo a la izquierda (ambos modos) --- */
+    .glyph-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .glyph-stamp {
+        position: fixed; bottom: 64px; left: 22px;
+        font-size: 92px; font-weight: 900; line-height: 1;
+        color: var(--accent); opacity: 0;
+        text-shadow: 0 0 44px var(--accent-glow);
+        transition: opacity 0.7s ease;
+    }
+    [data-theme="cyn"] .gs-cyn { opacity: 0.14; }
+    [data-theme="v"] .gs-v { opacity: 0.14; }
+    [data-theme="doll"] .gs-doll { opacity: 0.14; }
+    [data-theme="lizzy"] .gs-lizzy { opacity: 0.14; }
+    [data-theme="uzi"] .gs-uzi { opacity: 0.14; }
+    [data-theme="gradient"] .glyph-stamp { display: none; }
+    @media (max-width: 900px) { .glyph-stamp { font-size: 54px; bottom: 46px; left: 14px; } }
+
+    /* --- Chips de personaje: solo en modo TEC y con su tema activo --- */
+    .float-chip.chip-cyn, .float-chip.chip-v, .float-chip.chip-doll,
+    .float-chip.chip-lizzy, .float-chip.chip-uzi, .float-chip.chip-grad { display: none; }
+    [data-theme="cyn"] .chip-cyn { display: inline-block; }
+    [data-theme="v"] .chip-v { display: inline-block; }
+    [data-theme="doll"] .chip-doll { display: inline-block; }
+    [data-theme="lizzy"] .chip-lizzy { display: inline-block; }
+    [data-theme="uzi"] .chip-uzi { display: inline-block; }
+    [data-theme="gradient"] .chip-grad { display: inline-block; }
+    .float-chip.ctc1 { top: 22%; left: 32%; animation-delay: -13s, -3s; }
+    .float-chip.ctc2 { top: 46%; right: 12%; animation-delay: -7s, -5s; }
+    .float-chip.ctc3 { top: 76%; right: 30%; animation-delay: -19s, -1s; }
 </style>
 </head>
 <body>
@@ -2039,9 +2086,32 @@
         <span class="float-chip c4">Status: NULL</span>
         <span class="float-chip c5">MF::root@Ω</span>
         <span class="float-chip c6">⚠ solver.dll [OK]</span>
+        <span class="float-chip chip-cyn ctc1">solver.host [ACTIVE]</span>
+        <span class="float-chip chip-cyn ctc2">eyes → ⊗ hollow</span>
+        <span class="float-chip chip-cyn ctc3">desktop :: INFECTED</span>
+        <span class="float-chip chip-v ctc1">target.locked → TRUE</span>
+        <span class="float-chip chip-v ctc2">hunt.mode = ON</span>
+        <span class="float-chip chip-v ctc3">wings.deployed()</span>
+        <span class="float-chip chip-doll ctc1">AS::glyph → ▲</span>
+        <span class="float-chip chip-doll ctc2">telekinesis = ON</span>
+        <span class="float-chip chip-doll ctc3">[traducción no encontrada]</span>
+        <span class="float-chip chip-lizzy ctc1">social.rank = #1</span>
+        <span class="float-chip chip-lizzy ctc2">♥ friends++</span>
+        <span class="float-chip chip-lizzy ctc3">gossip.log ∞</span>
+        <span class="float-chip chip-uzi ctc1">angst.level = MAX</span>
+        <span class="float-chip chip-uzi ctc2">bite(me) → ERROR</span>
+        <span class="float-chip chip-uzi ctc3">railgun.charge = 87%</span>
+        <span class="float-chip chip-grad ctc1">@Copper-9 :: online</span>
     </div>
 </div>
 <div class="sol-strip" aria-hidden="true"></div>
+<div class="glyph-layer" aria-hidden="true">
+    <span class="glyph-stamp gs-cyn">⊗</span>
+    <span class="glyph-stamp gs-v">⌖</span>
+    <span class="glyph-stamp gs-doll">▲</span>
+    <span class="glyph-stamp gs-lizzy">♥</span>
+    <span class="glyph-stamp gs-uzi">⚔</span>
+</div>
 
 <nav>
     <div class="nav-inner">
