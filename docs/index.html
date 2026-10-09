@@ -1848,6 +1848,174 @@
         *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
         #ambient, .cursor-glow { display: none; }
     }
+
+    /* ============================================================
+       V4.4.2 — Fondos por modo (BAS sereno / TEC vivo) + capturas interactivas
+       ============================================================ */
+
+    /* --- Transición suave al cambiar de modo --- */
+    #ambient, .ambient-orb, .hero-grid { transition: opacity 0.7s ease, filter 0.7s ease; }
+
+    /* MODO BAS: sereno — orbes tenues, sin rejilla, gran Ω respirando */
+    body[data-umode="bas"] .ambient-orb { opacity: 0.4; filter: blur(110px); animation-duration: 70s; }
+    body[data-umode="bas"] .hero-grid { opacity: 0; }
+    body[data-umode="bas"]::before {
+        content: "Ω";
+        position: fixed;
+        right: -4vw; top: 10vh;
+        font-size: 44vw; line-height: 1; font-weight: 900;
+        color: transparent;
+        -webkit-text-stroke: 2px var(--accent);
+        opacity: 0.06;
+        pointer-events: none;
+        z-index: 0;
+        animation: omegaBreath 22s ease-in-out infinite alternate;
+    }
+    @keyframes omegaBreath { from { transform: scale(1) rotate(0deg); } to { transform: scale(1.04) rotate(3deg); } }
+
+    /* MODO TEC: vivo — orbes plenos, rejilla en movimiento, CRT y consola */
+    body[data-umode="tec"] .ambient-orb { opacity: 1; filter: blur(80px) saturate(1.25); }
+    body[data-umode="tec"]::before {
+        content: "";
+        position: fixed; inset: 0;
+        pointer-events: none;
+        z-index: 9998;
+        background: repeating-linear-gradient(0deg, rgba(0,0,0,0.55) 0 1px, transparent 1px 4px);
+        opacity: 0.18;
+    }
+    .tec-field { position: absolute; inset: 0; display: none; }
+    body[data-umode="tec"] .tec-field { display: block; }
+    .tec-gridlines {
+        position: absolute; inset: 0; opacity: 0.13;
+        background-image:
+            linear-gradient(var(--accent-glow) 1px, transparent 1px),
+            linear-gradient(90deg, var(--accent-glow) 1px, transparent 1px);
+        background-size: 72px 72px;
+        animation: gridPan 46s linear infinite;
+    }
+    @keyframes gridPan { from { background-position: 0 0; } to { background-position: 720px 360px; } }
+
+    /* Lluvia de líneas de código (cortina de fondo) */
+    .code-rain {
+        position: absolute; top: -45%; width: 2px; height: 42%;
+        background: linear-gradient(180deg, transparent, var(--accent), transparent);
+        opacity: 0.3;
+        animation: rainFall 9s linear infinite;
+    }
+    .code-rain.r1 { left: 12%; animation-delay: 0s; }
+    .code-rain.r2 { left: 38%; animation-delay: 3.2s; opacity: 0.22; }
+    .code-rain.r3 { left: 63%; animation-delay: 1.4s; }
+    .code-rain.r4 { left: 86%; animation-delay: 5s; opacity: 0.22; }
+    @keyframes rainFall { to { transform: translateY(400%); } }
+
+    /* Chips flotantes: fórmulas, terminal y avisos */
+    .float-chip {
+        position: absolute;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 0.8rem; font-weight: 700;
+        color: var(--accent);
+        border: 1px solid var(--border-hover);
+        border-radius: 6px;
+        padding: 4px 10px;
+        background: rgba(0,0,0,0.55);
+        opacity: 0.4;
+        white-space: nowrap;
+        animation: chipFloat 26s ease-in-out infinite alternate, chipGlitch 8s steps(1, end) infinite;
+    }
+    .float-chip.c1 { top: 16%; left: 5%; }
+    .float-chip.c2 { top: 28%; right: 7%; animation-delay: -6s, -2s; }
+    .float-chip.c3 { top: 52%; left: 10%; animation-delay: -11s, -4s; }
+    .float-chip.c4 { top: 64%; right: 5%; animation-delay: -3s, -6s; }
+    .float-chip.c5 { top: 38%; right: 28%; animation-delay: -18s, -1s; }
+    .float-chip.c6 { top: 84%; left: 24%; animation-delay: -9s, -5s; }
+    @keyframes chipFloat { to { transform: translateY(-34px); } }
+    @keyframes chipGlitch {
+        0%, 91%, 100% { text-shadow: none; }
+        92% { text-shadow: 2px 0 rgba(56,189,248,0.8), -2px 0 rgba(199,125,255,0.8); transform: skewX(-6deg); }
+        94% { text-shadow: -2px 0 rgba(56,189,248,0.8), 2px 0 rgba(199,125,255,0.8); }
+        96% { text-shadow: none; transform: none; }
+    }
+
+    /* Cinta de advertencia inferior (solo TEC) */
+    .sol-strip {
+        position: fixed; bottom: 0; left: 0; right: 0; height: 5px;
+        background: repeating-linear-gradient(45deg, var(--accent) 0 14px, transparent 14px 28px);
+        opacity: 0.55; pointer-events: none; z-index: 9990; display: none;
+    }
+    body[data-umode="tec"] .sol-strip { display: block; }
+
+    /* Línea de terminal en el hero (solo TEC) */
+    .hero-console {
+        margin-top: 28px;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 0.92rem; font-weight: 700;
+        color: var(--accent);
+        opacity: 0.9;
+        letter-spacing: 0.5px;
+    }
+    .hero-console .cursor {
+        display: inline-block; width: 9px; height: 1.05em;
+        background: var(--accent); margin-left: 5px; vertical-align: text-bottom;
+        box-shadow: 0 0 10px var(--accent-glow);
+        animation: blinkCursor 1.1s steps(1) infinite;
+    }
+    @keyframes blinkCursor { 50% { opacity: 0; } }
+
+    /* Glitch en el título del hero al pasar el mouse */
+    .hero-h1 .accent-grad { transition: text-shadow 0.2s ease; }
+    .hero-h1:hover .accent-grad {
+        text-shadow: 2px 0 rgba(56,189,248,0.7), -2px 0 rgba(199,125,255,0.7);
+        animation: glitchShift 0.32s steps(2) infinite;
+    }
+    @keyframes glitchShift { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1.5px); } 75% { transform: translateX(1.5px); } }
+
+    /* --- Capturas: reaccionan al pasar el mouse --- */
+    .carousel-card img { transition: transform 0.55s cubic-bezier(0.23,1,0.32,1), filter 0.55s ease; }
+    .carousel-card:hover img { transform: scale(1.07); filter: brightness(1.12) saturate(1.25) contrast(1.04); }
+    .carousel-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 30px 90px rgba(0,0,0,0.8), 0 0 55px var(--accent-glow);
+    }
+    .carousel-card:not(.active):hover { opacity: 0.9 !important; }
+    /* destello de barrido al hover */
+    .card-shine {
+        position: absolute; top: 0; bottom: 0; left: -85%; width: 55%;
+        background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.13) 50%, transparent 80%);
+        transform: skewX(-18deg);
+        transition: left 0.85s ease;
+        pointer-events: none; z-index: 3;
+    }
+    .carousel-card:hover .card-shine { left: 135%; }
+    /* chispa vectorial que atraviesa la captura al hover */
+    .card-spark {
+        position: absolute; top: 0; bottom: 0; left: 0; width: 3px;
+        background: linear-gradient(180deg, transparent 0%, var(--accent) 25%, var(--accent) 75%, transparent 100%);
+        box-shadow: 0 0 16px var(--accent-glow), 0 0 34px var(--accent-glow);
+        opacity: 0; pointer-events: none; z-index: 4;
+    }
+    .carousel-card:hover .card-spark { animation: sparkSweep 0.9s ease-out; }
+    @keyframes sparkSweep { 0% { opacity: 0; transform: translateX(-14px); } 12% { opacity: 1; } 100% { opacity: 0; transform: translateX(640px); } }
+    /* subtítulo: fondo más denso + pista de ampliación */
+    .carousel-card .card-caption { transition: background 0.4s ease; }
+    .carousel-card:hover .card-caption { background: linear-gradient(0deg, rgba(0,0,0,0.98) 0%, transparent 100%); }
+    .carousel-card .card-caption::after { content: " 🔍"; opacity: 0; transition: opacity 0.4s ease; }
+    .carousel-card:hover .card-caption::after { opacity: 1; }
+    .carousel-dot:hover { background: var(--accent); transform: scale(1.35); }
+
+    /* --- ECO: apaga lo nuevo --- */
+    body.low-mode::before { display: none; }
+    body.low-mode .tec-field, body.low-mode .sol-strip, body.low-mode .card-shine, body.low-mode .card-spark { display: none; }
+    body.low-mode .hero-console .cursor { animation: none; }
+
+    /* --- Accesibilidad y móvil --- */
+    @media (prefers-reduced-motion: reduce) {
+        .tec-field, .sol-strip, .card-shine, .card-spark, .code-rain, .float-chip { display: none !important; }
+        body[data-umode="bas"]::before, body[data-umode="tec"]::before { display: none; }
+    }
+    @media (max-width: 900px) {
+        .float-chip, .code-rain { display: none; }
+        body[data-umode="bas"]::before { font-size: 70vw; top: 22vh; }
+    }
 </style>
 </head>
 <body>
@@ -1859,7 +2027,21 @@
     <div class="ambient-orb o1"></div>
     <div class="ambient-orb o2"></div>
     <div class="ambient-orb o3"></div>
+    <div class="tec-field">
+        <div class="tec-gridlines"></div>
+        <div class="code-rain r1"></div>
+        <div class="code-rain r2"></div>
+        <div class="code-rain r3"></div>
+        <div class="code-rain r4"></div>
+        <span class="float-chip c1">ℵ(ω+4)</span>
+        <span class="float-chip c2">d(A,B) = 0</span>
+        <span class="float-chip c3">[EXEC] optimize --all</span>
+        <span class="float-chip c4">Status: NULL</span>
+        <span class="float-chip c5">MF::root@Ω</span>
+        <span class="float-chip c6">⚠ solver.dll [OK]</span>
+    </div>
 </div>
+<div class="sol-strip" aria-hidden="true"></div>
 
 <nav>
     <div class="nav-inner">
@@ -1961,6 +2143,8 @@
             </div>
         </div>
 
+
+        <div class="hero-console fade-in" data-umode="tec" aria-hidden="true">&gt; omega_solver.exe --mode=TEC --optimize-all --dry-run=false<span class="cursor"></span></div>
         <div class="tech-strip fade-in" data-umode="tec">
             <div class="tech-strip-label" data-i18n="tech_label">Construido con</div>
             <div class="tech-items">
@@ -2804,6 +2988,8 @@
         card.innerHTML = `
             <img src="${slide.src}" alt="${slide.caption}" loading="lazy" decoding="async" onerror="this.style.opacity=0.2">
             <div class="card-caption">${slide.caption}</div>
+            <div class="card-shine"></div>
+            <div class="card-spark"></div>
         `;
         card.addEventListener('click', () => {
             if (i === currentSlide) openLightbox(i);
