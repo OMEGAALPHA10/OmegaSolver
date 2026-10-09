@@ -1795,7 +1795,13 @@
         .cursor-glow { display: none; }
         .lightbox { padding: 40px 20px; }
         .lightbox-nav { width: 42px; height: 42px; font-size: 1.8rem; }
-        .theme-menu { min-width: 220px; right: -8px; }
+        .theme-menu {
+            position: fixed;
+            top: auto; left: 12px; right: 12px; bottom: 12px;
+            min-width: 0; width: auto;
+            transform: translateY(16px);
+        }
+        .theme-menu.open { transform: translateY(0); }
     }
 
     /* ============================================================
@@ -2048,7 +2054,9 @@
     [data-theme="doll"] .gs-doll { opacity: 0.14; }
     [data-theme="lizzy"] .gs-lizzy { opacity: 0.14; }
     [data-theme="uzi"] .gs-uzi { opacity: 0.14; }
-    [data-theme="gradient"] .glyph-stamp { display: none; }
+    [data-theme="gradient"] .gs-grad { opacity: 0.14; }
+    [data-theme="gradient"] .glyph-stamp:not(.gs-grad) { display: none; }
+    .glyph-stamp svg { display: block; filter: drop-shadow(0 0 30px var(--accent-glow)); }
     @media (max-width: 900px) { .glyph-stamp { font-size: 54px; bottom: 46px; left: 14px; } }
 
     /* --- Chips de personaje: solo en modo TEC y con su tema activo --- */
@@ -2063,6 +2071,44 @@
     .float-chip.ctc1 { top: 22%; left: 32%; animation-delay: -13s, -3s; }
     .float-chip.ctc2 { top: 46%; right: 12%; animation-delay: -7s, -5s; }
     .float-chip.ctc3 { top: 76%; right: 30%; animation-delay: -19s, -1s; }
+
+    /* ============================================================
+       V4.4.5 — Doblaje LATAM, railgun de Uzi, sello Solver (Uzi Post-Cyn)
+       ============================================================ */
+    .float-chip.ctc4 { top: 60%; left: 42%; animation-delay: -15s, -7s; }
+    .float-chip.ctc5 { top: 18%; left: 44%; animation-delay: -21s, -9s; }
+    .float-chip.ctc6 { top: 70%; left: 8%; animation-delay: -5s, -12s; }
+
+    /* Diagrama blueprint del railgun (solo tema Uzi) */
+    .uzi-blueprint {
+        position: fixed; right: 26px; bottom: 64px;
+        z-index: 0; pointer-events: none;
+        display: none;
+        opacity: 0.5;
+    }
+    [data-theme="uzi"] .uzi-blueprint { display: block; }
+    @media (max-width: 900px) { .uzi-blueprint { display: none !important; } }
+
+    /* Panel técnico real (solo modo TEC) */
+    .tec-specs {
+        margin: 18px auto 0;
+        max-width: 680px;
+        text-align: left;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 0.78rem;
+        border: 1px dashed var(--border-hover);
+        border-radius: 10px;
+        padding: 14px 18px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 5px 28px;
+        background: rgba(0,0,0,0.45);
+    }
+    @media (min-width: 700px) { .tec-specs { grid-template-columns: 1fr 1fr; } }
+    .tec-specs .spec-row { display: flex; gap: 10px; align-items: baseline; }
+    .tec-specs .spec-row .k { color: var(--text-muted); min-width: 108px; }
+    .tec-specs .spec-row .v { color: var(--text-dim); font-weight: 700; }
+    .tec-specs .spec-row::before { content: "·"; color: var(--accent); margin-right: 2px; }
 </style>
 </head>
 <body>
@@ -2089,19 +2135,30 @@
         <span class="float-chip chip-cyn ctc1">solver.host [ACTIVE]</span>
         <span class="float-chip chip-cyn ctc2">eyes → ⊗ hollow</span>
         <span class="float-chip chip-cyn ctc3">desktop :: INFECTED</span>
+        <span class="float-chip chip-cyn ctc4">tail.wag → TRUE</span>
+        <span class="float-chip chip-cyn ctc5">energy: golden.retriever.exe</span>
+        <span class="float-chip chip-cyn ctc6">speech: "staccato. words."</span>
         <span class="float-chip chip-v ctc1">target.locked → TRUE</span>
         <span class="float-chip chip-v ctc2">hunt.mode = ON</span>
         <span class="float-chip chip-v ctc3">wings.deployed()</span>
+        <span class="float-chip chip-v ctc4">style: sadistic.elegance</span>
         <span class="float-chip chip-doll ctc1">AS::glyph → ▲</span>
         <span class="float-chip chip-doll ctc2">telekinesis = ON</span>
         <span class="float-chip chip-doll ctc3">[traducción no encontrada]</span>
+        <span class="float-chip chip-doll ctc4">knives.floating → 12</span>
         <span class="float-chip chip-lizzy ctc1">social.rank = #1</span>
         <span class="float-chip chip-lizzy ctc2">♥ friends++</span>
         <span class="float-chip chip-lizzy ctc3">gossip.log ∞</span>
+        <span class="float-chip chip-lizzy ctc4">outpost.3 :: rank_01</span>
         <span class="float-chip chip-uzi ctc1">angst.level = MAX</span>
         <span class="float-chip chip-uzi ctc2">bite(me) → ERROR</span>
         <span class="float-chip chip-uzi ctc3">railgun.charge = 87%</span>
-        <span class="float-chip chip-grad ctc1">@Copper-9 :: online</span>
+        <span class="float-chip chip-uzi ctc4">dub.LATAM → "NUZI"</span>
+        <span class="float-chip chip-uzi ctc5">catchphrase → ¡muérdeme!</span>
+        <span class="float-chip chip-grad ctc1">solver.host → MERGED</span>
+        <span class="float-chip chip-grad ctc2">purple.append(yellow)</span>
+        <span class="float-chip chip-grad ctc3">⚠ solver.box [OPEN]</span>
+        <span class="float-chip chip-grad ctc4">@Copper-9 :: online</span>
     </div>
 </div>
 <div class="sol-strip" aria-hidden="true"></div>
@@ -2111,6 +2168,24 @@
     <span class="glyph-stamp gs-doll">▲</span>
     <span class="glyph-stamp gs-lizzy">♥</span>
     <span class="glyph-stamp gs-uzi">⚔</span>
+    <span class="glyph-stamp gs-grad"><svg width="92" height="92" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sgv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C026D3"/><stop offset=".5" stop-color="#E91E63"/><stop offset="1" stop-color="#FACC15"/></linearGradient></defs><path d="M50 10 L90 82 L10 82 Z" stroke="url(#sgv)" stroke-width="3" fill="none"/><circle cx="50" cy="60" r="13" stroke="url(#sgv)" stroke-width="3" fill="none"/><path d="M50 47 L50 73 M37 60 L63 60" stroke="url(#sgv)" stroke-width="2"/></svg></span>
+</div>
+
+<div class="uzi-blueprint" aria-hidden="true">
+    <svg width="150" height="86" viewBox="0 0 150 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 18 H144 M6 64 H144" stroke="#A855F7" stroke-width="1.5"/>
+        <circle cx="34" cy="41" r="9" stroke="#D946EF" stroke-width="1.5"/>
+        <circle cx="62" cy="41" r="9" stroke="#D946EF" stroke-width="1.5"/>
+        <circle cx="90" cy="41" r="9" stroke="#D946EF" stroke-width="1.5"/>
+        <path d="M104 41 L128 41" stroke="#FACC15" stroke-width="2" stroke-dasharray="4 3"/>
+        <circle cx="134" cy="41" r="3" fill="#FACC15"/>
+        <path d="M104 26 V56" stroke="#A855F7" stroke-width="1"/>
+        <text x="28" y="10" fill="#D946EF" font-family="monospace" font-size="8">C1</text>
+        <text x="56" y="10" fill="#D946EF" font-family="monospace" font-size="8">C2</text>
+        <text x="84" y="10" fill="#D946EF" font-family="monospace" font-size="8">C3</text>
+        <text x="104" y="10" fill="#FACC15" font-family="monospace" font-size="8">PWR 87%</text>
+        <text x="6" y="82" fill="#A855F7" font-family="monospace" font-size="8">railgun_mk.uzi :: blueprint</text>
+    </svg>
 </div>
 
 <nav>
@@ -2215,6 +2290,18 @@
 
 
         <div class="hero-console fade-in" data-umode="tec" aria-hidden="true">&gt; omega_solver.exe --mode=TEC --optimize-all --dry-run=false<span class="cursor"></span></div>
+        <div class="tec-specs fade-in" data-umode="tec" aria-label="Detalles técnicos">
+            <div class="spec-row"><span class="k">runtime</span><span class="v">powershell + wpf</span></div>
+            <div class="spec-row"><span class="k">os.target</span><span class="v">windows 10 / 11 · x64</span></div>
+            <div class="spec-row"><span class="k">shell.min</span><span class="v">powershell 5.1+</span></div>
+            <div class="spec-row"><span class="k">footprint</span><span class="v">~50 mb · 2 gb ram</span></div>
+            <div class="spec-row"><span class="k">elevation</span><span class="v">admin (uac)</span></div>
+            <div class="spec-row"><span class="k">license</span><span class="v">gpl-3.0 · auditable</span></div>
+            <div class="spec-row"><span class="k">i18n</span><span class="v">es / en / pt</span></div>
+            <div class="spec-row"><span class="k">net.transfer</span><span class="v">robocopy + ftp</span></div>
+            <div class="spec-row"><span class="k">pkg</span><span class="v">OMEGAALPHA10.OmegaSolver — en revisión</span></div>
+            <div class="spec-row"><span class="k">stats.live</span><span class="v">GET api.github.com</span></div>
+        </div>
         <div class="tech-strip fade-in" data-umode="tec">
             <div class="tech-strip-label" data-i18n="tech_label">Construido con</div>
             <div class="tech-items">
