@@ -1797,12 +1797,69 @@
         .lightbox-nav { width: 42px; height: 42px; font-size: 1.8rem; }
         .theme-menu { min-width: 220px; right: -8px; }
     }
+
+    /* ============================================================
+       V4.4.1 — AÑADIDOS: Modos BAS/TEC, Modo ECO, fondo ambiente
+       ============================================================ */
+
+    /* --- Fondo ambiente: rellena el negro entre secciones --- */
+    #ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .ambient-orb { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform; }
+    .ambient-orb.o1 { width: 520px; height: 520px; top: 16%; left: -130px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); animation: orbDrift1 38s ease-in-out infinite alternate; }
+    .ambient-orb.o2 { width: 420px; height: 420px; top: 58%; right: -110px; background: radial-gradient(circle, rgba(199,125,255,0.14) 0%, transparent 70%); animation: orbDrift2 46s ease-in-out infinite alternate; }
+    .ambient-orb.o3 { width: 620px; height: 620px; bottom: -180px; left: 32%; background: radial-gradient(circle, rgba(56,189,248,0.10) 0%, transparent 70%); animation: orbDrift3 52s ease-in-out infinite alternate; }
+    @keyframes orbDrift1 { from { transform: translate(0, 0) scale(1); } to { transform: translate(140px, 90px) scale(1.15); } }
+    @keyframes orbDrift2 { from { transform: translate(0, 0) scale(1.1); } to { transform: translate(-120px, -70px) scale(0.95); } }
+    @keyframes orbDrift3 { from { transform: translate(0, 0) scale(1); } to { transform: translate(90px, -110px) scale(1.2); } }
+    [data-theme="gradient"] .ambient-orb.o1 { background: radial-gradient(circle, rgba(233,30,99,0.20) 0%, transparent 70%); }
+    [data-theme="gradient"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(250,204,21,0.14) 0%, transparent 70%); }
+    [data-theme="gradient"] .ambient-orb.o3 { background: radial-gradient(circle, rgba(192,38,211,0.14) 0%, transparent 70%); }
+
+    /* --- Selector de modo BAS / TEC (simula los modos de la app) --- */
+    .mode-switch { display: flex; gap: 2px; border: 1px solid var(--border); border-radius: 8px; padding: 3px; background: rgba(20,16,0,0.8); transition: border-color 0.4s ease; }
+    .mode-switch button { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-weight: 900; font-size: 0.72rem; padding: 5px 10px; border-radius: 6px; transition: all 0.2s; font-family: inherit; }
+    .mode-switch button:hover { color: var(--accent); }
+    .mode-switch button.active { background: var(--accent-gradient); color: #000; text-shadow: 0 0 6px rgba(255,255,255,0.5); }
+
+    /* --- Botón ECO (simula el Modo Low de la app) --- */
+    .eco-btn { display: flex; align-items: center; gap: 6px; background: rgba(20,16,0,0.8); border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-family: inherit; font-weight: 900; font-size: 0.72rem; color: var(--text-muted); transition: all 0.25s; }
+    .eco-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .eco-btn.on { background: var(--accent-gradient); color: #000; border-color: transparent; box-shadow: 0 0 12px var(--accent-glow); text-shadow: 0 0 6px rgba(255,255,255,0.5); }
+    .eco-btn .eco-leaf { font-size: 0.8rem; line-height: 1; }
+
+    /* --- Modo BAS: oculta las secciones técnicas --- */
+    body[data-umode="bas"] [data-umode="tec"] { display: none; }
+
+    /* --- MODO ECO: apaga los efectos costosos --- */
+    body.low-mode::after { display: none; }
+    body.low-mode .cursor-glow { display: none; }
+    body.low-mode #ambient { display: none; }
+    body.low-mode .hero-aurora { animation: none !important; opacity: 0.5; }
+    body.low-mode .hero-watermark { animation: none !important; }
+    body.low-mode .hero-ribbon { animation: none !important; }
+    body.low-mode .badge .dot { animation: none !important; }
+    body.low-mode .stat-value.loading::after { animation: none !important; }
+
+    /* --- Nota winget pendiente --- */
+    .winget-note { color: var(--text-muted); font-size: 0.8rem; line-height: 1.5; border: 1px dashed var(--border-hover); border-radius: 8px; padding: 8px 12px; margin-bottom: 14px; }
+
+    /* --- Accesibilidad: reduced motion --- */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        #ambient, .cursor-glow { display: none; }
+    }
 </style>
 </head>
 <body>
 
 <div id="scroll-progress"></div>
 <div class="cursor-glow" id="cursorGlow"></div>
+
+<div id="ambient" aria-hidden="true">
+    <div class="ambient-orb o1"></div>
+    <div class="ambient-orb o2"></div>
+    <div class="ambient-orb o3"></div>
+</div>
 
 <nav>
     <div class="nav-inner">
@@ -1823,6 +1880,13 @@
                 <button data-lang="en">EN</button>
                 <button data-lang="pt">PT</button>
             </div>
+            <div class="mode-switch" role="group" aria-label="Modo de la web (como en la app)">
+                <button data-umode-btn="bas" title="Modo Básico — como en la app">BAS</button>
+                <button data-umode-btn="tec" title="Modo Técnico — secciones avanzadas">TEC</button>
+            </div>
+            <button class="eco-btn" id="ecoBtn" aria-pressed="false" title="Modo Eco: desactiva efectos pesados">
+                <span class="eco-leaf">🌱</span> ECO
+            </button>
             <div class="theme-picker">
                 <button class="theme-btn" id="themeBtn" data-theme-current="cyn" aria-label="Theme">
                     <span class="theme-dot"></span>
@@ -1897,7 +1961,7 @@
             </div>
         </div>
 
-        <div class="tech-strip fade-in">
+        <div class="tech-strip fade-in" data-umode="tec">
             <div class="tech-strip-label" data-i18n="tech_label">Construido con</div>
             <div class="tech-items">
                 <span class="tech-item"><span class="bullet"></span>PowerShell 7</span>
@@ -2087,8 +2151,9 @@
     </div>
     <div class="install-grid">
         <div class="install-card fade-in">
-            <h3>⚡ Winget <span class="tag" data-i18n="tag_recommended">Recomendado</span></h3>
+            <h3>⚡ Winget <span class="tag" data-i18n="tag_pending">En revisión</span></h3>
             <p data-i18n="install_winget_desc">Instala OmegaSolver con un solo comando desde la terminal.</p>
+            <p class="winget-note" data-i18n="winget_pending">⏳ El paquete está en revisión oficial en winget-pkgs. Si el comando aún no funciona, descarga el .exe firmado desde GitHub Releases.</p>
             <span class="code-label" data-i18n="install_new">Instalación limpia</span>
             <div class="code-block">
                 <code>winget install OMEGAALPHA10.OmegaSolver</code>
@@ -2147,7 +2212,7 @@
     </div>
 </section>
 
-<section id="changelog">
+<section id="changelog" data-umode="tec">
     <div class="section-header fade-in">
         <span class="section-eyebrow" data-i18n="cl_eyebrow">Historial</span>
         <h2 class="section-title"><span data-i18n="cl_title">Changelog</span></h2>
@@ -2177,7 +2242,7 @@
     </div>
 </section>
 
-<section id="issues">
+<section id="issues" data-umode="tec">
     <div class="section-header fade-in">
         <span class="section-eyebrow" data-i18n="issues_eyebrow">Transparencia</span>
         <h2 class="section-title"><span data-i18n="issues_title">Issues conocidos</span></h2>
@@ -2195,7 +2260,7 @@
     </div>
 </section>
 
-<section id="roadmap">
+<section id="roadmap" data-umode="tec">
     <div class="section-header fade-in">
         <span class="section-eyebrow" data-i18n="rm_eyebrow">Futuro</span>
         <h2 class="section-title"><span data-i18n="rm_title">Roadmap</span></h2>
@@ -2873,6 +2938,111 @@
         }
     }
     loadStats();
+</script>
+
+<script>
+    /* ============================================================
+       V4.4.1 — Modos BAS/TEC + Modo ECO + i18n extra
+       ============================================================ */
+    (function () {
+        // --- Nuevas cadenas i18n (se fusionan con el diccionario existente) ---
+        var EXTRA = {
+            es: {
+                mode_bas_title: 'Modo Básico — como en la app', mode_tec_title: 'Modo Técnico — secciones avanzadas',
+                eco_title: 'Modo Eco: desactiva efectos pesados',
+                toast_bas: 'Modo Básico activado', toast_tec: 'Modo Técnico activado — secciones avanzadas visibles',
+                toast_eco_on: '🌱 Modo Eco activado — animaciones reducidas', toast_eco_off: 'Modo Eco desactivado',
+                hero_badge: 'Winget — en revisión oficial',
+                tag_pending: 'En revisión',
+                winget_pending: '⏳ El paquete está en revisión oficial en winget-pkgs. Si el comando aún no funciona, descarga el .exe firmado desde GitHub Releases.'
+            },
+            en: {
+                mode_bas_title: 'Basic Mode — just like the app', mode_tec_title: 'Technical Mode — advanced sections',
+                eco_title: 'Eco Mode: disables heavy effects',
+                toast_bas: 'Basic Mode enabled', toast_tec: 'Technical Mode enabled — advanced sections visible',
+                toast_eco_on: '🌱 Eco Mode on — reduced animations', toast_eco_off: 'Eco Mode off',
+                hero_badge: 'Winget — under official review',
+                tag_pending: 'In review',
+                winget_pending: "⏳ The package is under official review in winget-pkgs. If the command doesn't work yet, download the signed .exe from GitHub Releases."
+            },
+            pt: {
+                mode_bas_title: 'Modo Básico — como no app', mode_tec_title: 'Modo Técnico — seções avançadas',
+                eco_title: 'Modo Eco: desativa efeitos pesados',
+                toast_bas: 'Modo Básico ativado', toast_tec: 'Modo Técnico ativado — seções avançadas visíveis',
+                toast_eco_on: '🌱 Modo Eco ativado — animações reduzidas', toast_eco_off: 'Modo Eco desativado',
+                hero_badge: 'Winget — em revisão oficial',
+                tag_pending: 'Em revisão',
+                winget_pending: '⏳ O pacote está em revisão oficial no winget-pkgs. Se o comando ainda não funcionar, baixe o .exe assinado do GitHub Releases.'
+            }
+        };
+        Object.keys(EXTRA).forEach(function (l) {
+            if (typeof i18n !== 'undefined' && i18n[l]) { Object.assign(i18n[l], EXTRA[l]); }
+        });
+
+        // --- Idioma actual (con protección ante localStorage bloqueado) ---
+        function currentLang() {
+            try {
+                var b = document.querySelector('.lang-switch button.active');
+                return (b && b.dataset.lang) || localStorage.getItem('omega_lang') || 'es';
+            } catch (e) { return 'es'; }
+        }
+
+        // --- Títulos traducibles de los botones nuevos (setLang no cubre title="") ---
+        function applyExtraTitles(lang) {
+            var d = (typeof i18n !== 'undefined' && i18n[lang]) ? i18n[lang] : (typeof i18n !== 'undefined' ? i18n.es : null);
+            if (!d) return;
+            var bas = document.querySelector('[data-umode-btn="bas"]');
+            var tec = document.querySelector('[data-umode-btn="tec"]');
+            var eco = document.getElementById('ecoBtn');
+            if (bas) { bas.title = d.mode_bas_title; }
+            if (tec) { tec.title = d.mode_tec_title; }
+            if (eco) { eco.title = d.eco_title; }
+        }
+        if (typeof setLang === 'function') {
+            var _setLang = setLang;
+            setLang = function (lang) { _setLang(lang); applyExtraTitles(lang); };
+        }
+
+        // --- Modo BAS / TEC (simula los modos de la app) ---
+        var umodeBtns = document.querySelectorAll('[data-umode-btn]');
+        function setUmode(mode, announce) {
+            document.body.dataset.umode = mode;
+            umodeBtns.forEach(function (b) { b.classList.toggle('active', b.dataset.umodeBtn === mode); });
+            try { localStorage.setItem('omega_umode', mode); } catch (e) {}
+            if (announce && typeof showToast === 'function' && typeof i18n !== 'undefined' && i18n[currentLang()]) {
+                showToast(mode === 'tec' ? i18n[currentLang()].toast_tec : i18n[currentLang()].toast_bas);
+            }
+        }
+        umodeBtns.forEach(function (b) {
+            b.addEventListener('click', function () { setUmode(b.dataset.umodeBtn, true); });
+        });
+        try { setUmode(localStorage.getItem('omega_umode') || 'bas', false); }
+        catch (e) { setUmode('bas', false); }
+
+        // --- Modo ECO (como el Modo Low de la app) ---
+        var ecoBtn = document.getElementById('ecoBtn');
+        function setEco(on, announce) {
+            document.body.classList.toggle('low-mode', on);
+            if (ecoBtn) {
+                ecoBtn.classList.toggle('on', on);
+                ecoBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+            }
+            try { localStorage.setItem('omega_eco', on ? '1' : '0'); } catch (e) {}
+            if (announce && typeof showToast === 'function' && typeof i18n !== 'undefined' && i18n[currentLang()]) {
+                showToast(on ? i18n[currentLang()].toast_eco_on : i18n[currentLang()].toast_eco_off);
+            }
+        }
+        if (ecoBtn) {
+            ecoBtn.addEventListener('click', function () { setEco(!document.body.classList.contains('low-mode'), true); });
+        }
+        var savedEco = null, reduced = false;
+        try { savedEco = localStorage.getItem('omega_eco'); } catch (e) {}
+        try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+        setEco(savedEco === '1' || (savedEco === null && reduced), false);
+
+        // --- Reaplicar idioma para mostrar las cadenas nuevas y el badge corregido ---
+        try { if (typeof setLang === 'function') { setLang(currentLang()); } } catch (e) {}
+    })();
 </script>
 
 </body>
