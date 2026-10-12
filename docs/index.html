@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OmegaSolver V4.4 | Limpiador Y optimizador para Windows</title>
-<meta name="description" content="OmegaSolver V4.4: Suite de diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado, i18n, protección SSD, PS12EXE y firma SHA256. Open source bajo GPLv3.">
+<title>OmegaSolver V4.4.1 | Limpiador y optimizador para Windows</title>
+<meta name="description" content="OmegaSolver V4.4.1: Suite de diagnóstico, mantenimiento y optimización para Windows. Cold start 45% más rápido, fix Winget Live, motor asíncrono. Open source bajo GPLv3.">
 <meta name="author" content="Fabian — OMEGA_ALPHA">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <meta name="keywords" content="optimizador windows, limpiador windows, mantenimiento windows, reparar windows, SFC DISM CHKDSK, powershell wpf, open source, GPLv3, omegasolver, optimizar pc, limpiar pc windows, winget">
@@ -19,14 +19,14 @@
 <link rel="alternate" hreflang="x-default" href="https://omegaalpha10.github.io/OmegaSolver/">
 
 <!-- Open Graph -->
-<meta property="og:title" content="OmegaSolver V4.4 — Suite de Optimización para Windows">
-<meta property="og:description" content="Diagnóstico, mantenimiento y optimización para Windows. Modo Básico y Avanzado. Open source bajo GPLv3.">
+<meta property="og:title" content="OmegaSolver V4.4.1 — Suite de Optimización para Windows">
+<meta property="og:description" content="Diagnóstico, mantenimiento y optimización para Windows. Cold start 45% más rápido. Open source bajo GPLv3.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://omegaalpha10.github.io/OmegaSolver/">
 <meta property="og:image" content="https://omegaalpha10.github.io/OmegaSolver/screenshots/banner-cyn.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="OmegaSolver V4.4 — Suite de Optimización para Windows">
+<meta property="og:image:alt" content="OmegaSolver V4.4.1 — Suite de Optimización para Windows">
 <meta property="og:site_name" content="OmegaSolver">
 <meta property="og:locale" content="es_ES">
 <meta property="og:locale:alternate" content="en_US">
@@ -34,10 +34,10 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OmegaSolver V4.4 — Suite de Optimización para Windows">
+<meta name="twitter:title" content="OmegaSolver V4.4.1 — Suite de Optimización para Windows">
 <meta name="twitter:description" content="Diagnóstico, mantenimiento y optimización para Windows. Open source bajo GPLv3.">
 <meta name="twitter:image" content="https://omegaalpha10.github.io/OmegaSolver/screenshots/banner-cyn.jpg">
-<meta name="twitter:image:alt" content="OmegaSolver V4.4">
+<meta name="twitter:image:alt" content="OmegaSolver V4.4.1">
 
 <meta name="theme-color" content="#FFD400">
 <link rel="icon" type="image/png" href="./screenshots/logo.png">
@@ -53,8 +53,8 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "OmegaSolver",
-  "alternateName": "OmegaSolver V4.4",
-  "softwareVersion": "4.4",
+  "alternateName": "OmegaSolver V4.4.1",
+  "softwareVersion": "4.4.1",
   "operatingSystem": "Windows 10, Windows 11",
   "applicationCategory": "UtilitiesApplication",
   "applicationSubCategory": "System Optimization",
@@ -1529,6 +1529,11 @@
         color: var(--text-dim);
     }
     .issue-item .workaround strong { color: var(--green); }
+    .issue-item.fixed {
+        border-left-color: var(--green);
+        background: linear-gradient(160deg, rgba(16,30,20,0.85) 0%, rgba(6,10,6,0.9) 100%);
+    }
+    .issue-item.fixed h4 { color: var(--green); }
 
     /* ROADMAP */
     .roadmap {
@@ -2025,10 +2030,8 @@
 
     /* ============================================================
        V4.4.3 — Personalidad por tema: guiños a la serie inspiradora
-       Cada tema de color evoca a su personaje sin nombrarlo
        ============================================================ */
 
-    /* --- Orbes con la paleta de cada personaje --- */
     [data-theme="cyn"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(255,212,0,0.16) 0%, transparent 70%); }
     [data-theme="cyn"] .ambient-orb.o3 { background: radial-gradient(circle, rgba(255,160,0,0.10) 0%, transparent 70%); }
     [data-theme="v"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(255,120,0,0.15) 0%, transparent 70%); }
@@ -2040,7 +2043,6 @@
     [data-theme="uzi"] .ambient-orb.o2 { background: radial-gradient(circle, rgba(217,70,239,0.16) 0%, transparent 70%); }
     [data-theme="uzi"] .ambient-orb.o3 { background: radial-gradient(circle, rgba(88,28,135,0.14) 0%, transparent 70%); }
 
-    /* --- Sello del personaje: glifo fijo abajo a la izquierda (ambos modos) --- */
     .glyph-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     .glyph-stamp {
         position: fixed; bottom: 64px; left: 22px;
@@ -2059,7 +2061,6 @@
     .glyph-stamp svg { display: block; filter: drop-shadow(0 0 30px var(--accent-glow)); }
     @media (max-width: 900px) { .glyph-stamp { font-size: 54px; bottom: 46px; left: 14px; } }
 
-    /* --- Chips de personaje: solo en modo TEC y con su tema activo --- */
     .float-chip.chip-cyn, .float-chip.chip-v, .float-chip.chip-doll,
     .float-chip.chip-lizzy, .float-chip.chip-uzi, .float-chip.chip-grad { display: none; }
     [data-theme="cyn"] .chip-cyn { display: inline-block; }
@@ -2079,7 +2080,6 @@
     .float-chip.ctc5 { top: 18%; left: 44%; animation-delay: -21s, -9s; }
     .float-chip.ctc6 { top: 70%; left: 8%; animation-delay: -5s, -12s; }
 
-    /* Diagrama blueprint del railgun (solo tema Uzi) */
     .uzi-blueprint {
         position: fixed; right: 26px; bottom: 64px;
         z-index: 0; pointer-events: none;
@@ -2089,7 +2089,6 @@
     [data-theme="uzi"] .uzi-blueprint { display: block; }
     @media (max-width: 900px) { .uzi-blueprint { display: none !important; } }
 
-    /* Panel técnico real (solo modo TEC) */
     .tec-specs {
         margin: 18px auto 0;
         max-width: 680px;
@@ -2109,6 +2108,41 @@
     .tec-specs .spec-row .k { color: var(--text-muted); min-width: 108px; }
     .tec-specs .spec-row .v { color: var(--text-dim); font-weight: 700; }
     .tec-specs .spec-row::before { content: "·"; color: var(--accent); margin-right: 2px; }
+
+    /* ============================================================
+       V4.4.1 — Benchmark comparativo V4.4 vs V4.4.1
+       ============================================================ */
+    .bench-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; }
+    .bench-card {
+        background: linear-gradient(160deg, rgba(20,16,0,0.9) 0%, rgba(5,3,0,0.9) 100%);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 26px 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.35s ease;
+    }
+    .bench-card:hover { transform: translateY(-4px); border-color: var(--border-hover); box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px var(--accent-glow); }
+    .bench-card .bench-label { font-size: 0.72rem; font-weight: 900; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+    .bench-row { margin-bottom: 18px; }
+    .bench-row:last-child { margin-bottom: 0; }
+    .bench-name { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.88rem; margin-bottom: 6px; color: var(--text-dim); }
+    .bench-name .val { font-family: 'Consolas', monospace; font-weight: 900; }
+    .bench-name .val.win { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+    .bench-bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; position: relative; }
+    .bench-bar > span { display: block; height: 100%; border-radius: 999px; transition: width 1.2s cubic-bezier(0.23,1,0.32,1); background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.25)); }
+    .bench-bar > span.win { background: var(--accent-gradient); box-shadow: 0 0 20px var(--accent-glow); }
+    .bench-delta { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 900; padding: 3px 10px; border-radius: 999px; margin-top: 6px; }
+    .bench-delta.pos { color: var(--green); background: rgba(74,222,128,0.10); border: 1px solid var(--green); }
+    .bench-delta.neg { color: var(--orange); background: rgba(251,146,60,0.10); border: 1px solid var(--orange); }
+    .bench-hardware { max-width: 900px; margin: 0 auto 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .bench-hw-item { background: rgba(20,16,0,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; transition: all 0.25s; }
+    .bench-hw-item:hover { border-color: var(--accent); background: var(--card-hi); }
+    .bench-hw-item .lbl { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; margin-bottom: 6px; }
+    .bench-hw-item .val { font-size: 0.92rem; font-weight: 700; font-family: 'Consolas', monospace; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; line-height: 1.3; }
+    .bench-note { max-width: 820px; margin: 26px auto 0; padding: 16px 20px; border-left: 4px solid var(--accent); background: rgba(20,16,0,0.5); border-radius: 8px; color: var(--text-dim); font-size: 0.9rem; line-height: 1.65; }
+    .bench-note code { font-family: 'Consolas', monospace; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; font-size: 0.85rem; }
+    [data-theme="gradient"] .bench-note { border-image: var(--accent-gradient) 1; border-left: 4px solid; }
 </style>
 </head>
 <body>
@@ -2193,10 +2227,11 @@
         <a href="#" class="nav-logo" aria-label="OmegaSolver — Inicio">
             <img src="./screenshots/logo.png" alt="OmegaSolver" width="36" height="36">
             <span class="nav-logo-text">OMEGASOLVER</span>
-            <span class="nav-version">V4.4</span>
+            <span class="nav-version">V4.4.1</span>
         </a>
         <div class="nav-links">
             <a href="#story" data-i18n="nav_story">Historia</a>
+            <a href="#performance" data-i18n="nav_performance">Rendimiento</a>
             <a href="#features" data-i18n="nav_features">Features</a>
             <a href="#screenshots" data-i18n="nav_screens">Capturas</a>
             <a href="#install" data-i18n="nav_install">Instalar</a>
@@ -2239,8 +2274,8 @@
     <div class="hero-inner">
 
         <div class="hero-banner-wrap fade-in" id="heroBannerWrap">
-            <span class="hero-ribbon">✨ V4.4</span>
-            <img id="heroBanner" src="./screenshots/banner-cyn.jpg" alt="OmegaSolver V4.4 — Suite de Optimización para Windows" class="hero-banner-img">
+            <span class="hero-ribbon">✨ V4.4.1</span>
+            <img id="heroBanner" src="./screenshots/banner-cyn.jpg" alt="OmegaSolver V4.4.1 — Suite de Optimización para Windows" class="hero-banner-img">
         </div>
 
         <div class="badges-row">
@@ -2262,12 +2297,13 @@
 
         <div class="hero-cta">
             <a href="#install" class="btn btn-primary" data-i18n="hero_cta_install">📥 Instalar ahora</a>
+            <a href="#performance" class="btn btn-outline" data-i18n="hero_cta_perf" data-text="⚡ Ver benchmarks">⚡ Ver benchmarks</a>
             <a href="https://github.com/OMEGAALPHA10/OmegaSolver" target="_blank" rel="noopener" class="btn btn-outline" data-i18n="hero_cta_github" data-text="Ver en GitHub">Ver en GitHub</a>
         </div>
 
         <div class="stats-bar">
             <div class="stat-item">
-                <div class="stat-value">4.4</div>
+                <div class="stat-value">4.4.1</div>
                 <div class="stat-label" data-i18n="stat_version">Versión</div>
             </div>
             <div class="stat-item">
@@ -2299,13 +2335,15 @@
             <div class="spec-row"><span class="k">license</span><span class="v">gpl-3.0 · auditable</span></div>
             <div class="spec-row"><span class="k">i18n</span><span class="v">es / en / pt</span></div>
             <div class="spec-row"><span class="k">net.transfer</span><span class="v">robocopy + ftp</span></div>
+            <div class="spec-row"><span class="k">async.engine</span><span class="v">Invoke-OmegaAsync</span></div>
+            <div class="spec-row"><span class="k">cold.start</span><span class="v">33.61 s (vs 61.35 s en V4.4)</span></div>
             <div class="spec-row"><span class="k">pkg</span><span class="v">OMEGAALPHA10.OmegaSolver — en revisión</span></div>
             <div class="spec-row"><span class="k">stats.live</span><span class="v">GET api.github.com</span></div>
         </div>
         <div class="tech-strip fade-in" data-umode="tec">
             <div class="tech-strip-label" data-i18n="tech_label">Construido con</div>
             <div class="tech-items">
-                <span class="tech-item"><span class="bullet"></span>PowerShell 7</span>
+                <span class="tech-item"><span class="bullet"></span>PowerShell 5.1 / 7</span>
                 <span class="tech-item"><span class="bullet"></span>WPF</span>
                 <span class="tech-item"><span class="bullet"></span>PS12EXE</span>
                 <span class="tech-item"><span class="bullet"></span>Winget</span>
@@ -2332,6 +2370,81 @@
             <img src="./screenshots/logo.png" alt="" width="36" height="36" loading="lazy" onerror="this.style.display='none'">
             <span data-i18n="story_sig">— Fabian (OMEGA_ALPHA), desarrollador independiente</span>
         </p>
+    </div>
+</section>
+
+<section id="performance">
+    <div class="section-header fade-in">
+        <span class="section-eyebrow" data-i18n="perf_eyebrow">Rendimiento verificado</span>
+        <h2 class="section-title"><span data-i18n="perf_title">Casi el doble</span> <span class="highlight" data-i18n="perf_title_b">de rápida</span></h2>
+        <p class="section-sub" data-i18n="perf_sub">Benchmark real sobre hardware modesto donde las mejoras se notan de verdad.</p>
+    </div>
+
+    <div class="bench-hardware fade-in">
+        <div class="bench-hw-item"><div class="lbl" data-i18n="perf_hw_cpu">Procesador</div><div class="val">Celeron N3350<br>@ 1.10 GHz</div></div>
+        <div class="bench-hw-item"><div class="lbl" data-i18n="perf_hw_cores">Núcleos</div><div class="val">2 lógicos</div></div>
+        <div class="bench-hw-item"><div class="lbl" data-i18n="perf_hw_ram">RAM</div><div class="val">4 GB · 2133 MHz</div></div>
+        <div class="bench-hw-item"><div class="lbl" data-i18n="perf_hw_gpu">Gráficos</div><div class="val">Intel HD · 128 MB</div></div>
+        <div class="bench-hw-item"><div class="lbl" data-i18n="perf_hw_disk">Almacenamiento</div><div class="val">58 GB (50 usados)</div></div>
+        <div class="bench-hw-item"><div class="lbl" data-i18n="perf_hw_os">Sistema</div><div class="val">Windows 11 Pro<br>build 26200</div></div>
+    </div>
+
+    <div class="bench-grid">
+        <div class="bench-card fade-in">
+            <div class="bench-label" data-i18n="perf_card_cold">🚀 Cold start</div>
+            <div class="bench-row">
+                <div class="bench-name"><span>V4.4</span><span class="val">61.35 s</span></div>
+                <div class="bench-bar"><span style="width:100%"></span></div>
+            </div>
+            <div class="bench-row">
+                <div class="bench-name"><span>V4.4.1</span><span class="val win">33.61 s</span></div>
+                <div class="bench-bar"><span class="win" style="width:54.8%"></span></div>
+            </div>
+            <div class="bench-delta pos" data-i18n="perf_delta_cold">▼ 45.2% más rápido</div>
+        </div>
+
+        <div class="bench-card fade-in">
+            <div class="bench-label" data-i18n="perf_card_consist">📊 Consistencia (σ)</div>
+            <div class="bench-row">
+                <div class="bench-name"><span>V4.4</span><span class="val">±22.03 s</span></div>
+                <div class="bench-bar"><span style="width:100%"></span></div>
+            </div>
+            <div class="bench-row">
+                <div class="bench-name"><span>V4.4.1</span><span class="val win">±5.74 s</span></div>
+                <div class="bench-bar"><span class="win" style="width:26%"></span></div>
+            </div>
+            <div class="bench-delta pos" data-i18n="perf_delta_consist">▼ 74% de varianza</div>
+        </div>
+
+        <div class="bench-card fade-in">
+            <div class="bench-label" data-i18n="perf_card_cpu">💻 CPU idle</div>
+            <div class="bench-row">
+                <div class="bench-name"><span>V4.4</span><span class="val">4.79 %</span></div>
+                <div class="bench-bar"><span style="width:100%"></span></div>
+            </div>
+            <div class="bench-row">
+                <div class="bench-name"><span>V4.4.1</span><span class="val win">3.64 %</span></div>
+                <div class="bench-bar"><span class="win" style="width:76%"></span></div>
+            </div>
+            <div class="bench-delta pos" data-i18n="perf_delta_cpu">▼ 24% menos CPU</div>
+        </div>
+
+        <div class="bench-card fade-in">
+            <div class="bench-label" data-i18n="perf_card_ram">🧠 RAM idle</div>
+            <div class="bench-row">
+                <div class="bench-name"><span>V4.4</span><span class="val win">266.6 MB</span></div>
+                <div class="bench-bar"><span class="win" style="width:97.5%"></span></div>
+            </div>
+            <div class="bench-row">
+                <div class="bench-name"><span>V4.4.1</span><span class="val">273.5 MB</span></div>
+                <div class="bench-bar"><span style="width:100%"></span></div>
+            </div>
+            <div class="bench-delta neg" data-i18n="perf_delta_ram">▲ 2.6% (coste async)</div>
+        </div>
+    </div>
+
+    <div class="bench-note fade-in" data-i18n="perf_note">
+        <strong>Veredicto:</strong> V4.4.1 arranca <strong>casi el doble de rápido</strong>, con <strong>24% menos CPU</strong>, y a cambio de solo <strong>7 MB extra de RAM</strong> — el coste natural del motor asíncrono (<code>Invoke-OmegaAsync</code> / <code>Invoke-OmegaTaskAsync</code>) que libera el hilo UI de todas las llamadas lentas a WMI/CIM.
     </div>
 </section>
 
@@ -2419,14 +2532,24 @@
 
     <div class="bento">
         <div class="bento-card bento-3 new highlight fade-in">
-            <span class="bento-icon">🖼️</span>
-            <h3 data-i18n="bento_f1_t">Logo embebido Base64</h3>
-            <p data-i18n="bento_f1_d">El logo de OmegaSolver viaja dentro del propio ejecutable. Sin dependencias externas, sin rutas rotas, 100% portátil.</p>
+            <span class="bento-icon">🚀</span>
+            <h3 data-i18n="bento_f0_t">Motor asíncrono</h3>
+            <p data-i18n="bento_f0_d">Toda operación pesada corre en runspaces de fondo. La ventana responde al instante incluso mientras el diagnóstico, la limpieza o winget trabajan por debajo.</p>
         </div>
         <div class="bento-card bento-3 new highlight fade-in">
+            <span class="bento-icon">🐛</span>
+            <h3 data-i18n="bento_f00_t">Winget Live corregido</h3>
+            <p data-i18n="bento_f00_d">El bug del panel de detalle al hacer clic en tarjetas de búsqueda en vivo está resuelto. Soporte para PSCustomObject y hashtable, fallback de icono blindado.</p>
+        </div>
+        <div class="bento-card bento-2 fade-in">
+            <span class="bento-icon">🖼️</span>
+            <h3 data-i18n="bento_f1_t">Logo embebido Base64</h3>
+            <p data-i18n="bento_f1_d">El logo viaja dentro del ejecutable. 100% portátil.</p>
+        </div>
+        <div class="bento-card bento-2 fade-in">
             <span class="bento-icon">🎨</span>
             <h3 data-i18n="bento_f2_t">Emojis contextuales</h3>
-            <p data-i18n="bento_f2_d">Cada función del manual tiene su propio emoji identificativo: 🔧 reparación, 🔍 escaneo, 🗑️ limpieza, 🌐 red, 🛡️ seguridad.</p>
+            <p data-i18n="bento_f2_d">Cada función del manual tiene su propio emoji identificativo.</p>
         </div>
         <div class="bento-card bento-2 fade-in">
             <span class="bento-icon">🌐</span>
@@ -2459,9 +2582,9 @@
             <p data-i18n="bento_f8_d">Para PCs con recursos limitados.</p>
         </div>
         <div class="bento-card bento-2 fade-in">
-            <span class="bento-icon">🚀</span>
-            <h3 data-i18n="bento_f9_t">Auto-Update</h3>
-            <p data-i18n="bento_f9_d">Verificación automática en GitHub.</p>
+            <span class="bento-icon">📋</span>
+            <h3 data-i18n="bento_f10_t">Limpieza detallada</h3>
+            <p data-i18n="bento_f10_d">Reporte exacto por ubicación: archivos y MB liberados.</p>
         </div>
     </div>
 </section>
@@ -2500,7 +2623,7 @@
                 <code>winget install OMEGAALPHA10.OmegaSolver</code>
                 <button class="copy-btn" data-copy="winget install OMEGAALPHA10.OmegaSolver" data-i18n="copy">Copiar</button>
             </div>
-            <span class="code-label" data-i18n="install_update">Actualizar a V4.4</span>
+            <span class="code-label" data-i18n="install_update">Actualizar a V4.4.1</span>
             <div class="code-block">
                 <code>winget upgrade OMEGAALPHA10.OmegaSolver</code>
                 <button class="copy-btn" data-copy="winget upgrade OMEGAALPHA10.OmegaSolver" data-i18n="copy">Copiar</button>
@@ -2536,7 +2659,7 @@
         </div>
         <div class="req-item fade-in">
             <div class="label" data-i18n="req_ram">RAM</div>
-            <div class="value">2 GB</div>
+            <div class="value">4 GB (verificado)</div>
         </div>
         <div class="req-item fade-in">
             <div class="label" data-i18n="req_disk">Disco</div>
@@ -2561,7 +2684,12 @@
     </div>
     <div class="changelog">
         <div class="cl-item fade-in">
-            <div class="cl-version">v4.4 <span class="cl-latest">LATEST</span></div>
+            <div class="cl-version">v4.4.1 <span class="cl-latest">LATEST</span></div>
+            <div class="cl-date">2026 · Octubre</div>
+            <div class="cl-desc" data-i18n="cl_441">Motor asíncrono (Invoke-OmegaAsync) que libera el hilo UI. Overlay de carga no bloqueante. <strong>Fix del bug crítico de Winget Live</strong> (panel de detalle ahora abre). Errores visibles en diálogo. Limpieza detallada con reporte por ubicación y MB veraces. Ventanas opacas: CPU idle de 66-75% a menos del 10%. Get-HotFix por registro CBS (&lt;0.5 s). Favicons a 44/96 px. Cold start reducido a la mitad en hardware modesto.</div>
+        </div>
+        <div class="cl-item fade-in">
+            <div class="cl-version">v4.4</div>
             <div class="cl-date">2026 · Octubre</div>
             <div class="cl-desc" data-i18n="cl_44">Logo embebido Base64, emblema en el manual, emojis contextuales por función, migración a PS12EXE, firma SHA256 con Timestamp DigiCert, codificación UTF-8 con BOM estricta, corrección de crashes por funciones ausentes.</div>
         </div>
@@ -2586,16 +2714,16 @@
 <section id="issues" data-umode="tec">
     <div class="section-header fade-in">
         <span class="section-eyebrow" data-i18n="issues_eyebrow">Transparencia</span>
-        <h2 class="section-title"><span data-i18n="issues_title">Issues conocidos</span></h2>
-        <p class="section-sub" data-i18n="issues_sub">Bugs documentados y workarounds. Sin humo.</p>
+        <h2 class="section-title"><span data-i18n="issues_title">Estado de issues</span></h2>
+        <p class="section-sub" data-i18n="issues_sub">Sin bugs conocidos en V4.4.1. Esto fue lo que se corrigió.</p>
     </div>
     <div class="issues-list">
-        <div class="issue-item fade-in">
-            <h4>⚠️ <span data-i18n="issue1_title">Winget Live — detalle no abre</span></h4>
-            <p data-i18n="issue1_desc">Al buscar una app en modo Winget Live y hacer clic en su tarjeta, el panel de detalle no se abre. La navegación por catálogo predefinido funciona correctamente.</p>
+        <div class="issue-item fixed fade-in">
+            <h4>✓ <span data-i18n="issue_fixed_title">Winget Live — panel de detalle (CORREGIDO en V4.4.1)</span></h4>
+            <p data-i18n="issue_fixed_desc">Al hacer clic en una tarjeta de resultado de la búsqueda en vivo, el panel de detalle ahora se abre correctamente. El bug estaba en el fallback del icono al escribir <code>.Text</code> sobre un control <code>&lt;Image&gt;</code>.</p>
             <div class="workaround">
-                <strong data-i18n="workaround">Workaround:</strong>
-                <span data-i18n="issue1_fix">usa las categorías del catálogo (Navegadores, Utilidades, Desarrollo, etc.) en lugar de la búsqueda live. Pendiente para V4.4.1.</span>
+                <strong data-i18n="what_changed">Qué cambió:</strong>
+                <span data-i18n="issue_fixed_fix">Fallback de icono ahora distingue entre TextBlock e Image, la función está blindada con try/catch, y las apps live heredan descripción del catálogo. Soporte completo para PSCustomObject y hashtable.</span>
             </div>
         </div>
     </div>
@@ -2609,9 +2737,9 @@
     </div>
     <div class="roadmap">
         <div class="rm-card fade-in">
-            <span class="rm-tag soon">v4.4.1</span>
-            <h4 data-i18n="rm1_title">Winget Live fix</h4>
-            <p data-i18n="rm1_desc">Reparar el crash al hacer clic en tarjetas de búsqueda en vivo. Es el único bug conocido pendiente.</p>
+            <span class="rm-tag soon">v4.5</span>
+            <h4 data-i18n="rm1_title">FTP bidireccional</h4>
+            <p data-i18n="rm1_desc">Descarga de archivos desde servidores FTP además de la subida actual. Compartir archivos pasa a ser bidireccional completo.</p>
         </div>
         <div class="rm-card fade-in">
             <span class="rm-tag planned" data-i18n="rm_planned">Planificado</span>
@@ -2644,6 +2772,10 @@
         <details class="fade-in">
             <summary data-i18n="faq3_q">¿Funciona en SSD?</summary>
             <p data-i18n="faq3_a">Sí. OmegaSolver detecta automáticamente el tipo de disco y bloquea la desfragmentación en SSD para proteger su vida útil. Todo lo demás (SFC, DISM, limpieza) funciona perfectamente.</p>
+        </details>
+        <details class="fade-in">
+            <summary data-i18n="faq_async_q">¿Por qué V4.4.1 es el doble de rápida?</summary>
+            <p data-i18n="faq_async_a">V4.4 ejecutaba todas las llamadas lentas a WMI/CIM en el hilo UI antes de mostrar la ventana (esperando ~30-80 s en hardware modesto). V4.4.1 las movió a runspaces de fondo vía Invoke-OmegaAsync: la ventana aparece en ~30 s y los datos se rellenan después. Medido en un Celeron N3350: 61.35 s → 33.61 s.</p>
         </details>
         <details class="fade-in">
             <summary data-i18n="faq_ps12_q">¿Qué cambió de PS2EXE a PS12EXE?</summary>
@@ -2694,11 +2826,11 @@
 <script>
     const i18n = {
         es: {
-            nav_story:"Historia", nav_features:"Features", nav_screens:"Capturas", nav_install:"Instalar", nav_faq:"FAQ",
+            nav_story:"Historia", nav_performance:"Rendimiento", nav_features:"Features", nav_screens:"Capturas", nav_install:"Instalar", nav_faq:"FAQ",
             hero_badge:"Disponible en Winget", hero_venezuela:"Hecho en Venezuela", hero_badge_license:"Código abierto · GPLv3",
             hero_h1_a:"El trabajo de limpieza", hero_h1_b:"nunca termina.",
             hero_desc:"Suite de diagnóstico, mantenimiento y optimización para Windows. Construida en PowerShell + WPF. Diseñada para usuarios básicos y técnicos por igual. Libre, auditable y gratuito.",
-            hero_cta_install:"📥 Instalar ahora", hero_cta_github:"Ver en GitHub",
+            hero_cta_install:"📥 Instalar ahora", hero_cta_perf:"⚡ Ver benchmarks", hero_cta_github:"Ver en GitHub",
             stat_version:"Versión", stat_stars:"Stars", stat_forks:"Forks", stat_langs:"Idiomas", stat_updated:"Actualizado",
             tech_label:"Construido con", theme_btn:"Tema",
             story_eyebrow:"El proyecto", story_title:"Sobre el proyecto", story_sub:"La historia detrás de OmegaSolver.",
@@ -2706,6 +2838,12 @@
             story_p2:"Así nació la idea de los dos modos: un Modo Básico con acciones seguras y claras, y un Modo Avanzado con acceso a herramientas como SFC, DISM o CHKDSK. Todo con confirmaciones claras, protección automática contra desfragmentar SSD, y un sistema de cambios reversibles por si algo sale mal.",
             story_p3:"El proyecto está desarrollado íntegramente en PowerShell + WPF por una sola persona, desde Venezuela, en ratos libres. Es open source bajo GPLv3 y está disponible oficialmente en Winget.",
             story_sig:"— Fabian (OMEGA_ALPHA), desarrollador independiente",
+            perf_eyebrow:"Rendimiento verificado", perf_title:"Casi el doble", perf_title_b:"de rápida",
+            perf_sub:"Benchmark real sobre hardware modesto donde las mejoras se notan de verdad.",
+            perf_hw_cpu:"Procesador", perf_hw_cores:"Núcleos", perf_hw_ram:"RAM", perf_hw_gpu:"Gráficos", perf_hw_disk:"Almacenamiento", perf_hw_os:"Sistema",
+            perf_card_cold:"🚀 Cold start", perf_card_consist:"📊 Consistencia (σ)", perf_card_cpu:"💻 CPU idle", perf_card_ram:"🧠 RAM idle",
+            perf_delta_cold:"▼ 45.2% más rápido", perf_delta_consist:"▼ 74% de varianza", perf_delta_cpu:"▼ 24% menos CPU", perf_delta_ram:"▲ 2.6% (coste async)",
+            perf_note:"<strong>Veredicto:</strong> V4.4.1 arranca <strong>casi el doble de rápido</strong>, con <strong>24% menos CPU</strong>, y a cambio de solo <strong>7 MB extra de RAM</strong> — el coste natural del motor asíncrono (<code>Invoke-OmegaAsync</code> / <code>Invoke-OmegaTaskAsync</code>) que libera el hilo UI de todas las llamadas lentas a WMI/CIM.",
             os_eyebrow:"Libertad", os_title:"Código abierto", os_title_b:"bajo GPLv3",
             os_sub:"OmegaSolver es software libre. Léelo, audítalo, modifícalo y redistribúyelo con las cuatro libertades garantizadas por la GNU GPLv3.",
             os_guarantee:"Garantías del usuario", os_contribute:"Contribuye",
@@ -2736,42 +2874,54 @@
             ux_adv_5:"18 temas visuales + estilo OMEGA",
             features_eyebrow:"Capacidades", features_title:"Todo lo que", features_title_b:"necesitas",
             features_sub:"Desde limpieza básica hasta herramientas técnicas avanzadas.",
-            bento_f1_t:"Logo embebido Base64", bento_f1_d:"El logo de OmegaSolver viaja dentro del propio ejecutable. Sin dependencias externas, sin rutas rotas, 100% portátil.",
-            bento_f2_t:"Emojis contextuales", bento_f2_d:"Cada función del manual tiene su propio emoji identificativo: 🔧 reparación, 🔍 escaneo, 🗑️ limpieza, 🌐 red, 🛡️ seguridad.",
+            bento_f0_t:"Motor asíncrono",
+            bento_f0_d:"Toda operación pesada corre en runspaces de fondo. La ventana responde al instante incluso mientras el diagnóstico, la limpieza o winget trabajan por debajo.",
+            bento_f00_t:"Winget Live corregido",
+            bento_f00_d:"El bug del panel de detalle al hacer clic en tarjetas de búsqueda en vivo está resuelto. Soporte para PSCustomObject y hashtable, fallback de icono blindado.",
+            bento_f1_t:"Logo embebido Base64",
+            bento_f1_d:"El logo de OmegaSolver viaja dentro del propio ejecutable. Sin dependencias externas, sin rutas rotas, 100% portátil.",
+            bento_f2_t:"Emojis contextuales",
+            bento_f2_d:"Cada función del manual tiene su propio emoji identificativo.",
             bento_f3_t:"3 idiomas", bento_f3_d:"ES/EN/PT en tiempo real sin reiniciar.",
             bento_f4_t:"Protección SSD", bento_f4_d:"Bloquea desfragmentación automáticamente.",
             bento_f5_t:"18 temas", bento_f5_d:"Incluye el estilo OMEGASOLVER con 6 sub-paletas.",
             bento_f6_t:"Compartir red", bento_f6_d:"Robocopy (SMB) + FTP para móviles.",
             bento_f7_t:"Reversible", bento_f7_d:"Todos los cambios se guardan.",
             bento_f8_t:"Low Mode", bento_f8_d:"Para PCs con recursos limitados.",
-            bento_f9_t:"Auto-Update", bento_f9_d:"Verificación automática en GitHub.",
+            bento_f10_t:"Limpieza detallada",
+            bento_f10_d:"Reporte exacto por ubicación: archivos y MB liberados.",
             screens_eyebrow:"Interfaz", screens_title:"Capturas", screens_sub:"Gira el carrusel o haz clic en cualquier tarjeta.",
             install_eyebrow:"Empezar", install_title:"Instalación", install_sub:"Elige el método que prefieras.",
-            tag_recommended:"Recomendado", install_new:"Instalación limpia", install_update:"Actualizar a V4.4",
+            tag_pending:"En revisión", install_new:"Instalación limpia", install_update:"Actualizar a V4.4.1",
             install_winget_desc:"Instala OmegaSolver con un solo comando desde la terminal.",
+            winget_pending:"⏳ El paquete está en revisión oficial en winget-pkgs. Si el comando aún no funciona, descarga el .exe firmado desde GitHub Releases.",
             install_store_desc:"Próximamente disponible. Instalación y actualizaciones automáticas.",
             install_store_btn:"Próximamente", install_github_desc:"Descarga el instalador firmado directamente.",
             install_github_btn:"Ir a Releases",
             req_eyebrow:"Compatibilidad", req_title:"Requisitos", req_sub:"Funciona en cualquier PC con Windows moderno.",
             req_os:"Sistema", req_ram:"RAM", req_disk:"Disco", req_arch:"Arquitectura", req_admin:"Permisos", req_admin_val:"Administrador",
             cl_eyebrow:"Historial", cl_title:"Changelog", cl_sub:"Últimas versiones publicadas.",
+            cl_441:"Motor asíncrono (Invoke-OmegaAsync) que libera el hilo UI. Overlay de carga no bloqueante. <strong>Fix del bug crítico de Winget Live</strong> (panel de detalle ahora abre). Errores visibles en diálogo. Limpieza detallada con reporte por ubicación y MB veraces. Ventanas opacas: CPU idle de 66-75% a menos del 10%. Get-HotFix por registro CBS (<0.5 s). Favicons a 44/96 px. Cold start reducido a la mitad en hardware modesto.",
             cl_44:"Logo embebido Base64, emblema en el manual, emojis contextuales, migración a PS12EXE, firma SHA256 con Timestamp, UTF-8 con BOM estricta.",
             cl_43:"Compartición de archivos por red con Robocopy y FTP. Integración con Easy Context Menu. Auto-update vía GitHub. Firma digital.",
             cl_421:"i18n completo (ES/EN/PT), temas OMEGASOLVER con 6 sub-paletas, Modo Low.",
             cl_40:"Reescritura completa en WPF. Sistema de cambios reversibles. Detección SSD/HDD.",
-            issues_eyebrow:"Transparencia", issues_title:"Issues conocidos", issues_sub:"Bugs documentados y workarounds. Sin humo.",
-            issue1_title:"Winget Live — detalle no abre",
-            issue1_desc:"Al buscar una app en modo Winget Live y hacer clic en su tarjeta, el panel de detalle no se abre. La navegación por catálogo funciona.",
-            workaround:"Workaround:", issue1_fix:"usa las categorías del catálogo en lugar de la búsqueda live. Pendiente para V4.4.1.",
+            issues_eyebrow:"Transparencia", issues_title:"Estado de issues", issues_sub:"Sin bugs conocidos en V4.4.1. Esto fue lo que se corrigió.",
+            issue_fixed_title:"Winget Live — panel de detalle (CORREGIDO en V4.4.1)",
+            issue_fixed_desc:"Al hacer clic en una tarjeta de resultado de la búsqueda en vivo, el panel de detalle ahora se abre correctamente. El bug estaba en el fallback del icono al escribir .Text sobre un control <Image>.",
+            what_changed:"Qué cambió:",
+            issue_fixed_fix:"Fallback de icono ahora distingue entre TextBlock e Image, la función está blindada con try/catch, y las apps live heredan descripción del catálogo. Soporte completo para PSCustomObject y hashtable.",
             rm_eyebrow:"Futuro", rm_title:"Roadmap", rm_sub:"Hacia dónde va OmegaSolver.",
             rm_planned:"Planificado", rm_idea:"Idea",
-            rm1_title:"Winget Live fix", rm1_desc:"Reparar el crash al hacer clic en tarjetas de búsqueda. Único bug conocido pendiente.",
+            rm1_title:"FTP bidireccional", rm1_desc:"Descarga de archivos desde servidores FTP además de la subida actual. Compartir archivos pasa a ser bidireccional completo.",
             rm2_title:"Microsoft Store", rm2_desc:"Publicación oficial para instalación automática sin comandos.",
             rm3_title:"Más idiomas", rm3_desc:"Italiano, Francés y Alemán. La arquitectura i18n ya está lista.",
             faq_title:"Preguntas frecuentes", faq_sub:"Todo lo que necesitas saber antes de instalarlo.",
             faq1_q:"¿OmegaSolver es gratis?", faq1_a:"Sí. OmegaSolver es y será siempre gratuito y de código abierto bajo GNU GPLv3.",
             faq2_q:"¿Es seguro usarlo?", faq2_a:"Sí. Las acciones críticas requieren confirmación, y los cambios reversibles se guardan y pueden restaurarse con un clic.",
             faq3_q:"¿Funciona en SSD?", faq3_a:"Sí. Detecta automáticamente el tipo de disco y bloquea la desfragmentación en SSD.",
+            faq_async_q:"¿Por qué V4.4.1 es el doble de rápida?",
+            faq_async_a:"V4.4 ejecutaba todas las llamadas lentas a WMI/CIM en el hilo UI antes de mostrar la ventana (esperando ~30-80 s en hardware modesto). V4.4.1 las movió a runspaces de fondo vía Invoke-OmegaAsync: la ventana aparece en ~30 s y los datos se rellenan después. Medido en un Celeron N3350: 61.35 s → 33.61 s.",
             faq_ps12_q:"¿Qué cambió de PS2EXE a PS12EXE?", faq_ps12_a:"PS12EXE ofrece mejor manejo de scripts grandes, soporte más robusto de Unicode y mejor integración con PowerShell 7.",
             faq4_q:"¿Puedo contribuir?", faq4_a:"¡Por supuesto! El proyecto está en GitHub. Reporta bugs, propón ideas o traduce la app.",
             faq5_q:"¿Por qué pide permisos de administrador?", faq5_a:"Porque realiza tareas que requieren elevación: SFC/DISM, cachés protegidas, configuración de red.",
@@ -2782,11 +2932,11 @@
             copy:"Copiar", copied:"¡Copiado!", link_copied:"¡Enlace copiado!"
         },
         en: {
-            nav_story:"Story", nav_features:"Features", nav_screens:"Screenshots", nav_install:"Install", nav_faq:"FAQ",
+            nav_story:"Story", nav_performance:"Performance", nav_features:"Features", nav_screens:"Screenshots", nav_install:"Install", nav_faq:"FAQ",
             hero_badge:"Available on Winget", hero_venezuela:"Made in Venezuela", hero_badge_license:"Open source · GPLv3",
             hero_h1_a:"The cleanup work", hero_h1_b:"never ends.",
             hero_desc:"Diagnostics, maintenance and optimization suite for Windows. Built in PowerShell + WPF. Designed for both basic and technical users. Free, auditable, and libre.",
-            hero_cta_install:"📥 Install now", hero_cta_github:"View on GitHub",
+            hero_cta_install:"📥 Install now", hero_cta_perf:"⚡ View benchmarks", hero_cta_github:"View on GitHub",
             stat_version:"Version", stat_stars:"Stars", stat_forks:"Forks", stat_langs:"Languages", stat_updated:"Updated",
             tech_label:"Built with", theme_btn:"Theme",
             story_eyebrow:"The project", story_title:"About the project", story_sub:"The story behind OmegaSolver.",
@@ -2794,6 +2944,12 @@
             story_p2:"That's how the two modes were born: a Basic Mode with safe and clear actions, and an Advanced Mode with access to tools like SFC, DISM or CHKDSK.",
             story_p3:"The project is developed entirely in PowerShell + WPF by a single person, from Venezuela, in spare time. It's open source under GPLv3 and is officially available on Winget.",
             story_sig:"— Fabian (OMEGA_ALPHA), independent developer",
+            perf_eyebrow:"Verified performance", perf_title:"Almost twice", perf_title_b:"as fast",
+            perf_sub:"Real benchmark on modest hardware where improvements really show.",
+            perf_hw_cpu:"CPU", perf_hw_cores:"Cores", perf_hw_ram:"RAM", perf_hw_gpu:"Graphics", perf_hw_disk:"Storage", perf_hw_os:"OS",
+            perf_card_cold:"🚀 Cold start", perf_card_consist:"📊 Consistency (σ)", perf_card_cpu:"💻 CPU idle", perf_card_ram:"🧠 RAM idle",
+            perf_delta_cold:"▼ 45.2% faster", perf_delta_consist:"▼ 74% variance", perf_delta_cpu:"▼ 24% less CPU", perf_delta_ram:"▲ 2.6% (async cost)",
+            perf_note:"<strong>Verdict:</strong> V4.4.1 starts <strong>almost twice as fast</strong>, with <strong>24% less CPU</strong>, at the cost of only <strong>7 MB extra RAM</strong> — the natural cost of the async engine (<code>Invoke-OmegaAsync</code> / <code>Invoke-OmegaTaskAsync</code>) that frees the UI thread from all slow WMI/CIM calls.",
             os_eyebrow:"Freedom", os_title:"Open source", os_title_b:"under GPLv3",
             os_sub:"OmegaSolver is free software. Read it, audit it, modify it, and redistribute it under the four freedoms guaranteed by the GNU GPLv3.",
             os_guarantee:"User guarantees", os_contribute:"Contribute",
@@ -2824,42 +2980,52 @@
             ux_adv_5:"18 visual themes + OMEGA style",
             features_eyebrow:"Capabilities", features_title:"Everything you", features_title_b:"need",
             features_sub:"From basic cleanup to advanced technical tools.",
+            bento_f0_t:"Async engine",
+            bento_f0_d:"All heavy operations run in background runspaces. The window responds instantly even while diagnostics, cleanup or winget work underneath.",
+            bento_f00_t:"Winget Live fixed",
+            bento_f00_d:"The detail panel bug when clicking live search cards is fixed. Support for PSCustomObject and hashtable, hardened icon fallback.",
             bento_f1_t:"Embedded Base64 logo", bento_f1_d:"OmegaSolver's logo travels inside the executable. No external dependencies, 100% portable.",
-            bento_f2_t:"Contextual emojis", bento_f2_d:"Every manual entry has its own emoji: 🔧 repair, 🔍 scan, 🗑️ clean, 🌐 network, 🛡️ security.",
+            bento_f2_t:"Contextual emojis", bento_f2_d:"Every manual entry has its own identifying emoji.",
             bento_f3_t:"3 languages", bento_f3_d:"ES/EN/PT in real time without restart.",
             bento_f4_t:"SSD Protection", bento_f4_d:"Auto-blocks defragmentation.",
             bento_f5_t:"18 themes", bento_f5_d:"Includes OMEGASOLVER style with 6 sub-palettes.",
             bento_f6_t:"Network share", bento_f6_d:"Robocopy (SMB) + FTP for mobiles.",
             bento_f7_t:"Reversible", bento_f7_d:"All changes are saved.",
             bento_f8_t:"Low Mode", bento_f8_d:"For PCs with limited resources.",
-            bento_f9_t:"Auto-Update", bento_f9_d:"Automatic GitHub check.",
+            bento_f10_t:"Detailed cleanup",
+            bento_f10_d:"Exact report per location: files and MB freed.",
             screens_eyebrow:"Interface", screens_title:"Screenshots", screens_sub:"Rotate the carousel or click any card.",
             install_eyebrow:"Get started", install_title:"Installation", install_sub:"Choose your preferred method.",
-            tag_recommended:"Recommended", install_new:"Fresh install", install_update:"Upgrade to V4.4",
+            tag_pending:"In review", install_new:"Fresh install", install_update:"Upgrade to V4.4.1",
             install_winget_desc:"Install OmegaSolver with a single command from the terminal.",
+            winget_pending:"⏳ The package is under official review in winget-pkgs. If the command doesn't work yet, download the signed .exe from GitHub Releases.",
             install_store_desc:"Coming soon. Automatic install and updates.",
             install_store_btn:"Coming soon", install_github_desc:"Download the signed installer directly.",
             install_github_btn:"Go to Releases",
             req_eyebrow:"Compatibility", req_title:"Requirements", req_sub:"Runs on any modern Windows PC.",
             req_os:"System", req_ram:"RAM", req_disk:"Disk", req_arch:"Architecture", req_admin:"Permissions", req_admin_val:"Administrator",
             cl_eyebrow:"History", cl_title:"Changelog", cl_sub:"Latest published versions.",
+            cl_441:"Async engine (Invoke-OmegaAsync) that frees the UI thread. Non-blocking loading overlay. <strong>Critical Winget Live bug fix</strong> (detail panel now opens). Visible errors in dialog. Detailed cleanup with report per location and truthful MB. Opaque windows: CPU idle from 66-75% to below 10%. Get-HotFix via CBS registry (<0.5 s). Favicons at 44/96 px. Cold start halved on modest hardware.",
             cl_44:"Embedded Base64 logo, manual emblem, contextual emojis, PS12EXE migration, SHA256 signature with Timestamp, strict UTF-8 with BOM.",
             cl_43:"Network file sharing with Robocopy and FTP. Easy Context Menu integration. Auto-update via GitHub. Digital signature.",
             cl_421:"Full i18n (ES/EN/PT), OMEGASOLVER themes with 6 sub-palettes, Low Mode.",
             cl_40:"Full rewrite in WPF. Reversible changes system. SSD/HDD detection.",
-            issues_eyebrow:"Transparency", issues_title:"Known issues", issues_sub:"Documented bugs and workarounds. No fluff.",
-            issue1_title:"Winget Live — detail won't open",
-            issue1_desc:"When searching an app in Winget Live mode and clicking its card, the detail panel doesn't open. Catalog navigation works.",
-            workaround:"Workaround:", issue1_fix:"use the catalog categories instead of live search. Pending for V4.4.1.",
+            issues_eyebrow:"Transparency", issues_title:"Issue status", issues_sub:"No known bugs in V4.4.1. This is what was fixed.",
+            issue_fixed_title:"Winget Live — detail panel (FIXED in V4.4.1)",
+            issue_fixed_desc:"When clicking a live search result card, the detail panel now opens correctly. The bug was in the icon fallback writing .Text over an <Image> control.",
+            what_changed:"What changed:",
+            issue_fixed_fix:"Icon fallback now distinguishes TextBlock vs Image, the function is hardened with try/catch, and live apps inherit description from the catalog. Full support for PSCustomObject and hashtable.",
             rm_eyebrow:"Future", rm_title:"Roadmap", rm_sub:"Where OmegaSolver is heading.",
             rm_planned:"Planned", rm_idea:"Idea",
-            rm1_title:"Winget Live fix", rm1_desc:"Fix the crash when clicking live search cards. Only remaining known bug.",
+            rm1_title:"Bidirectional FTP", rm1_desc:"File download from FTP servers in addition to current upload. File sharing becomes fully bidirectional.",
             rm2_title:"Microsoft Store", rm2_desc:"Official publication for automatic install without commands.",
             rm3_title:"More languages", rm3_desc:"Italian, French and German. i18n architecture is ready.",
             faq_title:"Frequently Asked Questions", faq_sub:"Everything you need to know before installing.",
             faq1_q:"Is OmegaSolver free?", faq1_a:"Yes. OmegaSolver is and will always be free and open source under GNU GPLv3.",
             faq2_q:"Is it safe?", faq2_a:"Yes. Critical actions require confirmation, and reversible changes are saved and can be restored with one click.",
             faq3_q:"Does it work on SSD?", faq3_a:"Yes. It auto-detects the disk type and blocks defragmentation on SSDs.",
+            faq_async_q:"Why is V4.4.1 twice as fast?",
+            faq_async_a:"V4.4 ran all slow WMI/CIM calls on the UI thread before showing the window (waiting ~30-80 s on modest hardware). V4.4.1 moved them to background runspaces via Invoke-OmegaAsync: the window appears in ~30 s and data fills in afterward. Measured on a Celeron N3350: 61.35 s → 33.61 s.",
             faq_ps12_q:"What changed from PS2EXE to PS12EXE?", faq_ps12_a:"PS12EXE offers better handling of large scripts, more robust Unicode support and better PowerShell 7 integration.",
             faq4_q:"Can I contribute?", faq4_a:"Of course! The project is on GitHub. Report bugs, suggest ideas, or translate the app.",
             faq5_q:"Why does it ask for administrator permissions?", faq5_a:"Because it performs tasks that require elevation: SFC/DISM, protected caches, network settings.",
@@ -2870,11 +3036,11 @@
             copy:"Copy", copied:"Copied!", link_copied:"Link copied!"
         },
         pt: {
-            nav_story:"História", nav_features:"Recursos", nav_screens:"Capturas", nav_install:"Instalar", nav_faq:"FAQ",
+            nav_story:"História", nav_performance:"Desempenho", nav_features:"Recursos", nav_screens:"Capturas", nav_install:"Instalar", nav_faq:"FAQ",
             hero_badge:"Disponível no Winget", hero_venezuela:"Feito na Venezuela", hero_badge_license:"Código aberto · GPLv3",
             hero_h1_a:"O trabalho de limpeza", hero_h1_b:"nunca termina.",
             hero_desc:"Suíte de diagnóstico, manutenção e otimização para Windows. Construída em PowerShell + WPF. Projetada para usuários básicos e técnicos. Livre, auditável e gratuita.",
-            hero_cta_install:"📥 Instalar agora", hero_cta_github:"Ver no GitHub",
+            hero_cta_install:"📥 Instalar agora", hero_cta_perf:"⚡ Ver benchmarks", hero_cta_github:"Ver no GitHub",
             stat_version:"Versão", stat_stars:"Stars", stat_forks:"Forks", stat_langs:"Idiomas", stat_updated:"Atualizado",
             tech_label:"Construído com", theme_btn:"Tema",
             story_eyebrow:"O projeto", story_title:"Sobre o projeto", story_sub:"A história por trás do OmegaSolver.",
@@ -2882,6 +3048,12 @@
             story_p2:"Assim nasceu a ideia dos dois modos: um Modo Básico com ações seguras, e um Modo Avançado com acesso a ferramentas como SFC, DISM ou CHKDSK.",
             story_p3:"O projeto é desenvolvido inteiramente em PowerShell + WPF por uma única pessoa, da Venezuela, em tempo livre. É open source sob GPLv3 e está oficialmente disponível no Winget.",
             story_sig:"— Fabian (OMEGA_ALPHA), desenvolvedor independente",
+            perf_eyebrow:"Desempenho verificado", perf_title:"Quase o dobro", perf_title_b:"mais rápida",
+            perf_sub:"Benchmark real em hardware modesto onde as melhorias realmente aparecem.",
+            perf_hw_cpu:"Processador", perf_hw_cores:"Núcleos", perf_hw_ram:"RAM", perf_hw_gpu:"Gráficos", perf_hw_disk:"Armazenamento", perf_hw_os:"Sistema",
+            perf_card_cold:"🚀 Cold start", perf_card_consist:"📊 Consistência (σ)", perf_card_cpu:"💻 CPU idle", perf_card_ram:"🧠 RAM idle",
+            perf_delta_cold:"▼ 45.2% mais rápida", perf_delta_consist:"▼ 74% de variância", perf_delta_cpu:"▼ 24% menos CPU", perf_delta_ram:"▲ 2.6% (custo async)",
+            perf_note:"<strong>Veredicto:</strong> V4.4.1 inicia <strong>quase o dobro de rápido</strong>, com <strong>24% menos CPU</strong>, ao custo de apenas <strong>7 MB extra de RAM</strong> — o custo natural do motor assíncrono (<code>Invoke-OmegaAsync</code> / <code>Invoke-OmegaTaskAsync</code>) que libera a thread UI de todas as chamadas lentas ao WMI/CIM.",
             os_eyebrow:"Liberdade", os_title:"Código aberto", os_title_b:"sob GPLv3",
             os_sub:"O OmegaSolver é software livre. Leia, audite, modifique e redistribua sob as quatro liberdades garantidas pela GNU GPLv3.",
             os_guarantee:"Garantias do usuário", os_contribute:"Contribua",
@@ -2912,42 +3084,52 @@
             ux_adv_5:"18 temas visuais + estilo OMEGA",
             features_eyebrow:"Capacidades", features_title:"Tudo o que", features_title_b:"você precisa",
             features_sub:"De limpeza básica a ferramentas técnicas avançadas.",
+            bento_f0_t:"Motor assíncrono",
+            bento_f0_d:"Toda operação pesada corre em runspaces de fundo. A janela responde instantaneamente mesmo enquanto o diagnóstico, a limpeza ou winget trabalham por baixo.",
+            bento_f00_t:"Winget Live corrigido",
+            bento_f00_d:"O bug do painel de detalhes ao clicar em cartões de busca ao vivo está resolvido. Suporte para PSCustomObject e hashtable, fallback de ícone blindado.",
             bento_f1_t:"Logo embutido Base64", bento_f1_d:"O logo do OmegaSolver viaja dentro do executável. Sem dependências externas, 100% portátil.",
-            bento_f2_t:"Emojis contextuais", bento_f2_d:"Cada entrada do manual tem seu emoji: 🔧 reparo, 🔍 varredura, 🗑️ limpeza, 🌐 rede, 🛡️ segurança.",
+            bento_f2_t:"Emojis contextuais", bento_f2_d:"Cada entrada do manual tem seu próprio emoji identificativo.",
             bento_f3_t:"3 idiomas", bento_f3_d:"ES/EN/PT em tempo real sem reiniciar.",
             bento_f4_t:"Proteção SSD", bento_f4_d:"Bloqueia desfragmentação automaticamente.",
             bento_f5_t:"18 temas", bento_f5_d:"Inclui o estilo OMEGASOLVER com 6 sub-paletas.",
             bento_f6_t:"Compartilhar rede", bento_f6_d:"Robocopy (SMB) + FTP para celulares.",
             bento_f7_t:"Reversível", bento_f7_d:"Todas as mudanças são salvas.",
             bento_f8_t:"Low Mode", bento_f8_d:"Para PCs com recursos limitados.",
-            bento_f9_t:"Auto-Update", bento_f9_d:"Verificação automática no GitHub.",
+            bento_f10_t:"Limpeza detalhada",
+            bento_f10_d:"Relatório exato por local: arquivos e MB liberados.",
             screens_eyebrow:"Interface", screens_title:"Capturas", screens_sub:"Gire o carrossel ou clique em qualquer cartão.",
             install_eyebrow:"Começar", install_title:"Instalação", install_sub:"Escolha o método que preferir.",
-            tag_recommended:"Recomendado", install_new:"Instalação limpa", install_update:"Atualizar para V4.4",
+            tag_pending:"Em revisão", install_new:"Instalação limpa", install_update:"Atualizar para V4.4.1",
             install_winget_desc:"Instale o OmegaSolver com um único comando no terminal.",
+            winget_pending:"⏳ O pacote está em revisão oficial no winget-pkgs. Se o comando ainda não funcionar, baixe o .exe assinado do GitHub Releases.",
             install_store_desc:"Em breve. Instalação e atualizações automáticas.",
             install_store_btn:"Em breve", install_github_desc:"Baixe o instalador assinado diretamente.",
             install_github_btn:"Ir para Releases",
             req_eyebrow:"Compatibilidade", req_title:"Requisitos", req_sub:"Funciona em qualquer PC Windows moderno.",
             req_os:"Sistema", req_ram:"RAM", req_disk:"Disco", req_arch:"Arquitetura", req_admin:"Permissões", req_admin_val:"Administrador",
             cl_eyebrow:"Histórico", cl_title:"Changelog", cl_sub:"Últimas versões publicadas.",
+            cl_441:"Motor assíncrono (Invoke-OmegaAsync) que libera a thread UI. Overlay de carregamento não bloqueante. <strong>Correção do bug crítico do Winget Live</strong> (painel de detalhes agora abre). Erros visíveis em diálogo. Limpeza detalhada com relatório por local e MB verídicos. Janelas opacas: CPU idle de 66-75% para menos de 10%. Get-HotFix pelo registro CBS (<0.5 s). Favicons em 44/96 px. Cold start reduzido pela metade em hardware modesto.",
             cl_44:"Logo embutido Base64, emblema no manual, emojis contextuais, migração para PS12EXE, assinatura SHA256 com Timestamp.",
             cl_43:"Compartilhamento de arquivos pela rede com Robocopy e FTP. Integração com Easy Context Menu. Auto-update via GitHub.",
             cl_421:"i18n completo (ES/EN/PT), temas OMEGASOLVER com 6 sub-paletas, Modo Low.",
             cl_40:"Reescrita completa em WPF. Sistema de mudanças reversíveis. Detecção SSD/HDD.",
-            issues_eyebrow:"Transparência", issues_title:"Problemas conhecidos", issues_sub:"Bugs documentados e workarounds.",
-            issue1_title:"Winget Live — detalhes não abrem",
-            issue1_desc:"Ao buscar um app no modo Winget Live e clicar no cartão, o painel de detalhes não abre. A navegação pelo catálogo funciona.",
-            workaround:"Workaround:", issue1_fix:"use as categorias do catálogo em vez da busca live. Pendente para V4.4.1.",
+            issues_eyebrow:"Transparência", issues_title:"Status dos problemas", issues_sub:"Sem bugs conhecidos em V4.4.1. Isto foi o que se corrigiu.",
+            issue_fixed_title:"Winget Live — painel de detalhes (CORRIGIDO em V4.4.1)",
+            issue_fixed_desc:"Ao clicar em um cartão de resultado da busca ao vivo, o painel de detalhes agora abre corretamente. O bug estava no fallback do ícone ao escrever .Text sobre um controle <Image>.",
+            what_changed:"O que mudou:",
+            issue_fixed_fix:"Fallback de ícone agora distingue entre TextBlock e Image, a função está blindada com try/catch, e os apps live herdam descrição do catálogo. Suporte completo para PSCustomObject e hashtable.",
             rm_eyebrow:"Futuro", rm_title:"Roadmap", rm_sub:"Para onde o OmegaSolver está indo.",
             rm_planned:"Planejado", rm_idea:"Ideia",
-            rm1_title:"Correção Winget Live", rm1_desc:"Corrigir o crash ao clicar nos cartões de busca. Único bug conhecido restante.",
+            rm1_title:"FTP bidirecional", rm1_desc:"Download de arquivos de servidores FTP além do upload atual. Compartilhar arquivos torna-se totalmente bidirecional.",
             rm2_title:"Microsoft Store", rm2_desc:"Publicação oficial para instalação automática sem comandos.",
             rm3_title:"Mais idiomas", rm3_desc:"Italiano, Francês e Alemão. A arquitetura i18n está pronta.",
             faq_title:"Perguntas Frequentes", faq_sub:"Tudo o que você precisa saber antes de instalar.",
             faq1_q:"O OmegaSolver é gratuito?", faq1_a:"Sim. O OmegaSolver é e sempre será gratuito e open source sob GNU GPLv3.",
             faq2_q:"É seguro usá-lo?", faq2_a:"Sim. Ações críticas exigem confirmação, e mudanças reversíveis são salvas e restauráveis com um clique.",
             faq3_q:"Funciona em SSD?", faq3_a:"Sim. Detecta o tipo de disco e bloqueia desfragmentação em SSDs.",
+            faq_async_q:"Por que o V4.4.1 é o dobro de rápido?",
+            faq_async_a:"O V4.4 rodava todas as chamadas lentas ao WMI/CIM na thread UI antes de mostrar a janela (esperando ~30-80 s em hardware modesto). O V4.4.1 as moveu para runspaces de fundo via Invoke-OmegaAsync: a janela aparece em ~30 s e os dados são preenchidos depois. Medido num Celeron N3350: 61.35 s → 33.61 s.",
             faq_ps12_q:"O que mudou de PS2EXE para PS12EXE?", faq_ps12_a:"PS12EXE oferece melhor tratamento de scripts grandes, suporte Unicode mais robusto e melhor integração com PowerShell 7.",
             faq4_q:"Posso contribuir?", faq4_a:"Claro! O projeto está no GitHub. Reporte bugs, sugira ideias ou traduza o app.",
             faq5_q:"Por que pede permissões de administrador?", faq5_a:"Porque realiza tarefas que exigem elevação: SFC/DISM, caches protegidos, configurações de rede.",
@@ -2963,7 +3145,11 @@
         document.documentElement.lang = lang;
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (i18n[lang] && i18n[lang][key]) el.textContent = i18n[lang][key];
+            if (i18n[lang] && i18n[lang][key]) {
+                const val = i18n[lang][key];
+                if (val.indexOf('<') > -1) { el.innerHTML = val; }
+                else { el.textContent = val; }
+            }
         });
         document.querySelectorAll('.lang-switch button').forEach(b => {
             b.classList.toggle('active', b.dataset.lang === lang);
@@ -3014,35 +3200,19 @@
         const banner = document.getElementById('heroBanner');
         const wrap = banner ? banner.parentElement : null;
         if (banner && bannerMap[theme]) {
-            // Asegurar que el wrap NO este oculto (fix del onerror viejo)
-            if (wrap) {
-                wrap.style.display = '';
-                wrap.style.visibility = 'visible';
-            }
+            if (wrap) { wrap.style.display = ''; wrap.style.visibility = 'visible'; }
             const newSrc = bannerMap[theme];
             const currentSrc = banner.getAttribute('src') || '';
             if (!currentSrc.includes(newSrc.replace('./', ''))) {
                 banner.style.opacity = '0';
-                // SIEMPRE restaurar opacity cuando cargue o falle
                 banner.onload = () => { banner.style.opacity = '1'; };
                 banner.onerror = () => { banner.style.opacity = '1'; };
                 setTimeout(() => {
                     banner.src = newSrc;
-                    // Si ya estaba en cache, mostrar inmediatamente
-                    if (banner.complete && banner.naturalWidth > 0) {
-                        banner.style.opacity = '1';
-                    }
-                    // Timeout de seguridad: si a los 1.5s sigue en 0, forzar
-                    setTimeout(() => {
-                        if (banner.style.opacity === '0') {
-                            banner.style.opacity = '1';
-                        }
-                    }, 1500);
+                    if (banner.complete && banner.naturalWidth > 0) { banner.style.opacity = '1'; }
+                    setTimeout(() => { if (banner.style.opacity === '0') { banner.style.opacity = '1'; } }, 1500);
                 }, 180);
-            } else {
-                // No cambio el src pero igual asegurar visible
-                banner.style.opacity = '1';
-            }
+            } else { banner.style.opacity = '1'; }
         }
 
         try { localStorage.setItem('omega_theme', theme); } catch (e) {}
@@ -3288,41 +3458,30 @@
        V4.4.1 — Modos BAS/TEC + Modo ECO + i18n extra
        ============================================================ */
     (function () {
-        // --- Nuevas cadenas i18n (se fusionan con el diccionario existente) ---
         var EXTRA = {
             es: {
                 mode_bas_title: 'Modo Básico — como en la app', mode_tec_title: 'Modo Técnico — secciones avanzadas',
                 eco_title: 'Modo Eco: desactiva efectos pesados',
                 toast_bas: 'Modo Básico activado', toast_tec: 'Modo Técnico activado — secciones avanzadas visibles',
-                toast_eco_on: '🌱 Modo Eco activado — animaciones reducidas', toast_eco_off: 'Modo Eco desactivado',
-                hero_badge: 'Winget — en revisión oficial',
-                tag_pending: 'En revisión',
-                winget_pending: '⏳ El paquete está en revisión oficial en winget-pkgs. Si el comando aún no funciona, descarga el .exe firmado desde GitHub Releases.'
+                toast_eco_on: '🌱 Modo Eco activado — animaciones reducidas', toast_eco_off: 'Modo Eco desactivado'
             },
             en: {
                 mode_bas_title: 'Basic Mode — just like the app', mode_tec_title: 'Technical Mode — advanced sections',
                 eco_title: 'Eco Mode: disables heavy effects',
                 toast_bas: 'Basic Mode enabled', toast_tec: 'Technical Mode enabled — advanced sections visible',
-                toast_eco_on: '🌱 Eco Mode on — reduced animations', toast_eco_off: 'Eco Mode off',
-                hero_badge: 'Winget — under official review',
-                tag_pending: 'In review',
-                winget_pending: "⏳ The package is under official review in winget-pkgs. If the command doesn't work yet, download the signed .exe from GitHub Releases."
+                toast_eco_on: '🌱 Eco Mode on — reduced animations', toast_eco_off: 'Eco Mode off'
             },
             pt: {
                 mode_bas_title: 'Modo Básico — como no app', mode_tec_title: 'Modo Técnico — seções avançadas',
                 eco_title: 'Modo Eco: desativa efeitos pesados',
                 toast_bas: 'Modo Básico ativado', toast_tec: 'Modo Técnico ativado — seções avançadas visíveis',
-                toast_eco_on: '🌱 Modo Eco ativado — animações reduzidas', toast_eco_off: 'Modo Eco desativado',
-                hero_badge: 'Winget — em revisão oficial',
-                tag_pending: 'Em revisão',
-                winget_pending: '⏳ O pacote está em revisão oficial no winget-pkgs. Se o comando ainda não funcionar, baixe o .exe assinado do GitHub Releases.'
+                toast_eco_on: '🌱 Modo Eco ativado — animações reduzidas', toast_eco_off: 'Modo Eco desativado'
             }
         };
         Object.keys(EXTRA).forEach(function (l) {
             if (typeof i18n !== 'undefined' && i18n[l]) { Object.assign(i18n[l], EXTRA[l]); }
         });
 
-        // --- Idioma actual (con protección ante localStorage bloqueado) ---
         function currentLang() {
             try {
                 var b = document.querySelector('.lang-switch button.active');
@@ -3330,7 +3489,6 @@
             } catch (e) { return 'es'; }
         }
 
-        // --- Títulos traducibles de los botones nuevos (setLang no cubre title="") ---
         function applyExtraTitles(lang) {
             var d = (typeof i18n !== 'undefined' && i18n[lang]) ? i18n[lang] : (typeof i18n !== 'undefined' ? i18n.es : null);
             if (!d) return;
@@ -3346,7 +3504,6 @@
             setLang = function (lang) { _setLang(lang); applyExtraTitles(lang); };
         }
 
-        // --- Modo BAS / TEC (simula los modos de la app) ---
         var umodeBtns = document.querySelectorAll('[data-umode-btn]');
         function setUmode(mode, announce) {
             document.body.dataset.umode = mode;
@@ -3362,7 +3519,6 @@
         try { setUmode(localStorage.getItem('omega_umode') || 'bas', false); }
         catch (e) { setUmode('bas', false); }
 
-        // --- Modo ECO (como el Modo Low de la app) ---
         var ecoBtn = document.getElementById('ecoBtn');
         function setEco(on, announce) {
             document.body.classList.toggle('low-mode', on);
@@ -3383,7 +3539,6 @@
         try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
         setEco(savedEco === '1' || (savedEco === null && reduced), false);
 
-        // --- Reaplicar idioma para mostrar las cadenas nuevas y el badge corregido ---
         try { if (typeof setLang === 'function') { setLang(currentLang()); } } catch (e) {}
     })();
 </script>
