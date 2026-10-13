@@ -93,8 +93,8 @@
         --text-dim: #D1D5DB;
         --green: #4ADE80;
         --orange: #FB923C;
-        --cut: 18px;
-        --cut-sm: 12px;
+        --bracket: 18px;
+        --bracket-thick: 2px;
     }
 
     /* TEMAS */
@@ -191,52 +191,57 @@
     }
 
     /* ============================================================
-       HOLO CARDS (Murder Drones hologram style)
-       Esquinas diagonales cortadas en top-left y bottom-right
+       HOLO CARD — Corchetes de esquina (HUD sci-fi)
+       Rectángulo redondeado intacto + marcas en L en las 4 esquinas.
+       NO rompe bordes ni degradados.
        ============================================================ */
     .holo {
         position: relative;
-        clip-path: polygon(
-            0 var(--cut),
-            var(--cut) 0,
-            100% 0,
-            100% calc(100% - var(--cut)),
-            calc(100% - var(--cut)) 100%,
-            0 100%
-        );
-        transition: filter 0.35s ease, transform 0.35s ease;
+        border-radius: 14px;
     }
+
+    /* Corchetes de esquina: 8 layers de background (2 por esquina) */
     .holo::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: var(--cut);
-        right: 0;
-        height: 2px;
-        background: var(--accent-gradient);
+        inset: 6px;
+        border-radius: 8px;
+        pointer-events: none;
+        background-image:
+            /* ── Top-left ── */
+            linear-gradient(to right,  var(--accent) 0 100%) 0 0,
+            linear-gradient(to bottom, var(--accent) 0 100%) 0 0,
+            /* ── Top-right ── */
+            linear-gradient(to left,   var(--accent) 0 100%) 100% 0,
+            linear-gradient(to bottom, var(--accent) 0 100%) 100% 0,
+            /* ── Bottom-left ── */
+            linear-gradient(to right,  var(--accent) 0 100%) 0 100%,
+            linear-gradient(to top,    var(--accent) 0 100%) 0 100%,
+            /* ── Bottom-right ── */
+            linear-gradient(to left,   var(--accent) 0 100%) 100% 100%,
+            linear-gradient(to top,    var(--accent) 0 100%) 100% 100%;
+        background-size:
+            var(--bracket) var(--bracket-thick), var(--bracket-thick) var(--bracket),
+            var(--bracket) var(--bracket-thick), var(--bracket-thick) var(--bracket),
+            var(--bracket) var(--bracket-thick), var(--bracket-thick) var(--bracket),
+            var(--bracket) var(--bracket-thick), var(--bracket-thick) var(--bracket);
+        background-repeat: no-repeat;
+        background-position:
+            0 0, 0 0,
+            100% 0, 100% 0,
+            0 100%, 0 100%,
+            100% 100%, 100% 100%;
         opacity: 0.55;
-        transition: opacity 0.35s ease;
-        pointer-events: none;
-        z-index: 2;
+        transition: opacity 0.4s ease;
+        z-index: 3;
     }
-    .holo::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: var(--cut);
-        height: 1px;
-        background: var(--accent-gradient);
-        opacity: 0.25;
-        transition: opacity 0.35s ease;
-        pointer-events: none;
-        z-index: 2;
+
+    .holo:hover::before {
+        opacity: 1;
     }
-    .holo:hover {
-        filter: drop-shadow(0 0 24px var(--accent-glow));
-    }
-    .holo:hover::before { opacity: 1; }
-    .holo:hover::after  { opacity: 0.7; }
+
+    /* Cuando es un bento-card con la clase .new, el ::after se usa para el badge.
+       Los corchetes siguen funcionando porque usan ::before. */
 
     /* === NAV === */
     nav {
@@ -564,7 +569,8 @@
         width: 100%;
         max-width: 1000px;
         position: relative;
-        clip-path: polygon(0 24px, 24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%);
+        border-radius: 16px;
+        overflow: hidden;
     }
     .hero-banner-img {
         width: 100%;
@@ -764,7 +770,7 @@
         background: var(--border);
         border: 1px solid var(--border);
         overflow: hidden;
-        clip-path: polygon(0 14px, 14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+        border-radius: 14px;
         transition: background 0.4s ease, border-color 0.4s ease;
     }
     [data-theme="gradient"] .stats-bar {
@@ -825,16 +831,9 @@
         margin: 34px auto 0;
         padding: 18px 22px;
         background: rgba(10,8,0,0.55);
-        clip-path: polygon(0 14px, 14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
-        position: relative;
-    }
-    .tech-strip::before {
-        content: '';
-        position: absolute;
-        inset: 0;
         border: 1px solid var(--border);
-        clip-path: inherit;
-        pointer-events: none;
+        border-radius: 14px;
+        position: relative;
     }
     .tech-strip-label {
         font-size: 0.68rem;
@@ -870,7 +869,7 @@
         box-shadow: 0 0 8px var(--accent);
     }
 
-    /* === SECTIONS (SIMETRÍA CONSISTENTE) === */
+    /* === SECTIONS === */
     main { max-width: 1280px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
     section { padding: 72px 0; }
     .section-header {
@@ -927,15 +926,9 @@
         margin: 0 auto;
         background: linear-gradient(160deg, var(--card) 0%, rgba(13,10,0,0.7) 100%);
         border: 1px solid var(--border);
+        border-radius: 14px;
         padding: 40px 34px;
         position: relative;
-    }
-    .story::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0;
-        width: 4px; height: 100%;
-        background: var(--accent-gradient);
     }
     .story p {
         color: var(--text-dim);
@@ -979,6 +972,7 @@
     .ux-card {
         background: linear-gradient(160deg, rgba(20,16,0,0.92) 0%, rgba(5,3,0,0.92) 100%);
         border: 1px solid var(--border);
+        border-radius: 14px;
         padding: 30px 26px;
         position: relative;
         display: flex;
@@ -1050,22 +1044,13 @@
     .bento-card {
         background: linear-gradient(160deg, rgba(20,16,0,0.92) 0%, rgba(5,3,0,0.92) 100%);
         border: 1px solid var(--border);
+        border-radius: 14px;
         padding: 24px 22px;
         position: relative;
         display: flex;
         flex-direction: column;
         min-height: 180px;
     }
-    .bento-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 2px;
-        background: var(--accent-gradient);
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    .bento-card:hover::before { opacity: 1; }
     .bento-card.new::after {
         content: 'NEW';
         position: absolute;
@@ -1079,6 +1064,7 @@
         border-radius: 999px;
         box-shadow: 0 0 15px var(--accent-glow);
         text-shadow: 0 0 6px rgba(255,255,255,0.7);
+        z-index: 4;
     }
     .bento-icon {
         font-size: 1.8rem;
@@ -1137,11 +1123,11 @@
         overflow: hidden;
         background: var(--card);
         border: 2px solid var(--border);
+        border-radius: 14px;
         box-shadow: 0 30px 80px rgba(0,0,0,0.7);
         cursor: pointer;
         transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
         backface-visibility: hidden;
-        clip-path: polygon(0 20px, 20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
     }
     .carousel-card img {
         width: 100%; height: 100%;
@@ -1316,6 +1302,7 @@
     .install-card {
         background: linear-gradient(160deg, rgba(20,16,0,0.92) 0%, rgba(5,3,0,0.92) 100%);
         border: 1px solid var(--border);
+        border-radius: 14px;
         padding: 26px 22px;
         display: flex;
         flex-direction: column;
@@ -1413,6 +1400,7 @@
     .req-item {
         background: rgba(20,16,0,0.7);
         border: 1px solid var(--border);
+        border-radius: 12px;
         padding: 16px;
         text-align: center;
         transition: all 0.25s;
@@ -1513,6 +1501,7 @@
         background: linear-gradient(160deg, rgba(30,16,0,0.85) 0%, rgba(10,6,0,0.9) 100%);
         border: 1px solid var(--border);
         border-left: 4px solid var(--orange);
+        border-radius: 12px;
         padding: 20px 22px;
     }
     .issue-item h4 {
@@ -1559,6 +1548,7 @@
         background: linear-gradient(160deg, rgba(20,16,0,0.92) 0%, rgba(5,3,0,0.92) 100%);
         border: 1px solid var(--border);
         border-left: 4px solid var(--border-hover);
+        border-radius: 12px;
         padding: 22px 22px;
     }
     .rm-tag {
@@ -1753,7 +1743,7 @@
     }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-    /* === BENCHMARK (V4.4.1) === */
+    /* === BENCHMARK === */
     .bench-hardware {
         max-width: 900px;
         margin: 0 auto 36px;
@@ -1765,6 +1755,7 @@
     .bench-hw-item {
         background: rgba(20,16,0,0.6);
         border: 1px solid var(--border);
+        border-radius: 12px;
         padding: 14px;
         text-align: center;
         transition: all 0.25s;
@@ -1800,6 +1791,7 @@
     .bench-card {
         background: linear-gradient(160deg, rgba(20,16,0,0.92) 0%, rgba(5,3,0,0.92) 100%);
         border: 1px solid var(--border);
+        border-radius: 14px;
         padding: 24px 22px;
         display: flex;
         flex-direction: column;
@@ -1884,9 +1876,7 @@
     }
     .bench-note strong { color: var(--text); }
 
-    /* ============================================================
-       AMBIENT + TEC + BAS MODES
-       ============================================================ */
+    /* === AMBIENT / MODES === */
     #ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
     .ambient-orb { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform; }
     .ambient-orb.o1 { width: 520px; height: 520px; top: 16%; left: -130px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); animation: orbDrift1 38s ease-in-out infinite alternate; }
@@ -2020,12 +2010,11 @@
         font-size: 0.76rem;
         border: 1px dashed var(--border-hover);
         border-radius: 10px;
-        padding: 12px 16px;
+        padding: 14px 18px;
         display: grid;
         grid-template-columns: 1fr;
         gap: 4px 24px;
         background: rgba(0,0,0,0.45);
-        padding: 14px 18px;
     }
     @media (min-width: 700px) { .tec-specs { grid-template-columns: 1fr 1fr; } }
     .tec-specs .spec-row { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
@@ -2085,7 +2074,7 @@
     [data-theme="uzi"] .uzi-blueprint { display: block; }
 
     /* ============================================================
-       RESPONSIVE — MÓVIL / TABLET
+       RESPONSIVE
        ============================================================ */
     @media (max-width: 900px) {
         .bento { grid-template-columns: repeat(2, 1fr); }
@@ -2103,7 +2092,7 @@
     }
 
     @media (max-width: 640px) {
-        :root { --cut: 14px; --cut-sm: 10px; }
+        :root { --bracket: 14px; }
 
         nav { padding: 10px 12px; }
         .nav-inner { gap: 10px; }
@@ -2124,7 +2113,6 @@
         .theme-btn { padding: 4px 8px; font-size: 0.65rem; gap: 5px; }
         .theme-btn .theme-dot { width: 11px; height: 11px; }
 
-        /* MENÚ DE TEMAS: se abre hacia abajo, y en móvil se centra */
         .theme-picker { position: relative; }
         .theme-menu {
             position: fixed;
@@ -2144,7 +2132,6 @@
             transform: translate(-50%, -50%) scale(1);
             visibility: visible;
         }
-        /* Fondo oscuro detrás del modal móvil */
         .theme-menu.open::before {
             content: '';
             position: fixed;
@@ -2953,8 +2940,6 @@
             os_g2_l1:"Forks y PRs bienvenidos en GitHub",
             os_g2_l2:"Traducciones a nuevos idiomas abiertas",
             os_g2_l3:"Reportes de bugs y sugerencias activas",
-            os_links_label:"Enlaces del proyecto",
-            os_link_repo:"Repositorio en GitHub", os_link_issues:"Reportar Issue", os_link_source:"Código fuente",
             dual_eyebrow:"Para todos", dual_title:"Un programa, dos audiencias", dual_sub:"Diseñado tanto para quien nunca tocó Windows como para quien lo desarma por diversión.",
             ux_basic_tag:"Modo Básico", ux_basic_title:"Para usuarios cotidianos",
             ux_basic_desc:"Botones claros, explicaciones simples, nada técnico que asuste.",
@@ -3059,8 +3044,6 @@
             os_g2_l1:"Forks and PRs welcome on GitHub",
             os_g2_l2:"Translations to new languages open",
             os_g2_l3:"Bug reports and suggestions active",
-            os_links_label:"Project links",
-            os_link_repo:"GitHub repository", os_link_issues:"Report Issue", os_link_source:"Source code",
             dual_eyebrow:"For everyone", dual_title:"One program, two audiences", dual_sub:"Designed both for those who never touched Windows and those who take it apart for fun.",
             ux_basic_tag:"Basic Mode", ux_basic_title:"For everyday users",
             ux_basic_desc:"Clear buttons, simple explanations, nothing technical to scare you.",
@@ -3163,8 +3146,6 @@
             os_g2_l1:"Forks e PRs bem-vindos no GitHub",
             os_g2_l2:"Traduções para novos idiomas abertas",
             os_g2_l3:"Relatos de bugs e sugestões ativas",
-            os_links_label:"Links do projeto",
-            os_link_repo:"Repositório no GitHub", os_link_issues:"Reportar Issue", os_link_source:"Código-fonte",
             dual_eyebrow:"Para todos", dual_title:"Um programa, dois públicos", dual_sub:"Projetado tanto para quem nunca tocou no Windows quanto para quem o desmonta por diversão.",
             ux_basic_tag:"Modo Básico", ux_basic_title:"Para usuários cotidianos",
             ux_basic_desc:"Botões claros, explicações simples, nada técnico para assustar.",
