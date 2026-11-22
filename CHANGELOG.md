@@ -1,5 +1,50 @@
 # Historial de Cambios - OmegaSolver
 
+## [5.0.0] - 2026-11-21
+
+### Añadido
+- **Aplicación nativa en C#**: OmegaSolver deja de ser un script de PowerShell y pasa a una aplicación WPF sobre **.NET 10**, publicada como **un único `OmegaSolver.exe` autocontenido**. No requiere instalar PowerShell ni .NET: el runtime viaja dentro del ejecutable.
+- **Instalador con dos modos** (Inno Setup 6): **instalación completa** (accesos directos, desinstalador, tareas de Windows y datos en `%ProgramData%\OmegaSolver`) o **versión portátil** (sin iconos ni tareas; datos en `OmegaSolver-data` junto al `.exe`). También se puede forzar con `/PORTABLE=1`.
+- **Herramientas de uso rápido**: menú por secciones con ajustes ON/OFF y **manual propio integrado**, disponible tanto en **modo básico** como en **modo avanzado**, con **punto de restauración** antes de aplicar cambios.
+- **Reporte de limpieza emergente**: tras cada limpieza se muestra qué se eliminó, cuánto espacio se liberó y en qué rutas.
+- **Modos de consola para usuarios avanzados**: `--version`, `--selftest`, `--uicheck`, `--datacheck`, `--clean-safe`, `--restore-point` y `--cleanup-targets`.
+- **Manifiestos de winget** (esquema 1.10.0) para `OmegaAlpha10.OmegaSolver`, con instalador Inno y hash del setup; validados localmente con `winget validate`.
+- **ZIP de código fuente** adjunto a la release (`OmegaSolver-5.0.0-source.zip`) para cumplir con la GPLv3.
+- **Firma digital del `.exe` y del instalador** (`CN=OMEGA_ALPHA`, SHA-256 con timestamp de DigiCert), junto con `SHA256SUMS.txt` y el certificado público `.cer`.
+
+### Cambiado
+- **Arquitectura**: de un árbol de 170 archivos PowerShell con lanzador PS12EXE a **un único `.exe` nativo de 59,8 MB**. El XAML y las traducciones se conservan como **recursos incrustados**, con los mismos marcadores `@@clave@@` de la versión scripted.
+- **Interfaz**: idéntica a la V4.4.4 —mismos paneles, botones, textos, temas y animaciones—, con los ajustes mínimos que exige la nueva arquitectura.
+- **Distribución**: ya no se descarga un ZIP modular ni hace falta mantener `App.ps1` junto al ejecutable. La **V4.4.4 se conserva** como release histórica.
+- **Autolimpieza ampliada**: por intervalo, **diaria a una hora fija** o **al iniciar Windows**, con cierre opcional de navegadores.
+- **Panel de Ajustes reorganizado**: comportamiento, perfil, autolimpieza, rutas, botones personalizados y opciones avanzadas en un solo lugar; idioma y tema permanecen en la barra principal.
+- **Idiomas y temas**: **738 claves por idioma** (ES / EN / PT) y **18 temas + 6 subpaletas**, verificados con `--datacheck`.
+- **Datos**: instalada usa `%ProgramData%\OmegaSolver`; portátil usa `OmegaSolver-data` junto al `.exe`. Los ajustes de la V4 **no se migran automáticamente**.
+
+### Rendimiento
+Medido en la misma PC (Celeron N3350, 4 GB de RAM, disco mecánico, Defender activo), ejecutando el `.exe` oficial de cada versión con permisos de administrador y usando la mediana de las ejecuciones válidas:
+
+- **Arranque hasta la ventana**: ~27,4 s (V4.4.4) → **~12,9 s** (V5.0.0). **2,1× más rápido** (−53 %).
+- **CPU hasta la ventana**: ~9,8 s → **~3,6 s**. **≈2,6× menos**.
+- **RAM en reposo**: ~216 MB → **~271 MB** (+25 %, +55 MB) por el runtime nativo de WPF. Coste fijo y estable.
+- **Distribución**: 170 archivos (~1,5 MB) → **1 `.exe` (59,8 MB)**. Menos fricción con antivirus/SmartScreen: un solo binario firmado en lugar de 170 scripts.
+
+### Corregido
+- **Script de firma** (`scripts\sign-release.ps1`): detección de la raíz del proyecto sin depender del directorio actual, carga del PFX con fallback de flags (`EphemeralKeySet` → `Exportable` → `DefaultKeySet`), servidores de timestamp alternativos y aceptación de certificados autofirmados (`UnknownError` / `NotTrusted`) verificando el cambio de hash y la huella del firmante.
+- **Etiqueta duplicada en modo básico**: el encabezado y el botón de "Herramientas de uso rápido" mostraban el mismo texto; el botón ahora dice **"Abrir herramientas"** en ES / EN / PT.
+- **Proporción del botón Guardar** en Ajustes: corregido el tamaño del pie (Guardar / Cancelar / Logs).
+- **Sección "Apariencia" duplicada** en Ajustes: eliminada; los controles de terminal y fondo quedaron dentro de **Comportamiento**.
+
+### Documentación
+- **README reescrito para la V5**: arquitectura nativa, instalación (instalador / portátil / winget), rendimiento medido, firma, requisitos, datos generados, compilación y solución de problemas.
+- **Notas de la release V5.0.0** con destacados, tabla de rendimiento y contenido de la release.
+- **Código fuente publicado** en el repositorio y como ZIP en la release, con instrucciones de compilación, firma y validación de winget.
+
+### Licencia
+- Distribuido bajo la licencia GNU General Public License v3.0 (GPL-3.0).
+
+---
+
 ## [4.4.4] - 2026-10-25
 
 ### Añadido
