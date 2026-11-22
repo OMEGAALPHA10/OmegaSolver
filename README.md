@@ -2,15 +2,14 @@
 
 <img src="docs/screenshots/logo.png" alt="OmegaSolver" width="120">
 
-# ⚡ OmegaSolver V4.4.4
+# ⚡ OmegaSolver V5.0.0
 
-**Suite gráfica de diagnóstico, mantenimiento y optimización para Windows**
+**Suite gráfica nativa de diagnóstico, mantenimiento y optimización para Windows**
 
-[![Versión](https://img.shields.io/badge/version-4.4.4-FFD400?style=for-the-badge&logo=windowsterminal&logoColor=black)](https://github.com/OMEGAALPHA10/OmegaSolver/releases)
+[![Versión](https://img.shields.io/badge/version-5.0.0-FFD400?style=for-the-badge&logo=windowsterminal&logoColor=black)](https://github.com/OMEGAALPHA10/OmegaSolver/releases)
 [![Licencia](https://img.shields.io/badge/license-GPLv3-22C55E?style=for-the-badge&logo=gnu&logoColor=white)](https://www.gnu.org/licenses/gpl-3.0)
 [![Plataforma](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/OMEGAALPHA10/OmegaSolver)
-[![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207%2B-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
-[![Winget](https://img.shields.io/badge/Winget-disponible-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/microsoft/winget-cli)
+[![.NET](https://img.shields.io/badge/.NET-10%20%7C%20C%23-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 
 [![Stars](https://img.shields.io/github/stars/OMEGAALPHA10/OmegaSolver?style=flat-square&color=FFD400)](https://github.com/OMEGAALPHA10/OmegaSolver/stargazers)
 [![Forks](https://img.shields.io/github/forks/OMEGAALPHA10/OmegaSolver?style=flat-square&color=FFD400)](https://github.com/OMEGAALPHA10/OmegaSolver/forks)
@@ -19,23 +18,25 @@
 
 **🇻🇪 Proyecto personal de código abierto desarrollado desde Venezuela**
 
-[📥 Instalar](#-instalación-y-ejecución) · [🧩 ¿Por qué modular?](#-por-qué-modular-y-por-qué-el-zip-completo) · [⚡ Rendimiento](#-rendimiento-verificado) · [✨ Características](#-última-versión-v444--modular-and-office-update) · [🔐 Firma](#-verificación-de-firma) · [🤝 Contribuir](#-contribuciones)
+[📥 Instalar](#-instalación) · [⚡ Rendimiento](#-rendimiento-verificado) · [🔁 Arquitectura](#-de-powershell-a-c-qué-cambió-en-la-v5) · [✨ Características](#-última-versión-v500) · [🔐 Firma](#-verificación-de-firma) · [🛠️ Compilar](#-código-abierto-y-compilación) · [🤝 Contribuir](#-contribuciones)
 
 </div>
 
 ---
 
-**OmegaSolver** es una suite gráfica (GUI) de diagnóstico, mantenimiento y optimización para Windows, desarrollada íntegramente en **PowerShell + WPF**, con un pequeño **lanzador `.exe`** compilado mediante **PS12EXE**. Diseñada para simplificar tareas técnicas complejas sin sacrificar la potencia para usuarios avanzados.
+**OmegaSolver** es una suite gráfica (GUI) de diagnóstico, mantenimiento y optimización para Windows. La **V5 es una reescritura nativa en C# (.NET 10 + WPF)**: un único `OmegaSolver.exe` autocontenido, **sin PowerShell ni .NET que instalar**, con la **misma interfaz, módulos y flujo** que la V4.4.4, pero con un arranque **2,1× más rápido** y aproximadamente **2,6× menos CPU** en el mismo equipo.
 
 > [!IMPORTANT]
-> **Desde la V4.4.4 la descarga obligatoria es el `.zip` completo, no solo el `.exe`.**
-> `OmegaSolver.exe` ya **no contiene la aplicación**: es un lanzador de ~300 KB que busca `App.ps1` y las 170 fuentes modulares a su lado. Si descargas únicamente el `.exe`, o lo separas de `App.ps1`, la app **no arranca**. Antes de instalar, lee **[¿Por qué modular y por qué el ZIP completo?](#-por-qué-modular-y-por-qué-el-zip-completo)**.
+> **La V5 ya no necesita el ZIP modular.**
+> La V4.4.4 era un árbol de 170 scripts `.ps1` que tenían que viajar junto al lanzador. La V5 es **un solo archivo**: descarga el **instalador** (recomendado) o el **`.exe` portátil** y listo. No hay `App.ps1`, ni `Core\`, ni `Features\`, ni lanzador intermedio.
+>
+> La **V4.4.4 sigue disponible** en [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases) como referencia histórica. No se elimina ni se altera.
 
 ---
 
 ## 🌐 Página Web Oficial
 
-Toda la información del proyecto está disponible en el sitio web oficial: capturas interactivas, historia, changelog completo, roadmap público, FAQ, guías de instalación y disponibilidad en 3 idiomas (ES / EN / PT).
+Toda la información del proyecto está disponible en el sitio web oficial: capturas interactivas, historia, changelog, roadmap público, FAQ, guías de instalación y disponibilidad en 3 idiomas (ES / EN / PT).
 
 ### 👉 **[https://omegaalpha10.github.io/OmegaSolver/](https://omegaalpha10.github.io/OmegaSolver/)**
 
@@ -43,12 +44,9 @@ Toda la información del proyecto está disponible en el sitio web oficial: capt
 
 ## ⚡ Rendimiento Verificado
 
-> **Misma sesión y misma carga: la V4.4.4 abrió en 346,9 s y el `.exe` final de la V4.4.1 necesitó 1120,0 s (−69,0 %).** El otro build oficial de V4.4.1 midió 754,5 s: **con cualquiera de los dos, la modular abrió primero**. No es una estimación: se lanzó el **`.exe` real de cada versión**, en frío, con permisos de administrador y sin scripts intermedios.
+> **Misma PC, misma carga y la misma tarea: la V4.4.4 (PowerShell) tardó ~27,4 s en abrir y la V5.0.0 ~12,9 s (−53 %, 2,1× más rápida). El tiempo de CPU hasta tener la ventana bajó de ~9,8 s a ~3,6 s (≈2,6× menos).**
 >
-> Con el equipo descargado, la misma V4.4.4 abrió en **27,75 s y 57,2 s**. El estado de la máquina pesa más que la arquitectura; por eso aquí están **todas** las corridas, incluidas las que no abrieron.
-
-> [!IMPORTANT]
-> Esto no es un benchmark de laboratorio. Es un **Celeron N3350 con 4 GB de RAM, disco lento, Defender activo y el equipo compartido con otras aplicaciones**. Los tiempos absolutos son altos y muy variables; lo que vale es la comparación hecha **en las mismas condiciones**.
+> No es una estimación: se ejecutó el **`.exe` real de cada versión**, con permisos de administrador, cronometrando hasta que la ventana principal respondió. La V4.4.4 se copió a `%TEMP%` para no escribir nada dentro de su carpeta original.
 
 ### 🖥️ Equipo de prueba
 
@@ -57,682 +55,436 @@ Toda la información del proyecto está disponible en el sitio web oficial: capt
 | **Procesador** | Intel(R) Celeron(R) CPU N3350 @ 1.10 GHz |
 | **Núcleos lógicos** | 2 |
 | **RAM instalada** | 4,00 GB · 2133 MHz |
-| **Tarjeta gráfica** | Intel(R) HD Graphics · 128 MB |
-| **Almacenamiento** | 58 GB (≈50 GB usados) |
+| **Almacenamiento** | Disco mecánico de 58 GB (≈50 GB usados) |
 | **Sistema operativo** | Windows 11 Pro · build 26200 |
-| **PowerShell** | Windows PowerShell 5.1.26100.6584 |
-| **Antivirus** | Microsoft Defender activo (`MsMpEng` acumuló ≈47.900 s de CPU durante la sesión) |
-| **Carga del equipo** | Qoder (~840 MB) y otras apps abiertas durante toda la prueba |
+| **Antivirus** | Microsoft Defender activo |
+| **Carga del equipo** | Aplicaciones abiertas durante la prueba (editor, navegador, etc.) |
 
 ### 🔬 Metodología
 
-1. Se ejecuta el **`.exe` oficial de cada versión**, no un `.ps1` ni un script de prueba.
-2. Sesión **elevada** (administrador) y perfil **Hogar**.
+1. Se ejecuta el **`.exe` oficial de cada versión**, no un script de prueba.
+2. Sesión **elevada** (administrador).
 3. Antes de cada corrida se cierran las instancias previas: el **mutex de instancia única** impediría abrir una segunda ventana.
-4. El cronómetro va desde `Start-Process` hasta que existe la ventana principal con el título `OmegaSolver V4.4.x`. Se ignora el diálogo de "Instancia única".
-5. Tras abrir: **45 s de estabilización** y **20 s de muestreo** de RAM, CPU, hilos y handles.
-6. Orden alternado para repartir la deriva térmica y de carga.
+4. El cronómetro va desde `Start-Process` hasta que existe una ventana `OmegaSolver V5.0.0` **que responde**.
+5. RAM: *working set* tras 4 s de inactividad.
+6. Se usa la **mediana de las ejecuciones válidas** para reducir el ruido del disco y del antivirus.
 
-Binarios medidos (prefijo del SHA-256; el hash se calculó sobre el archivo exacto que se ejecutó):
+### 📊 Resultados
 
-| Versión | Archivo | Tamaño | SHA-256 (inicio) |
-|---|---|---:|---|
-| V4.4.1 (final) | `beta\OmegaSolver V4.4.1.exe` | 673.760 B | `8f40a9d6…e5dfda` |
-| V4.4.1 (build 15:21) | `OmegaSolver_v4.4.1.exe` | 666.624 B | `5966a5c7…c946f4` |
-| V4.4.4 | `OmegaSolver v4.4.4.exe` (**el que va dentro del ZIP publicado**) | 309.728 B | `e7ac8a18…085862` |
-
-### 📊 Resultados: misma sesión y misma carga
-
-| Métrica | V4.4.1 (final) | **V4.4.4** | Cambio |
+| Métrica | V4.4.4 (PowerShell) | **V5.0.0 (C#)** | Cambio |
 |---|---:|---:|---:|
-| **Arranque en frío** | 1120,0 s | **346,9 s** | 🟢 **−69,0 % · 12 min 53 s menos** |
-| RAM en reposo | 166,7 MB | 208,0 MB | 🟡 +41,3 MB (+24,8 %) |
-| CPU en reposo | 0,50 % | 4,10 % | 🟡 +3,60 pp (no concluyente) |
-| Hilos | 15 | 17 | 🟡 +2 |
-| Handles | 510 | 652 | 🟡 +142 |
-
-> El otro build oficial de V4.4.1 (666.624 B) midió **754,5 s**, **202,8 MB** de RAM, **4,43 %** de CPU, **13** hilos y **507** handles. Con los dos builds, la V4.4.4 abrió primero.
+| **Arranque hasta la ventana** | ~27,4 s | **~12,9 s** | 🟢 **−53 % · 2,1× más rápido** |
+| **CPU hasta la ventana** | ~9,8 s | **~3,6 s** | 🟢 **≈2,6× menos** |
+| **RAM en reposo (4 s)** | ~216 MB | ~271 MB | 🟡 +25 % (+55 MB) |
+| **Distribución** | 170 archivos (~1,5 MB) | **1 `.exe` (59,8 MB)** | ✅ Un solo archivo |
+| **Dependencias** | PowerShell 5.1 + .NET Framework | **Ninguna** (runtime incluido) | ✅ Autocontenido |
 
 ```text
-ARRANQUE EN FRÍO — misma carga (menor = mejor)
-════════════════════════════════════════════════════════════════
+ARRANQUE HASTA LA VENTANA — misma PC (menor = mejor)
+══════════════════════════════════════════════════════════════
 
-  V4.4.1  ████████████████████████████████████████████████  1120,0 s
-  V4.4.4  ████████████████                                  346,9 s
-          ╰──────────────────┬───────────────────╯
-                             │
-                     −69,0 % · 3,2× más rápida  ✅
+  V4.4.4  ███████████████████████████████████████  27,4 s
+  V5.0.0  ███████████████████                        12,9 s
+          ╰───────────────────┬──────────────────╯
+                              │
+                      −53 % · 2,1× más rápida  ✅
 ```
 
+### 🧠 ¿Por qué arranca más rápido?
+
+- **La V4 interpretaba y cargaba**: *dot-sourcing* de 170 archivos `.ps1` en cada inicio y compilación del C# incrustado con `csc.exe` antes de dibujar la ventana.
+- **La V5 ya está compilada**: el código nativo y el runtime de .NET viajan dentro del `.exe`; al abrirlo solo se carga y se muestra la ventana.
+- **Menos fricción con el antivirus**: Defender ya no escanea 170 scripts en cada arranque; escanea un único binario firmado.
+
 > [!NOTE]
-> En la V4.4.1 la ventana pertenece al propio `.exe` (la app va dentro del binario). En la V4.4.4 pertenece al `powershell.exe` que lanza el lanzador. Por eso la RAM, la CPU, los hilos y los handles son de **procesos distintos** y no se suman entre versiones: se compara el proceso que dibuja la ventana. La CPU, además, se midió con una muestra de 20 s y puede incluir tareas de fondo de cada app; **no debe leerse como consumo continuo**. La métrica sólida de esta prueba es el arranque.
-
-### 🎚️ Cuánto varía el arranque (y por qué)
-
-La **misma V4.4.4**, el mismo día y con menos carga, abrió en **27,75 s** y **57,2 s**. Con el equipo saturado necesitó **346,9 s**. Los dos builds oficiales de V4.4.1, que históricamente arrancaban en **33,61 s** (medición de su propia release, con el equipo más sano), necesitaron **754,5 s** y **1120,0 s** en esta sesión.
-
-Esto deja dos conclusiones:
-
-- **El estado del equipo domina el arranque en frío:** Defender escanea cada binario y `csc.exe` compila el C# de la app en cada ejecución. Con 4 GB de RAM, disco lento y `MsMpEng` activo, eso puede multiplicar el tiempo por 10 o más.
-- **La modularidad no salió más lenta en la práctica:** carga 170 archivos por dot-sourcing, pero evita que un `.exe` de 674 KB cargue y compile toda la app dentro de su propio proceso. En este equipo, la diferencia entre el build final de V4.4.1 y la V4.4.4 fue de **12 minutos y 53 segundos**.
-
-### 🧪 Todos los intentos (sin filtrar)
-
-| # | Versión (build) | Inicio | Límite | ¿Abrió? | Tiempo | Observación |
-|---|---|---|---:|---|---:|---|
-| 1 | V4.4.1 (15:21) | 19:15:38 | 900 s | ✅ | **754,5 s** | Primer éxito de la sesión |
-| 2 | V4.4.4 | 19:30:16 | 600 s | ❌ | >600 s | Lanzador y `powershell` activos, sin ventana |
-| 3 | V4.4.1 (15:21) | 19:43:50 | 900 s | ❌ | >900 s | Proceso vivo, sin ventana |
-| 4 | V4.4.4 | 20:00:18 | 600 s | ❌ | >600 s | `csc.exe` compilando; límite más corto |
-| 5 | V4.4.4 | 20:15:01 | 1500 s | ✅ | **346,9 s** | Misma franja de carga que el intento 6 |
-| 6 | V4.4.1 (final) | 20:38:57 | 1500 s | ✅ | **1120,0 s** | Build final; misma franja de carga que el 5 |
-
-> [!WARNING]
-> Los intentos 2 y 4 usaron un límite de **600 s**, menor que los 900 s del monolito. Se dejan en la tabla como evidencia de la variabilidad: en este equipo, **cualquier** arranque en frío puede quedar bloqueado varios minutos por el antivirus y la compilación. No se contaron como tiempo de arranque ni se usaron para calcular el −69 %.
-
-### ✅ Veredicto
-
-- **Arranque en frío (misma carga):** 346,9 s vs 1120,0 s → **3,2× más rápida** (−69,0 %). Frente al otro build de V4.4.1 (754,5 s) sigue siendo **2,2×** más rápida.
-- **Mejor caso medido (equipo descargado):** 27,75 s con la V4.4.4.
-- **Coste en reposo:** entre +5 y +41 MB de RAM según el build de V4.4.1 comparado, +2 a +4 hilos y +142 a +145 handles por el proceso lanzador adicional; la CPU no es concluyente con muestras de 20 s.
-- **Coste real de la modularidad:** 170 archivos y ~1,5 MB en disco; el antivirus escanea más archivos, pero el arranque no se degradó frente al monolito.
-
-**Conclusión:** en un equipo sano la diferencia entre ambas arquitecturas es pequeña; en un equipo limitado y con Defender activo, **el monolito es el que peor paga el arranque**. La modular gana justo donde más importa: hardware modesto.
+> La RAM sube ~55 MB porque el proceso incluye el runtime nativo de WPF. Es un coste fijo y estable, no acumulativo; el arranque y la CPU son las métricas que más se notan en el uso diario. En un equipo con SSD la diferencia de tiempo se reduce, pero la ventaja de CPU y de distribución se mantiene.
 
 ---
 
-## 🧩 ¿Por qué modular y por qué el ZIP completo?
+## 🔁 De PowerShell a C#: qué cambió en la V5
 
-Esta sección explica, sin atajos, **el cambio de arquitectura más importante del proyecto** y las tres reglas que se derivan de él. Si solo lees un apartado del README, que sea este.
+La V5 **no es un rediseño**: es la misma aplicación, portada pieza por pieza a C#. La interfaz se conservó **píxel a píxel** (mismos paneles, botones, textos, temas y animaciones) porque el XAML se reutilizó como recurso incrustado, con los mismos marcadores `@@clave@@` que usaba la versión scripted.
 
-> [!CAUTION]
-> **REGLA DE ORO:** descarga el **`.zip` completo** desde [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases), extrae **todo** en una carpeta propia y ejecuta el `.exe` **sin sacarlo de esa carpeta**. El `.exe` suelto no es la aplicación.
+| | **V4.4.4** | **V5.0.0** |
+|---|---|---|
+| **Lenguaje** | PowerShell 5.1 + C# incrustado | **C# nativo** |
+| **Interfaz** | XAML en archivos del árbol | **XAML incrustado** en el `.exe` |
+| **Entrega** | ZIP: lanzador + 170 archivos | **1 `.exe` autocontenido** |
+| **Runtime** | PowerShell del sistema + .NET Framework | **.NET 10 incluido** |
+| **Traducciones** | `strings.json` + parches | **738 claves × ES/EN/PT** |
+| **Temas** | `themes.json` | **18 temas + 6 subpaletas** |
+| **Instalación** | Extraer ZIP y ejecutar | **Instalador con modo completo o portátil** |
+| **Firma** | Solo el lanzador `.exe` | **`.exe` + instalador firmados** |
 
-### 1. Por qué se abandonó el `.ps1` único
+### 🗂️ Estructura del proyecto
 
-Hasta la V4.4.1, todo el programa vivía en **un solo archivo** de 8.756 líneas (~877 KB) que PS12EXE empaquetaba dentro de un `.exe` autosuficiente de 674 KB. Funcionaba, pero cada versión nueva se volvía más cara de mantener:
+```text
+OmegaSolverV5/
+├── App.xaml / App.xaml.cs        arranque, mutex de instancia única, tema inicial
+├── Cli.cs                        modos de consola (--version, --selftest, ...)
+├── OmegaSolver.csproj            net10.0-windows · WPF · single-file
+├── app.manifest                  requireAdministrator + DPI
+├── icon.ico
+├── Core/                         rutas, logs, i18n, temas, ajustes, perfil,
+│                                 diario de cambios, restauración, scheduler,
+│                                 hardware, diagnóstico, procesos, actualizaciones
+├── UI/                           MainWindow + ventana de carga
+├── Modules/
+│   ├── Cleanup/                  motor y destinos de limpieza
+│   ├── Store/                    tienda de apps (winget)
+│   ├── Share/                    compartir archivos (Robocopy / FTP)
+│   ├── Manual/                   manual detallado
+│   └── Toolbox/                  operaciones de reparación, reporte de limpieza
+├── Features/                     Ajustes, Office ODT, herramientas de uso rápido,
+│                                 acciones rápidas, autolimpieza, botones propios,
+│                                 tweaks, perfiles, políticas
+├── Resources/
+│   ├── Views/                    XAML incrustado (Settings, Office, Store, ...)
+│   ├── strings.json / strings_v5.json
+│   ├── themes.json               temas y subpaletas
+│   ├── store_*.json              catálogo de la tienda
+│   ├── manual_*.txt              manual básico/avanzado (3 idiomas)
+│   ├── winutil_manual_*.txt      manual de herramientas de uso rápido
+│   └── omega-*.b64               logos
+├── scripts/                      publish, instalador, firma, winget, benchmark
+└── installer/                    Inno Setup, licencia, notas, manifiestos winget
+```
 
-| Problema del monolito | Consecuencia real |
+**68 archivos C#/XAML · ~13.700 líneas.** La lógica de Windows (SFC, DISM, CHKDSK, winget, Office ODT, puntos de restauración, red, registro) se ejecuta con APIs y procesos del sistema; PowerShell del sistema solo se usa para dos tareas puntuales (puntos de restauración y botones personalizados), nunca como dependencia de la app.
+
+---
+
+## ✅ Lo que se mantiene y lo que mejora frente a la V4.4.4
+
+| Se mantiene igual | Mejora en la V5 |
 |---|---|
-| 8.756 líneas en un archivo | Cualquier cambio obligaba a recorrer y regenerar todo el archivo |
-| Sin separación por dominio | Un ajuste en Winget podía romper la limpieza o el instalador de Office |
-| Sin red de seguridad | No había forma automatizada de comprobar que un cambio no alterara otra función |
-| Traducciones dispersas | Cada cadena ES/EN/PT se buscaba a mano dentro del mismo archivo |
-| Recompilar para todo | Probar una idea exigía volver a compilar el `.exe` completo |
+| Interfaz, paneles y flujo de trabajo | Arranque 2,1× más rápido y ~2,6× menos CPU |
+| Modo básico y modo avanzado | Un único `.exe`; sin ZIP ni árbol de scripts |
+| Limpieza, reparación, red, tienda, Office, manual | Instalador con elección **completa / portátil** |
+| Temas (18) y subpaletas (6) | Datos y ajustes más ordenados por modo |
+| Idiomas ES / EN / PT | 738 claves por idioma, sin cadenas sueltas |
+| Perfil Empresa / Hogar | Firma digital en `.exe` **y** en el instalador |
+| Reversión de cambios reversibles | Reporte emergente tras cada limpieza |
+| Botones personalizados y rutas propias | Herramientas de uso rápido también en modo básico |
+| Sin telemetría ni cuentas | Integración con winget (manifiesto preparado) |
 
-La respuesta fue reconstruir el proyecto como un **árbol modular**: el mismo código, ahora dividido en **170 archivos** (`.ps1` + `.xaml`, ~11.900 líneas) agrupados por responsabilidad. Cada bloque del monolito original se colocó **una sola vez y en su orden exacto** dentro de un archivo puente generado (`Core/Exec.ps1`), de modo que la app sigue ejecutándose **como si fuera un único script**, pero el mantenimiento se hace por partes.
+---
 
-**Ventajas que ya se notan:**
+## ✨ Última versión: V5.0.0
 
-- **Aislamiento por dominio:** `Core/` (arranque, logger, configuración, temas, idiomas), `UI/` (ventanas y XAML), `Modules/` (limpieza, red, Winget, herramientas), `Workers/` (procesos externos) y `Features/` (perfil, Ajustes, autolimpieza, log en disco, botones personalizados, Office ODT).
-- **Verificación automática:** el generador reconstruye el script monolito a partir de los 170 fragmentos y un verificador compara el resultado **byte a byte**. Si un fragmento se duplica, se omite o se desordena, el build falla. (Comprobación actual: **170/170 fragmentos íntegros**.)
-- **Features nuevas sin tocar el núcleo:** el perfil Empresa/Hogar, el panel de Ajustes, la autolimpieza programada o el instalador de Office se añadieron como archivos independientes.
-- **Depuración localizada:** un error apunta a un archivo concreto (`Features/Feature.Profile.ps1`) en lugar de a "la línea 6.000 de un archivo gigante".
+### ⚡ Reescritura nativa en C#
+- **Un único `OmegaSolver.exe` autocontenido** (59,8 MB): no requiere instalar PowerShell ni .NET.
+- Misma interfaz WPF que la V4.4.4: mismos módulos, mismos botones, mismo flujo.
+- Arranque ~2,1× más rápido y ~2,6× menos CPU en el mismo equipo.
 
-**El coste, dicho claro:** un árbol de 170 archivos ocupa más en disco y provoca más fricción con antivirus/SmartScreen, que escanean archivo por archivo. En teoría eso debería hacer el arranque en frío más lento que un único archivo; en la práctica, el coste dominante es la compilación C# y el escaneo del `.exe` monolítico, y en nuestras mediciones la V4.4.4 abrió **más rápido** que la V4.4.1 (ver [⚡ Rendimiento](#-rendimiento-verificado)). Aun así, el arranque se paga **una vez por sesión** mientras la app queda abierta.
+### 📦 Instalador con dos modos
+- **Instalación completa:** accesos directos, desinstalador, tareas de Windows y datos en `%ProgramData%\OmegaSolver`.
+- **Versión portátil:** sin iconos ni tareas; los datos quedan en `OmegaSolver-data` junto al `.exe`, ideal para USB o pruebas.
+- Se elige desde el propio asistente o con `/PORTABLE=1`.
 
-### 2. Por qué ahora es OBLIGATORIO descargar el `.zip` entero
+### 🧰 Herramientas de uso rápido
+- Menú por secciones con ajustes ON/OFF, disponible **tanto en modo básico como avanzado**.
+- **Manual propio** integrado, pensado para quienes vienen de WinUtil.
+- **Punto de restauración** antes de aplicar cambios.
 
-El cambio de arquitectura cambió también **qué es el `.exe`**. Ya no es la app empaquetada: es un **lanzador mínimo** que arranca la app real, que vive en los archivos de al lado.
+### 🗑️ Limpieza transparente
+- **Reporte emergente** tras cada limpieza: qué se eliminó, cuánto espacio y dónde.
+- **Autolimpieza mejorada:** por intervalo, diaria a una hora fija o al iniciar Windows; cierre opcional de navegadores.
+- Rutas personalizadas y botones propios (con argumentos, confirmación, orden y prueba).
 
-| | V4.4.1 (anterior) | **V4.4.4 (actual)** |
-|---|---|---|
-| `.exe` | 674 KB · **la app completa** | **310 KB · solo el lanzador** |
-| Código de la app | dentro del `.exe` | **170 archivos fuera del `.exe`** |
-| ¿Funciona el `.exe` solo? | ✅ Sí | ❌ **No** |
-| Unidad de descarga | `.exe` | **`.zip` completo** |
-| Tamaño del paquete | 1 archivo | ZIP de ~648 KB → ~1,5 MB extraídos |
+### ⚙️ Ajustes rediseñados
+- Menos ruido: idioma y tema siguen en la barra principal.
+- Comportamiento, perfil, autolimpieza, rutas, botones personalizados y panel avanzado en un solo lugar.
 
-```text
-V4.4.1:  [ OmegaSolver.exe  ← script + runtime + todo el código ]
+### 🔧 Reparación y diagnóstico
+- SFC, DISM, CHKDSK, desfragmentación y modo de alto rendimiento.
+- Diagnóstico del equipo con recomendaciones personalizadas.
+- Puntos de restauración, gestor de programas de inicio y gestor de archivos bloqueados.
 
-V4.4.4:  [ OmegaSolver.exe ]  →  busca  →  [ App.ps1 ]
-                                              │
-                                              ├── Core\
-                                              ├── UI\
-                                              ├── Modules\
-                                              ├── Workers\
-                                              └── Features\
+### 🛒 Tienda y extras
+- Tienda de apps sobre **winget** con catálogo y categorías.
+- Instalador de **Office** con descarga oficial (365, LTSC 2024, 2021, 2019, 2016 y apps individuales).
+- Compartir archivos entre PC y móvil por red local (Robocopy / FTP).
+- Limpieza de controladores obsoletos y herramientas de red (DNS, Winsock, QoS).
+
+### 🌐 Idiomas y temas
+- **Español, English y Português** (738 claves por idioma).
+- **18 temas** y **6 subpaletas** de OMEGASOLVER style.
+
+---
+
+## 📥 Instalación
+
+### Opción 1 — Instalador (recomendada)
+
+1. Descarga **`OmegaSolver-Setup-5.0.0.exe`** desde [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases/tag/v5.0.0).
+2. Ejecútalo y acepta el UAC (la app requiere administrador).
+3. Elige **Instalación completa** o **Versión portátil** y sigue el asistente.
+
+Instalación silenciosa (para despliegues):
+
+```bat
+OmegaSolver-Setup-5.0.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-
 ```
 
-Si descargas **solo el `.exe`** de la V4.4.4, obtienes un lanzador de 310 KB sin programa que lanzar. Al ejecutarlo verás un cuadro de diálogo indicando que **no se encontró `App.ps1` junto a `OmegaSolver.exe`**, y se cerrará. No es un error de la app: es exactamente el comportamiento esperado cuando falta el árbol modular.
+Modo portátil directo desde el instalador:
+
+```bat
+OmegaSolver-Setup-5.0.0.exe /PORTABLE=1
+```
+
+### Opción 2 — Portátil (un solo archivo)
+
+1. Descarga **`OmegaSolver.exe`**.
+2. Colócalo en una carpeta escribible (USB, Documentos, etc.).
+3. Ejecútalo; creará `OmegaSolver-data` a su lado.
+
+No necesita instalación, ni permisos de escritura en `Program Files`, ni el ZIP de la V4.
+
+### Opción 3 — winget (pendiente de aprobación)
+
+El manifiesto ya está preparado y validado (`OmegaAlpha10.OmegaSolver`, versión 5.0.0). Cuando sea aprobado en `microsoft/winget-pkgs`:
+
+```powershell
+winget install OmegaAlpha10.OmegaSolver
+```
 
 > [!NOTE]
-> En la carpeta de publicación puede aparecer un `OmegaSolver.exe` suelto: sirve para **verificar la firma digital** y el hash. **No es** una instalación válida por sí mismo.
+> Hasta que el PR sea aprobado, `winget` no encontrará el paquete. Usa el instalador o el `.exe` portátil.
 
-### 3. Por qué el `.exe` debe estar en la MISMA carpeta que `App.ps1`
+### Verificar integridad
 
-No es una preferencia estética: es cómo funciona un ejecutable compilado con PS12EXE.
-
-1. Dentro de un `.exe` de PS12EXE, `$PSScriptRoot` **no apunta a la carpeta donde está el `.exe`**, sino a un directorio temporal de extracción. Por eso el lanzador no puede usar `$PSScriptRoot` para localizar la app.
-2. El lanzador obtiene su propia ruta real con `[System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName`.
-3. De ahí deriva la carpeta (`$exeDir`) y busca **exactamente** `$exeDir\App.ps1`.
-4. Fija `WorkingDirectory = $exeDir` y arranca el intérprete del sistema con:
-   `powershell.exe -NoProfile -ExecutionPolicy Bypass -STA -File "App.ps1"`.
-5. Si `App.ps1` no existe en esa carpeta, muestra el error y termina con código 1. **No hay búsqueda alternativa** en el escritorio, en `Program Files` ni en el directorio actual.
-
-**Qué significa en la práctica:**
-
-- ✅ **Correcto:** `C:\OmegaSolver\OmegaSolver.exe` junto a `C:\OmegaSolver\App.ps1`, `Core\`, `UI\`, etc. El acceso directo apunta al `.exe` dentro de esa carpeta.
-- ❌ **Incorrecto:** mover solo el `.exe` al Escritorio.
-- ❌ **Incorrecto:** dejar el `.exe` en `C:\OmegaSolver` y las fuentes en `Descargas\OmegaSolver-V4.4.4`.
-- ❌ **Incorrecto:** renombrar o mover `App.ps1` "para ordenar".
-- ❌ **Incorrecto:** un acceso directo con "Iniciar en" apuntando a otra carpeta (el lanzador usa su propia ubicación, pero el árbol debe seguir junto a él).
-
-**Detalles del lanzador que conviene conocer:**
-
-- `-STA` es obligatorio: WPF no funciona en un hilo MTA.
-- `-NoProfile` evita que un perfil de PowerShell del usuario altere el entorno de la app.
-- `-ExecutionPolicy Bypass` es necesario porque Windows bloquea por defecto la ejecución de scripts descargados.
-- `CreateNoWindow` evita una consola negra parpadeando al iniciar.
-- La app usa un **mutex de instancia única** (`Local\OmegaSolverV44_SingleInstance`). Si ya hay una instancia abierta verás el aviso **"OmegaSolver ya se encuentra en ejecución"**. Cierra la anterior (o termínala desde el Administrador de tareas) antes de abrir otra.
-
-### 4. Cómo se ensambla la app (el mosaico)
-
-El árbol no es una copia libre del monolito: es un **mosaico ordenado**.
-
-```text
-App.ps1 (63 líneas)
-├── define $root = $PSScriptRoot
-├── carga Core\Exec.ps1
-├── captura errores → logs\crash.txt
-└── Core\Exec.ps1  (generado)
-    ├── #@@LOAD / #@@INLINE / #@@XAML  ← orden exacto del monolito
-    ├── cada fragmento aparece UNA vez
-    └── Features\*.ps1 se inyectan antes del último #@@LOAD
-```
-
-- `_build\generate.js` recorre el monolito de referencia y genera la secuencia de carga.
-- `_build\build.ps1` reconstruye el script completo y ejecuta las comprobaciones.
-- `_build\check.js` compara el resultado con el original **byte a byte**. Un solo byte de diferencia invalida el build.
-
-Esto permite dos cosas a la vez: **desarrollar por archivos** y **garantizar que el comportamiento es idéntico** al del script validado.
-
-### 5. Errores típicos y su causa exacta
-
-| Síntoma | Causa | Solución |
-|---|---|---|
-| "No se encontró `App.ps1` junto a `OmegaSolver.exe`" | El `.exe` está separado del árbol modular | Extrae el ZIP completo en una carpeta y ejecuta el `.exe` de ahí |
-| El `.exe` no hace nada o se cierra al instante | Extracción incompleta: faltan `Core\`, `UI\`, etc. | Vuelve a extraer **todo** el ZIP (no ejecutes desde dentro del ZIP) |
-| "OmegaSolver ya se encuentra en ejecución" | Quedó una instancia anterior abierta o colgada | Ciérrala desde el Administrador de tareas y reintenta |
-| SmartScreen bloquea el `.exe` | Ejecutable descargado de Internet sin reputación | Verifica la firma ([sección de firma](#-verificación-de-firma)) y permite la ejecución |
-| Antivirus marca los `.ps1` | Son 170 scripts que se ejecutan al iniciar; heurística agresiva | Añade la carpeta extraída a exclusiones **solo si confías en el origen** |
-| Errores raros tras editar un archivo | Se rompió el mosaico (fragmento duplicado/desordenado) | No edites a mano el orden de `Core\Exec.ps1`; usa `_backup` + `build.ps1` |
-
-> [!WARNING]
-> La firma digital cubre el **lanzador `.exe`**. Los `.ps1` del árbol son código local y no van firmados individualmente: descarga siempre desde el repositorio/Releases oficiales y, si quieres estar seguro, compara el **SHA256 del ZIP** publicado. Un ZIP de terceros puede contener scripts alterados.
-
-### 6. ¿Y si quiero auditarlo o desarrollar?
-
-Todo el código está a la vista en el ZIP. Para desarrollo local puedes ejecutar directamente `App.ps1` con PowerShell 5.1 (sin pasar por el lanzador); para **distribuir**, el formato oficial sigue siendo el ZIP con el `.exe` + árbol modular. La app **no requiere** instalar PowerShell: usa el **Windows PowerShell 5.1 que ya trae Windows 10/11**.
-
----
-
-## 🛠️ Código Abierto y Compilación Universal
-
-El **código fuente completo** de OmegaSolver es el árbol modular que viene dentro del `.zip` de cada release: `App.ps1` más las carpetas `Core/`, `UI/`, `Modules/`, `Workers/` y `Features/` (170 archivos `.ps1`/`.xaml` cargados por dot-sourcing). El `OmegaSolver.exe` incluido no es el script empaquetado: es un **lanzador** compilado con PS12EXE que localiza `App.ps1` junto a sí mismo y arranca la app con el PowerShell 5.1 del sistema. Para generar ese ejecutable tú mismo:
-
-<details open>
-<summary><b>📦 Ver pasos de compilación manual</b></summary>
-
-<br>
-
-**1. Instalar el compilador** — Abre **Windows PowerShell 5.1 como Administrador** (no PS 7: PS12EXE tiene un bug con el subprocess de syntax-check en PS 7) y ejecuta:
+Descarga también **`SHA256SUMS.txt`** desde la release y compara:
 
 ```powershell
-Install-Module -Name ps12exe -Scope CurrentUser -Force -AllowClobber
+Get-FileHash .\OmegaSolver-Setup-5.0.0.exe -Algorithm SHA256
+Get-FileHash .\OmegaSolver.exe -Algorithm SHA256
 ```
 
-**2. Crear el script del lanzador** (`OmegaLauncher.ps1`) — el exe compilado no sabe dónde está (`$PSScriptRoot` apunta a un temporal), así que el lanzador resuelve su propia ubicación y arranca `App.ps1` junto a él:
-
-```powershell
-$ErrorActionPreference = 'Stop'
-# WPF: sin esto el .exe compilado puede no resolver [System.Windows.MessageBox]
-try { Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase } catch { }
-try {
-    $exeFile = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
-    $exeDir  = [System.IO.Path]::GetDirectoryName($exeFile)
-    $app     = Join-Path $exeDir 'App.ps1'
-    if (-not (Test-Path -LiteralPath $app)) {
-        [System.Windows.MessageBox]::Show("No se encontro App.ps1 junto a OmegaSolver.exe.`n`nExtrae el contenido completo del .zip en una carpeta y ejecuta el .exe desde ahi.", 'OmegaSolver', 'OK', 'Error') | Out-Null
-        exit 1
-    }
-    $psi = New-Object System.Diagnostics.ProcessStartInfo
-    $psi.FileName = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-    $psi.Arguments = '-NoProfile -ExecutionPolicy Bypass -STA -File "' + $app + '"'
-    $psi.WorkingDirectory = $exeDir
-    $psi.UseShellExecute = $false
-    $psi.CreateNoWindow = $true
-    [System.Diagnostics.Process]::Start($psi) | Out-Null
-    exit 0
-} catch {
-    try { [System.Windows.MessageBox]::Show('No se pudo iniciar OmegaSolver: ' + $_.Exception.Message, 'OmegaSolver', 'OK', 'Error') | Out-Null } catch { }
-    exit 1
-}
-```
-
-**3. Compilar el lanzador** — desde la misma consola de PS 5.1:
-
-```powershell
-ps12exe `
-  -inputFile  ".\OmegaLauncher.ps1" `
-  -outputFile ".\OmegaSolver.exe" `
-  -App @{
-      Windowed = $true
-  } `
-  -Os @{
-      Admin = $true
-  } `
-  -Resources @{
-      Icon        = 'icon.ico'
-      Title       = 'OmegaSolver V4.4.4'
-      Description = 'OmegaSolver V4.4.4'
-      Company     = 'OMEGA_ALPHA'
-      Product     = 'OmegaSolver V4.4.4'
-      Copyright   = '(c) 2026 OMEGA_ALPHA'
-      Version     = '4.4.4.0'
-  } `
-  -Locale en `
-  -NoUpdateCheck
-
-Remove-Item ".\OmegaSolver.exe.config" -Force -ErrorAction SilentlyContinue
-```
-
-> **Nota sobre `-Locale en`:** corrige un bug de PS12EXE en sistemas con locale no-inglés (p. ej. `es-VE`, `pt-BR`) que hace fallar el subprocess interno de parseo. El flag fuerza el uso de la tabla i18n interna del módulo.
-
-> **Nota sobre el `.config`:** PS12EXE lo genera automáticamente para declarar `<supportedRuntime v4.0>`. Windows 10/11 lo ignoran porque el CLR 4.x ya viene en el sistema, así que se puede borrar para dejar un `.exe` único y limpio.
-
-> **Nota sobre la distribución:** el `.exe` debe ir **siempre dentro de la carpeta del árbol modular** (junto a `App.ps1`), tal como viene en el `.zip` del release. Copiar solo el `.exe` a otra ubicación no funcionará.
-
-**4. Firmar el ejecutable** (requiere certificado `.pfx` propio):
-
-```powershell
-$pfx = Read-Host "Contraseña del .pfx" -AsSecureString
-$bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pfx)
-$plain = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
-[System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
-$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2(
-    (Resolve-Path "OmegaSolver_OMEGA_ALPHA.pfx").Path, $plain)
-Set-AuthenticodeSignature -FilePath "OmegaSolver.exe" `
-    -Certificate $cert -HashAlgorithm SHA256 `
-    -TimestampServer "http://timestamp.digicert.com"
-```
-
-</details>
-
----
-
-## 🆕 Última versión: V4.4.4 — "Modular and Office Update"
-
-### 📦 Instalador de Office integrado (modo avanzado)
-
-Descarga e instala Microsoft Office con la **Office Deployment Tool oficial**, directo desde los servidores de Microsoft — sin paquetes externos de terceros.
-
-- **5 suites**: Microsoft 365, Office LTSC 2024, Office 2021, Office 2019 y Office 2016. En Windows 7 / 8.x solo se ofrece Office 2016, la última compatible.
-- **Aplicaciones individuales**: marca una a una las que necesitas — Word, Excel, PowerPoint, Outlook, OneNote, Publisher, Access, OneDrive y Teams. Las demás se excluyen automáticamente de la instalación.
-- Arquitectura **x64 / x86**, canal de actualización (365) e idioma (es-es / en-us / pt-br).
-- La activación requiere la **licencia propia** del usuario (cuenta o clave de Microsoft).
-
-### ⚙ Panel de Ajustes
-
-Nuevo botón ⚙ junto a "Analizar PC" con personalización estilo BleachBit/Wintoys:
-
-- **Botones personalizados**: crea botones con el nombre que quieras que ejecutan tus scripts `.ps1`, `.cmd` o `.bat`.
-- **Rutas de limpieza personalizadas**: carpetas que se limpian con cualquier botón de limpieza existente.
-- **Autolimpieza cada X minutos** (intervalo a elección), con ejecución en **segundo plano** opcional.
-- **Log a disco** y botón para abrir la carpeta de logs.
-
-### 🏢 Perfil Empresarial / Hogar
-
-Al primer inicio la app pregunta el tipo de equipo. Con perfil **EMPRESARIAL** se desactivan las acciones que pueden chocar con las políticas de dominio (GPO): restablecer red, QoS, plan de energía, limpiezas profundas, CHKDSK /f y DISM /ResetBase. La elección se recuerda.
-
-¿Te equivocaste de perfil o cambió el uso del equipo? En **Ajustes → Perfil del equipo → "Cambiar perfil..."** puedes volver a abrir el diálogo y re-aplicar el gating GPO al instante, sin reiniciar la app.
-
-¿Quieres que la pregunta inicial vuelva a aparecer? Usa **"Preguntar al iniciar"** en esa misma tarjeta: borra la elección guardada y el diálogo EMPRESARIAL / HOGAR se mostrará de nuevo en el próximo arranque.
-
-### ⚡ Acciones rápidas y Todo-en-1-Clic
-
-Panel de acción rápida junto a la barra de basura real (tamaño medido, no estimado): *Limpieza en 1-Clic*, *Reparar todo* y **Todo-en-1-Clic** (limpieza + DNS + papelera + SFC + DISM + Winsock + re-análisis). En el modo avanzado, DISM y CHKDSK abren un **sub-diálogo de opciones** antes de ejecutarse.
-
-### 🧩 Código 100% modular
-
-El monolito se reorganizó en un árbol de **170 archivos** (`App.ps1` + `Core/`, `UI/`, `Modules/`, `Workers/`, `Features/`) cargados por dot-sourcing en el orden exacto del original. El `.zip` del release incluye el árbol completo junto a `OmegaSolver.exe`, un lanzador compilado con PS12EXE que solicita UAC y arranca la app.
-
-### 🖼️ Icono propio en la barra de tareas
-
-La ventana principal declara un **AppUserModelID** propio (`OMEGA_ALPHA.OmegaSolver`) y usa el **logo embebido de OmegaSolver** como icono de ventana. Así Windows ya no muestra el icono genérico de PowerShell en la barra de tareas, incluso cuando la app se inicia a través del lanzador.
-
----
-
-## 🎨 Versión anterior: V4.4.1 — "Absolute Async Update"
-
-### 🚀 Núcleo asíncrono (`Invoke-OmegaAsync`)
-
-Toda operación pesada corre ahora en **runspaces de fondo**, dejando el hilo UI siempre libre. La ventana responde al instante aunque el diagnóstico, la comprobación de actualizaciones, la limpieza profunda o la tienda winget estén trabajando por debajo.
-
-- **`Invoke-OmegaAsync`** — motor de trabajo en background. El código de fondo nunca toca controles WPF: sólo devuelve datos y un `DispatcherTimer` los pinta al terminar.
-- **`Invoke-OmegaTaskAsync`** — overlay de carga **no bloqueante**. Los pasos del overlay rotan de verdad mientras el trabajo pesado corre, con reloj y mensaje real desde archivo de progreso.
-
-### 🐛 Fix del bug crítico — Winget Live
-
-> **El bug de V4.4 está resuelto.** En V4.4, al hacer clic en una tarjeta de resultado de la búsqueda en vivo, el panel de detalle no se abría (excepción silenciosa al escribir `.Text` sobre un control `<Image>`).
-
-**Corregido en V4.4.1:**
-- Fallback de icono ahora distingue entre `TextBlock` e `Image` — nunca más `.Text` sobre `<Image>`.
-- La función `Show-OmegaAppDetailFn` está blindada con try/catch y muestra el error visible si algo falla.
-- Los resultados live heredan la descripción del catálogo curado (mejor UX).
-- Soporte completo para `PSCustomObject` **y** `hashtable` en el panel de detalle (antes sólo hashtable).
-- `winget list` ya no bloquea la apertura de la tienda: se calienta la caché en segundo plano y se re-renderiza automáticamente al terminar.
-
-### 💡 Errores visibles (`Show-OmegaTaskError`)
-
-Nueva función que **muestra un diálogo** con tipo de excepción, código HResult y detalle cuando una tarea de botón falla (sync o async). Antes los fallos sólo quedaban en el log — o ni eso.
-
-### 🧹 Limpieza detallada y veraz
-
-- **Reporte por ubicación**: cada limpieza indica exactamente qué eliminó — por cada path, número de archivos y MB liberados, más total general.
-- **Fix del bug de Limpieza 1-Clic**: en V4.4 reportaba como "eliminados" los GB de basura **restante** (medidos después de borrar). Ahora mide ANTES de borrar y reporta los GB realmente liberados.
-
-### 🖥️ Ventanas opacas (CPU idle -24 %)
-
-Las 5 ventanas WPF (principal, carga, tienda, compartir, manual) usan ahora **`AllowsTransparency="False"`**. Sin layered window: **CPU idle cae de 66-75 % a <10 %** en gráficos modestos. Los temas visuales siguen intactos.
-
-### ⚡ Micro-optimizaciones de rendimiento
-
-- **`Get-HotFix` → registro CBS** para el informe de actualizaciones. De 8-11 s (real medido en N3350) a <0.5 s.
-- **SystemProfile por `Test-Path` a System32** en vez de `Get-Command` (10× más rápido, ~0.6 s ahorrado).
-- **`Win32_OperatingSystem` eliminado del perfil inicial** — el registro ya provee `ProductName`, `DisplayVersion`, `Build` y `UBR`.
-- **Logo de carga decodificado una sola vez** y cacheado con `Freeze()`.
-- **Favicons de la tienda a 44/96 px** (`DecodePixelWidth`) en vez de 128/256 px — menos RAM y menos CPU de decodificación.
-- **`GC.Collect()` tras diagnóstico y limpieza**, y brushes con `Freeze()` para liberar memoria.
-- **Runspaces cancelados al cerrar** — sin hangs al salir de la app.
-
-### 🔧 Estabilidad
-
-- Reparación de crashes causados por funciones ausentes en el script compilado.
-- Reescritura de la función `Get-OmegaString` con acceso seguro por índice.
-- Eliminación de caracteres residuales (`*`, `<->`, `Search`, `Web`, `Cart`) en strings i18n y XAML.
-- `Invoke-OmegaHiddenCmd` — todos los comandos de consola (`ipconfig`, `netsh`, `powercfg`, `takeown`, `icacls`) sin ventanas emergentes.
-
-### 🎨 Compilación profesional
-
-- **Migración a PS12EXE** (v0.6.9+): mejor manejo de scripts grandes y caracteres Unicode.
-- **Codificación UTF-8 con BOM** estricta en todos los `.ps1`.
-- **Firma digital SHA256 con Timestamp DigiCert** aplicada por separado.
-- **Codificación segura de strings** para que acentos, eñes y emojis sobrevivan al empaquetado.
-
----
-
-## 🎨 Versión anterior: V4.4 — "Polish & Stability"
-
-### 🖼️ Identidad visual reforzada
-
-- **Logo embebido** en pantalla de carga (Base64, 100% offline, sin archivos externos).
-- **Emblema OmegaSolver** en el encabezado del manual.
-- **Emojis contextuales** en el manual: cada función identificada por su icono según su categoría.
-
-### 📖 Manual de usuario mejorado
-
-- **3 idiomas en paralelo** (ES / EN / PT) con dos niveles de explicación:
-  - **`BAS`** — Amigable para usuarios sin experiencia técnica.
-  - **`TEC`** — Técnica (parámetros, comandos, GUIDs, registro).
-
-- **Emojis por función**:
-
-| Emoji | Categoría |
-|:---:|---|
-| 🔧 | Reparación / recuperación |
-| 🔍 | Escaneo / diagnóstico (SFC, DISM, CHKDSK) |
-| 💾 | Almacenamiento / desfragmentación |
-| ⚡ | Rendimiento / energía |
-| 🗑️ | Limpieza de temporales |
-| 🧹 | Mantenimiento profundo |
-| 🌐 | Red / DNS / Internet |
-| 🚀 | Aceleración de red |
-| 🛡️ | Seguridad / punto de restauración / protección SSD |
-| 📁 | Compartir archivos |
-| 🔄 | Actualizaciones |
-| 🔒 | Archivos bloqueados |
-| ⚙️ | Controladores obsoletos |
-
----
-
-## 🎨 Versión anterior: V4.3 — "Multilingual & Network"
-
-### 🌐 Sistema multilenguaje (ES / EN / PT)
-
-Menú desplegable en la barra superior para cambiar el idioma **en caliente, sin reiniciar**. Persiste en `%ProgramData%\OmegaSolver\language.txt`.
-
-### 📖 Manual de usuario en 3 columnas
-
-Ventana modal con los 3 idiomas en paralelo, dos niveles de explicación (`BAS` / `TEC`). Se adapta a Modo Básico o Avanzado.
-
-### 📡 Compartir Archivos por Red (solo Modo Avanzado)
-
-- **Robocopy / SMB** para PC a PC con opciones avanzadas (`/MT:16`, `/MIR`, `/MOVE`, `/XD`, `/XF`, `/MINAGE`, credenciales SMB).
-- **FTP** para móviles Android / iOS / Smart TV.
-- Detección automática de IPs locales.
-- Registro de progreso en vivo.
-
-### 🔄 Auto-Update Checker (GitHub Releases)
-
-Consulta la API de GitHub al iniciar. Si hay nueva versión → badge naranja. Si no hay red → aviso amigable sin bloquear.
-
-### 🐢 Modo Low (bajos recursos)
-
-Para PCs con hardware limitado. Desactiva efectos costosos y persiste entre sesiones.
-
-### 🛠️ Herramientas inspiradas en Dism++
-
-- Crear Punto de Restauración (`Checkpoint-Computer`).
-- Gestionar Programas de Inicio (`Win32_StartupCommand`).
-- Analizar Actualizaciones (`Get-HotFix` / registro CBS).
-- Gestor de Archivos Bloqueados (`takeown + icacls`).
-- Limpiar Controladores Obsoletos (`pnputil + DISM`).
-
----
-
-## 📊 Tabla comparativa de versiones
-
-| Característica | V4.2 | V4.3 | V4.4 | V4.4.1 | **V4.4.4** |
-|---|:---:|:---:|:---:|:---:|:---:|
-| Interfaz WPF moderna | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Temas visuales | 17 + OMEGA (6 sub) | 17 + OMEGA (6 sub) | 17 + OMEGA (6 sub) | 17 + OMEGA (6 sub) | 17 + OMEGA (6 sub) |
-| Layout Básico / Avanzado | 2 col / 3 col | 2 col / 3 col | 2 col / 3 col | 2 col / 3 col | 2 col / 3 col |
-| Protección SSD | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Manual integrado | Bilingüe | 3 idiomas + BAS/TEC | + emojis | + emojis | + emojis |
-| Idiomas UI | ES | ES / EN / PT | ES / EN / PT | ES / EN / PT | ES / EN / PT |
-| Sistema de Reversión | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Instancia única | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Custom Chrome | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Modo Low | ❌ | ✅ | ✅ | ✅ | ✅ |
-| Auto-Update (GitHub) | ❌ | ✅ | ✅ | ✅ | ✅ |
-| Compartir Archivos (Red) | ❌ | ✅ | ✅ | ✅ | ✅ |
-| Easy Context Menu | ❌ | ✅ | ✅ | ✅ | ✅ |
-| Herramientas Dism++ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| Limpieza 1-Clic separada | ❌ | ✅ | ✅ | ✅ | ✅ |
-| Logo embebido (Base64) | ❌ | ❌ | ✅ | ✅ | ✅ |
-| Emojis contextuales en manual | ❌ | ❌ | ✅ | ✅ | ✅ |
-| Compilación con PS12EXE | ❌ | ❌ | ✅ | ✅ | ✅ |
-| Codificación UTF-8 con BOM | ❌ | ❌ | ✅ | ✅ | ✅ |
-| Firma SHA256 + Timestamp | ❌ | ❌ | ✅ | ✅ | ✅ |
-| Núcleo asíncrono (`Invoke-OmegaAsync`) | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Overlay de carga no bloqueante | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Ventanas opacas (`AllowsTransparency=False`) | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Errores visibles (`Show-OmegaTaskError`) | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Limpieza con reporte detallado por ubicación | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Fix Winget Live (panel de detalle) | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Cold start reducido a la mitad | ❌ | ❌ | ❌ | ✅ | ✅ |
-| **Instalador de Office (ODT oficial, apps individuales)** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Panel de Ajustes (botones y rutas personalizadas)** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Autolimpieza programada + segundo plano** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Log a disco con visor** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Perfil Empresarial / Hogar con gating GPO (cambiable desde Ajustes)** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Barra de basura real + acciones rápidas** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Todo-en-1-Clic (limpieza + reparación + red)** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Sub-diálogos de opciones DISM / CHKDSK** | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Código 100% modular (170 archivos) + exe lanzador** | ❌ | ❌ | ❌ | ❌ | ✅ |
-
----
-
-## 📥 Instalación y ejecución
-
-### Opción 1 — Ejecución directa (recomendado)
-
-1. Descarga **`OmegaSolver-V4.4.4.zip`** desde la sección [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases). **No descargues solo el `.exe`**: no funciona por sí solo.
-2. **Extrae todo el contenido** del `.zip` en una carpeta (por ejemplo `C:\OmegaSolver`). El ejecutable necesita los archivos fuente (`App.ps1`, `Core/`, `UI/`, `Modules/`, `Workers/`, `Features/`) junto a él.
-3. Ejecuta **`OmegaSolver.exe`** (doble clic o clic derecho → **Ejecutar como administrador**), **sin sacarlo de la carpeta**.
-4. Acepta la solicitud de elevación de UAC.
-
-> [!IMPORTANT]
-> **Nota de Administrador**: el programa requiere permisos elevados para interactuar con servicios, registro y herramientas nativas (SFC/DISM/CHKDSK).
->
-> **Nota**: `OmegaSolver.exe` es un lanzador que arranca la app modular con PowerShell 5.1 del sistema. Mantén siempre el `.exe` junto a `App.ps1` y las carpetas del árbol modular.
-
-> [!WARNING]
-> **No ejecutes `OmegaSolver.exe` desde dentro del `.zip`** (el explorador lo extrae a una carpeta temporal y el árbol queda incompleto), **no muevas el `.exe` al Escritorio** y **no renombres `App.ps1`**. En los tres casos el lanzador no encuentra el programa y se cierra con un aviso.
-
-### Opción 2 — Desde consola
-
-```cmd
-cd C:\OmegaSolver
-OmegaSolver.exe
-```
-
-### Opción 3 — Verificación de integridad SHA256
-
-```powershell
-Get-FileHash "OmegaSolver.exe" -Algorithm SHA256
-```
+| Archivo | Tamaño | SHA-256 |
+|---|---:|---|
+| `OmegaSolver-Setup-5.0.0.exe` | 57.778.968 B | `037C6E087D25148B42EA61E71FC5C237D6A5950CF0B4374A78EC4FCE76A07528` |
+| `OmegaSolver.exe` | 62.705.520 B | `321A46DEDEC68AA9820002953EFEB54AA2AE96EF1E136178BE0A6E455819F1A8` |
+
+> `SHA256SUMS.txt` incluye además el hash de `OmegaSolver-5.0.0-source.zip`. Los hashes corresponden a los binarios **ya firmados**: si firmas o recompilas por tu cuenta, cambian.
 
 ---
 
 ## 🔐 Verificación de firma
 
-### ¿Qué es el archivo `OmegaSolver.cer`?
+Ambos ejecutables están firmados con Authenticode (SHA-256) y sellados con timestamp:
 
-Es la **clave pública** del certificado con el que se firman los ejecutables. Permite verificar que un `.exe` fue publicado legítimamente por **OMEGA_ALPHA** y no ha sido alterado desde su firma.
+| Dato | Valor |
+|---|---|
+| **Firmante** | `CN=OMEGA_ALPHA` |
+| **Huella (SHA-1)** | `8FBA8DB7360958B573834E576E0F7439EB9C9FD7` |
+| **Válido hasta** | 2029-09-22 |
+| **Estado** | `Valid` en `.exe` y en el instalador |
 
-### Método gráfico (Windows)
-
-Clic derecho sobre el `.exe` → **Propiedades** → pestaña **Firmas digitales**. Debe aparecer: **OMEGA_ALPHA**.
-
-### Método técnico (PowerShell)
+Comprobación rápida:
 
 ```powershell
-Import-Certificate -FilePath "OmegaSolver.cer" `
-                   -CertStoreLocation "Cert:\CurrentUser\TrustedPublisher"
-
-Get-AuthenticodeSignature "OmegaSolver.exe" |
-    Format-List Status, @{N='Firmado por';E={$_.SignerCertificate.Subject}}
+Get-AuthenticodeSignature .\OmegaSolver.exe | Format-List Status, SignerCertificate
+Get-AuthenticodeSignature .\OmegaSolver-Setup-5.0.0.exe | Format-List Status, SignerCertificate
 ```
 
-Resultado esperado:
+También puedes verlo desde el Explorador: clic derecho → **Propiedades** → **Firmas digitales**.
 
-```text
-Status      : Valid
-Firmado por : CN=OMEGA_ALPHA
-```
+> [!WARNING]
+> El certificado es **autofirmado**. La firma es criptográficamente válida, pero Windows puede mostrar **SmartScreen / "editor desconocido"** porque no hay reputación ni cadena hacia una CA pública. Eso no significa que el archivo esté alterado: comprueba el SHA-256 y, si quieres, importa `OmegaSolver.cer` en **Entidades de certificación raíz de confianza**.
+>
+> La firma cubre el `.exe` y el instalador. El código fuente no va firmado: descarga siempre desde este repositorio o desde Releases oficiales.
 
 ---
 
-## 📋 Requisitos del sistema
+## 🖥️ Requisitos
 
 | Requisito | Detalle |
 |---|---|
-| **SO** | Windows 10 (build 1809+) o Windows 11 (64-bit) |
-| **.NET Framework** | 4.7.2 o superior |
-| **Permisos** | Administrador (el `.exe` lo solicita al arrancar) |
-| **PowerShell** | **Windows PowerShell 5.1**, incluido de serie en Windows 10/11. No hay que instalar nada: el `.exe` no lleva runtime, usa el del sistema |
-| **Distribución** | **ZIP completo** (~648 KB; ~1,5 MB extraído). El `.exe` aislado no es funcional |
-| **RAM mínima verificada** | 4 GB (probado en Celeron N3350 @ 1.10 GHz · 2 cores) |
-| **Almacenamiento mínimo** | 60 GB (probado con 58 GB totales, 8 GB libres) |
+| **Sistema operativo** | Windows 10 (build 17763 / 1809 o superior) o Windows 11 |
+| **Arquitectura** | x64 |
+| **Permisos** | Administrador (la app lo solicita al arrancar) |
+| **Runtime** | **Ninguno**: .NET 10 va incluido en el `.exe` |
+| **PowerShell** | No hay que instalarlo (Windows ya trae 5.1 para tareas puntuales) |
+| **RAM** | 4 GB recomendados |
+| **Disco** | ~60 MB para el `.exe` portátil; ~60 MB instalado + datos |
+| **Conexión** | Solo para tienda winget, descarga de Office y comprobación de actualizaciones |
 
 ---
 
-## 🗂️ Estructura de archivos generados
+## 📂 Datos generados (y cómo revertir)
+
+OmegaSolver guarda todo **localmente**; no hay cuentas ni telemetría.
+
+| Modo | Carpeta de estado |
+|---|---|
+| **Instalada** | `%ProgramData%\OmegaSolver` |
+| **Portátil** | `<carpeta del .exe>\OmegaSolver-data` |
+
+Contenido habitual:
 
 ```text
-%ProgramData%\OmegaSolver
-├── reversible-state.json      # Estado para reversión de cambios
-├── theme.txt                  # Tema visual seleccionado
-├── omega-subcolor.txt         # Sub-paleta de OMEGA style
-├── low-mode.txt               # Estado del Modo Low
-├── language.txt               # Idioma seleccionado (ES/EN/PT)
-├── profile.txt                # Perfil del equipo (EMPRESARIAL / HOGAR)
-├── settings.json              # Ajustes (botones, rutas, autolimpieza, terminal)
-├── omega-warning.ack          # Confirmación de advertencia OMEGA style
-├── logs\                      # Log de operaciones (omega_YYYYMMDD.log)
-└── odt\                       # Caché de la Office Deployment Tool
+OmegaSolver-data/  (o %ProgramData%\OmegaSolver)
+├── settings.json           ajustes (comportamiento, autolimpieza, rutas, botones)
+├── profile.txt             perfil Empresa / Hogar
+├── theme.txt               tema seleccionado
+├── language.txt            idioma (ES / EN / PT)
+├── omega-subcolor.txt      subpaleta
+├── low-mode.txt            modo de gráficos reducido
+├── reversible-state.json   cambios reversibles aplicados
+├── omega-warning.ack       aviso de riesgos aceptado
+├── ecm-prompt.ack          aviso de energía/ECM aceptado
+├── journal\                diario JSON de operaciones
+├── reports\                reportes de limpieza
+├── logs\                   registros y crash.txt
+├── odt\                    archivos temporales del instalador de Office
+└── winget-index.json       caché del catálogo de la tienda
 ```
 
-> [!NOTE]
-> OmegaSolver es **100% offline y privado**: no recolecta ni transmite telemetría. La única conexión a internet es la comprobación de actualizaciones en GitHub (puedes ignorarla si no hay red).
+- **Revertir cambios:** botón **"Revertir cambios"** en la ventana principal; usa `reversible-state.json` y el diario.
+- **Desinstalar:** desde **Configuración → Aplicaciones** o el desinstalador de OmegaSolver. Los datos de `%ProgramData%\OmegaSolver` puedes conservarlos o borrarlos a mano.
+- **Desde la V4:** los ajustes **no se migran automáticamente**; puedes desinstalar o borrar la carpeta antigua de la V4.4.4.
 
 ---
 
-## 🗂️ Historial de versiones
+## 🛠️ Código abierto y compilación
 
-| Versión | Tipo | Destacado |
+OmegaSolver es **software libre bajo GPL-3.0**. El código fuente completo de esta versión se publica en el repositorio y, para esta release, como **`OmegaSolver-5.0.0-source.zip`** en los assets de [v5.0.0](https://github.com/OMEGAALPHA10/OmegaSolver/releases/tag/v5.0.0).
+
+### Compilar el `.exe`
+
+Requisitos: **.NET 10 SDK** y, para el instalador, **Inno Setup 6**.
+
+```powershell
+git clone https://github.com/OMEGAALPHA10/OmegaSolver.git
+cd OmegaSolver
+dotnet build -c Release
+```
+
+O con el script del proyecto, que además ejecuta el autotest y publica un único `.exe`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\publish.ps1
+```
+
+Resultado: `dist\win-x64\OmegaSolver.exe`.
+
+### Instalador
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\make-installer.ps1
+```
+
+Resultado: `dist\OmegaSolver-Setup-5.0.0.exe` (Inno Setup 6, modo completo/portátil, 3 idiomas).
+
+### Firma y winget
+
+```powershell
+# Firma el .exe, reconstruye el setup con el binario firmado, firma el setup
+# y actualiza el SHA-256 del manifiesto de winget.
+powershell -ExecutionPolicy Bypass -File scripts\sign-release.ps1 -Pfx "D:\cert.pfx"
+```
+
+```powershell
+# Recalcular el hash del instalador en el manifiesto
+powershell -ExecutionPolicy Bypass -File scripts\update-winget-manifest.ps1
+
+# Validar los manifiestos
+winget validate --manifest installer\winget
+```
+
+### Modos de consola (usuarios avanzados)
+
+```text
+OmegaSolver.exe --version             muestra la versión
+OmegaSolver.exe --selftest [ruta]     autotest interno y escribe un reporte
+OmegaSolver.exe --uicheck             valida que el XAML incrustado carga
+OmegaSolver.exe --datacheck           valida temas, idiomas y catálogos
+OmegaSolver.exe --clean-safe          limpieza segura sin interfaz
+OmegaSolver.exe --restore-point       crea un punto de restauración
+OmegaSolver.exe --cleanup-targets     lista los destinos de limpieza
+```
+
+### Benchmarks
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\benchmark.ps1
+```
+
+Compara la V5 publicada contra la V4.4.4 (copiada a `%TEMP%`, sin tocar el original) y mide arranque, CPU y RAM.
+
+---
+
+## 🧪 Solución de problemas
+
+| Síntoma | Causa | Solución |
 |---|---|---|
-| **V4.4.4** | ✅ **Release actual** | Instalador de Office (ODT oficial, apps individuales), panel de Ajustes, autolimpieza, perfil Empresa/Hogar, código 100% modular |
-| V4.4.1 | 📦 Release estable | Async core, fix Winget Live, ventanas opacas, limpieza detallada |
-| V4.4 | 📦 Release estable | Logo embebido, emojis en manual, PS12EXE, firma SHA256 |
-| V4.3 | 📦 Release estable | Multilenguaje ES/EN/PT, Easy Context Menu, Auto-Update, Compartir Archivos, Dism++ tools |
-| V4.2 | 📦 Release estable | OMEGA style (6 sub-paletas), Custom Chrome, layout balanceado |
-| V4.1 / ALT | 📦 Histórico | Rediseño del layout, enumeración rápida |
-| V4.0 | 📦 Histórico | WPF completo, 17 temas, manual bilingüe adaptativo |
-| V3.9 y anteriores | 📦 Legacy | Windows Forms y scripts base |
+| SmartScreen bloquea el `.exe` | Certificado autofirmado sin reputación | Verifica el SHA-256 y la firma; elige "Más información → Ejecutar de todas formas" |
+| "OmegaSolver ya se encuentra en ejecución" | Quedó una instancia abierta o colgada | Ciérrala desde el Administrador de tareas y reintenta |
+| El instalador pide administrador | Es obligatorio para SFC, DISM, servicios y tareas | Acepta el UAC |
+| La versión portátil no guarda ajustes | Carpeta sin permisos de escritura | Muévela a una carpeta escribible (USB, Documentos) |
+| `winget install` no encuentra el paquete | El manifiesto aún no fue aprobado | Usa el instalador o el `.exe` portátil |
+| El antivirus marca el `.exe` | Binario nuevo, poca reputación | Comprueba la firma y añade una exclusión **solo si confías en el origen** |
+| Office no descarga | Sin conexión o bloqueo de red | Revisa la conexión; la descarga es oficial de Microsoft |
 
-Consulta el [CHANGELOG](CHANGELOG.md) para detalles completos.
+Los registros están en `logs\` dentro de la carpeta de estado; `crash.txt` recoge errores de arranque.
 
 ---
 
-## 🧑‍💻 Autoría
+## 📜 Historial de versiones
 
-- **Desarrollador principal**: OMEGA_ALPHA
-- **Colaboración técnica**: Gemini & DeepSeek
-- **Filosofía del proyecto**: Herramientas libres, transparentes y gratuitas para la comunidad, con un enfoque especial en la **reversibilidad** de todos los cambios.
+| Versión | Arquitectura | Destacado |
+|---|---|---|
+| **V5.0.0** | **C# · .NET 10 · WPF · 1 `.exe`** | Reescritura nativa, instalador dual, reporte de limpieza, herramientas de uso rápido, winget |
+| V4.4.4 | PowerShell + PS12EXE | Modular (170 archivos), Office ODT, Ajustes, perfil, acciones rápidas |
+| V4.4.1 | PowerShell + PS12EXE | Lanzador `.exe` + árbol modular |
+| V4.4 | PowerShell + PS12EXE | Primera modular estable |
+| V4.3 | PowerShell (monolítico) | Base de funciones actuales |
 
-> *"El trabajo de limpieza y optimización nunca termina. Por eso, Omega — el inicio — y no Alpha — el final."*
+Las versiones anteriores se conservan en [Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases).
 
 ---
 
 ## 🤝 Contribuciones
 
-Las contribuciones son bienvenidas:
-
-- 🐛 [Reportar un bug](https://github.com/OMEGAALPHA10/OmegaSolver/issues)
-- 💡 [Sugerir una mejora](https://github.com/OMEGAALPHA10/OmegaSolver/issues)
-- 🔧 Enviar un Pull Request
-
----
-
-## ⚖ Licencia
-
-Distribuido bajo **GNU General Public License v3 (GPLv3)**. Consulta [LICENSE](LICENSE) para los términos completos.
+- 🐞 **Errores:** abre un [Issue](https://github.com/OMEGAALPHA10/OmegaSolver/issues) con la versión, el idioma, los pasos y, si puedes, `logs\crash.txt`.
+- 💡 **Ideas:** issues con etiqueta de mejora; describe el caso de uso, no solo el botón.
+- 🔧 **Pull requests:** mantén el estilo del proyecto, prueba en modo básico y avanzado, y no rompas la paridad de idiomas.
+- ⭐ **Difusión:** una estrella ayuda a que más gente lo encuentre.
 
 ---
 
-## 📢 Nota sobre el uso del código y atribución
+## 📄 Licencia
 
-Con base en los términos de la licencia **GNU GPLv3**, cualquier persona es libre de estudiar, modificar y redistribuir este software. Sin embargo, se **exige estrictamente** que:
+Este proyecto se distribuye bajo **GNU General Public License v3.0**. Consulta [LICENSE](https://github.com/OMEGAALPHA10/OmegaSolver/blob/main/LICENSE) para el texto completo.
 
-1. Se mantengan intactos todos los encabezados de créditos y avisos de Copyright (`© OMEGA_ALPHA`).
-2. Si el proyecto modificado incluye una interfaz gráfica, se debe conservar visible y accesible la atribución original al autor de OmegaSolver.
+```text
+OmegaSolver - Suite de diagnóstico, mantenimiento y optimización para Windows
+Copyright (C) 2025-2026 OmegaAlpha10
+
+Este programa es software libre: puedes redistribuirlo y/o modificarlo
+bajo los términos de la GNU GPL v3 publicada por la Free Software Foundation.
+Se distribuye SIN GARANTÍA, sin siquiera la garantía implícita de
+COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR.
+```
+
+Si distribuyes una versión modificada, **debes publicar también el código fuente** bajo la misma licencia.
 
 ---
+
+## 🙏 Créditos
+
+- **Desarrollado por:** OMEGA_ALPHA (OmegaAlpha10).
+- **Interfaz y filosofía:** inspirada en la simplicidad de WinUtil y en el estilo visual de OMEGASOLVER.
+- **Tecnologías:** .NET 10, WPF, System.Management, Inno Setup, winget.
+- **Asistencia de IA:** port a C#, revisión de código y documentación.
 
 <div align="center">
 
-## 🔗 Enlaces rápidos
+**Si OmegaSolver te resulta útil, deja una ⭐ en el repositorio.**
 
-[🌐 Página Web](https://omegaalpha10.github.io/OmegaSolver/) · [📦 Última versión](https://github.com/OMEGAALPHA10/OmegaSolver/releases) · [🗃️ Todas las releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases) · [📄 CHANGELOG](CHANGELOG.md) · [🐛 Reportar un bug](https://github.com/OMEGAALPHA10/OmegaSolver/issues)
+[⬆ Volver arriba](#-omegasolver-v500) · [📥 Releases](https://github.com/OMEGAALPHA10/OmegaSolver/releases) · [🌐 Sitio web](https://omegaalpha10.github.io/OmegaSolver/)
 
----
-
-**⭐ Si te gusta el proyecto, dale una estrella en GitHub**
-
-[![Star](https://img.shields.io/github/stars/OMEGAALPHA10/OmegaSolver?style=social)](https://github.com/OMEGAALPHA10/OmegaSolver)
+Hecho con 🇻🇪 por OmegaAlpha10
 
 </div>
