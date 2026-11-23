@@ -1330,14 +1330,24 @@
         border-color: var(--border-hover);
     }
 
-    /* ============ CAROUSEL 3D ============ */
+    /* ============ SHOWCASE — CARRUSEL 3D ============ */
+    .showcase { position: relative; margin: 4px 0 0; }
+
     .carousel-3d-wrap {
-        perspective: 1600px;
-        perspective-origin: 50% 40%;
-        height: 460px;
+        perspective: 1700px;
+        perspective-origin: 50% 42%;
+        height: 470px;
         position: relative;
-        margin: 20px 0 30px;
+        margin: 18px 0 2px;
         overflow: hidden;
+        outline: none;
+        touch-action: pan-y;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+    .carousel-3d-wrap:focus-visible {
+        box-shadow: inset 0 0 0 2px var(--accent);
+        border-radius: 18px;
     }
     .carousel-3d {
         position: relative;
@@ -1349,41 +1359,48 @@
     .carousel-card {
         position: absolute;
         top: 50%; left: 50%;
-        width: 620px; height: 380px;
-        margin: -190px 0 0 -310px;
+        width: 640px; height: 360px;
+        margin: -180px 0 0 -320px;
         overflow: hidden;
-        background: var(--card);
+        background: radial-gradient(circle at 50% 35%, #161616 0%, #070707 78%);
         border: 2px solid var(--border-hover);
         border-radius: 14px;
         box-shadow: 0 30px 80px rgba(0,0,0,0.7);
         cursor: pointer;
-        transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+        transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.7s ease,
+                    border-color 0.4s, box-shadow 0.4s;
         backface-visibility: hidden;
+        will-change: transform, opacity;
     }
     .carousel-card img {
         width: 100%; height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         display: block;
         transition: transform 0.55s cubic-bezier(0.23,1,0.32,1), filter 0.55s ease;
     }
-    .carousel-card .card-caption {
+    .carousel-card .card-index {
         position: absolute;
-        bottom: 0; left: 0; right: 0;
-        padding: 12px 16px;
-        background: linear-gradient(0deg, rgba(0,0,0,0.92) 0%, transparent 100%);
-        color: var(--accent);
+        top: 10px; left: 12px;
         font-family: 'Consolas', monospace;
-        font-size: 0.8rem;
-        text-align: center;
-        letter-spacing: 0.5px;
-        transition: color 0.3s;
+        font-size: 0.66rem;
+        letter-spacing: 1.5px;
+        color: var(--accent);
+        background: rgba(0,0,0,0.62);
+        border: 1px solid var(--border-hover);
+        border-radius: 999px;
+        padding: 2px 9px;
+        opacity: 0;
+        transition: opacity 0.35s;
+        pointer-events: none;
+        z-index: 5;
     }
     .carousel-card.active {
         border-color: var(--accent);
         box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px var(--accent-glow);
         cursor: zoom-in;
     }
-    .carousel-card:hover img { transform: scale(1.07); filter: brightness(1.12) saturate(1.25); }
+    .carousel-card.active .card-index { opacity: 1; }
+    .carousel-card:hover img { transform: scale(1.035); filter: brightness(1.1) saturate(1.15); }
     .carousel-card:hover {
         border-color: var(--accent);
         box-shadow: 0 30px 90px rgba(0,0,0,0.8), 0 0 55px var(--accent-glow);
@@ -1405,55 +1422,173 @@
     .carousel-card:hover .card-spark { animation: sparkSweep 0.9s ease-out; }
     @keyframes sparkSweep { 0% { opacity: 0; transform: translateX(-14px); } 12% { opacity: 1; } 100% { opacity: 0; transform: translateX(640px); } }
 
-    .carousel-nav {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 18px;
-        margin-top: 14px;
-    }
-    .carousel-btn {
-        width: 46px; height: 46px;
+    .stage-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 52px; height: 52px;
         border-radius: 50%;
-        background: var(--card);
+        background: rgba(10,10,10,0.72);
         border: 2px solid var(--border-hover);
         color: var(--accent);
+        font-size: 1.7rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        font-size: 1.2rem;
+        z-index: 120;
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+    .stage-prev { left: 10px; }
+    .stage-next { right: 10px; }
+    .stage-arrow:hover {
+        background: var(--accent-gradient);
+        color: #000;
+        border-color: transparent;
+        box-shadow: 0 0 30px var(--accent-glow-strong);
+        transform: translateY(-50%) scale(1.1);
+    }
+    .stage-arrow:active { transform: translateY(-50%) scale(0.96); }
+
+    .stage-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 16px;
+        margin-top: 4px;
+        transition: border-color 0.3s;
+    }
+    .stage-meta:hover { border-color: var(--border-hover); }
+    .stage-badge {
+        font-family: 'Consolas', monospace;
+        font-size: 0.66rem;
+        text-transform: uppercase;
+        letter-spacing: 1.6px;
+        color: var(--accent);
+        background: var(--accent-glow);
+        border: 1px solid var(--border-hover);
+        border-radius: 999px;
+        padding: 4px 11px;
+        white-space: nowrap;
+        transition: color 0.3s, border-color 0.3s;
+    }
+    .stage-text {
+        flex: 1 1 240px;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+    .stage-text strong {
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .stage-progress {
+        height: 3px;
+        border-radius: 999px;
+        background: var(--border);
+        overflow: hidden;
+    }
+    .stage-progress i {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: var(--accent-gradient);
+        border-radius: inherit;
+        transition: width 0.45s cubic-bezier(0.23,1,0.32,1);
+    }
+    .stage-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-left: auto;
+    }
+    .autoplay-btn {
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid var(--border-hover);
+        color: var(--accent);
+        cursor: pointer;
+        font-size: 0.68rem;
+        letter-spacing: -0.5px;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.3s;
         font-family: inherit;
+        padding: 0 0 0 2px;
     }
-    .carousel-btn:hover {
-        background: var(--accent-gradient);
-        color: #000;
-        border-color: transparent;
-        transform: scale(1.12) rotate(4deg);
-        box-shadow: 0 0 25px var(--accent-glow-strong);
+    .autoplay-btn:hover {
+        background: var(--accent-glow);
+        border-color: var(--accent);
     }
-    .carousel-btn:active { transform: scale(0.95); }
-    .carousel-dots { display: flex; gap: 6px; }
-    .carousel-dot {
-        width: 8px; height: 8px;
-        border-radius: 50%;
+    .autoplay-btn.paused { color: var(--text-muted); padding-left: 4px; }
+    .stage-count {
+        font-family: 'Consolas', monospace;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+        white-space: nowrap;
+    }
+
+    .carousel-strip {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 12px 4px 10px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-hover) transparent;
+        scroll-behavior: smooth;
+        scroll-snap-type: x proximity;
+    }
+    .carousel-strip::-webkit-scrollbar { height: 6px; }
+    .carousel-strip::-webkit-scrollbar-track { background: transparent; }
+    .carousel-strip::-webkit-scrollbar-thumb {
         background: var(--border-hover);
-        cursor: pointer;
-        transition: all 0.3s;
-        border: none;
-        padding: 0;
-    }
-    .carousel-dot:hover {
-        background: var(--accent);
-        transform: scale(1.4);
-        box-shadow: 0 0 10px var(--accent-glow);
-    }
-    .carousel-dot.active {
-        background: var(--accent-gradient);
-        box-shadow: 0 0 12px var(--accent);
-        width: 24px;
         border-radius: 999px;
+    }
+    .strip-thumb {
+        position: relative;
+        flex: 0 0 104px;
+        height: 62px;
+        border-radius: 9px;
+        overflow: hidden;
+        border: 2px solid var(--border);
+        background: #0a0a0a;
+        padding: 0;
+        cursor: pointer;
+        opacity: 0.5;
+        transition: opacity 0.3s, border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        scroll-snap-align: center;
+    }
+    .strip-thumb img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .strip-thumb:hover {
+        opacity: 1;
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+    }
+    .strip-thumb.active {
+        opacity: 1;
+        border-color: var(--accent);
+        transform: translateY(-3px);
+        box-shadow: 0 0 18px var(--accent-glow), 0 6px 18px rgba(0,0,0,0.5);
     }
 
     /* ============ LIGHTBOX ============ */
@@ -1473,11 +1608,27 @@
     .lightbox.open { display: flex; }
     .lightbox img {
         max-width: 95%;
-        max-height: 82vh;
+        max-height: 76vh;
         border-radius: 12px;
         border: 3px solid var(--accent);
         box-shadow: 0 0 80px var(--accent-glow);
         user-select: none;
+    }
+    .lightbox-caption {
+        position: absolute;
+        bottom: 52px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: min(90%, 720px);
+        text-align: center;
+        color: var(--text);
+        font-size: 0.88rem;
+        background: rgba(0,0,0,0.55);
+        border-left: 3px solid var(--accent);
+        border-radius: 8px;
+        padding: 6px 16px;
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
     }
     .lightbox-close {
         position: absolute;
@@ -2453,8 +2604,9 @@
     @media (max-width: 900px) {
         .bento { grid-template-columns: repeat(2, 1fr); }
         .bento-3, .bento-2 { grid-column: span 2; }
-        .carousel-3d-wrap { height: 340px; }
-        .carousel-card { width: 500px; height: 300px; margin: -150px 0 0 -250px; }
+        .carousel-3d-wrap { height: 390px; }
+        .carousel-card { width: 520px; height: 292px; margin: -146px 0 0 -260px; }
+        .strip-thumb { flex: 0 0 88px; height: 52px; }
         .float-chip, .code-rain { display: none; }
         body[data-umode="bas"]::before { font-size: 70vw; top: 22vh; }
         .glyph-stamp { font-size: 54px; bottom: 46px; left: 14px; }
@@ -2543,11 +2695,17 @@
         .bento-3, .bento-2 { grid-column: span 1; }
         .bento-card { min-height: 150px; padding: 20px 18px; }
 
-        .carousel-3d-wrap { height: 240px; margin: 12px 0 20px; }
-        .carousel-card { width: 300px; height: 190px; margin: -95px 0 0 -150px; }
-        .carousel-card .card-caption { font-size: 0.7rem; padding: 10px 12px; }
-        .carousel-nav { gap: 12px; }
-        .carousel-btn { width: 42px; height: 42px; font-size: 1.1rem; }
+        .carousel-3d-wrap { height: 230px; margin: 10px 0 0; }
+        .carousel-card { width: 300px; height: 170px; margin: -85px 0 0 -150px; }
+        .stage-arrow { display: none; }
+        .stage-meta { gap: 10px; padding: 10px 12px; }
+        .stage-badge { font-size: 0.6rem; padding: 3px 9px; }
+        .stage-text strong { font-size: 0.82rem; }
+        .stage-right { gap: 8px; }
+        .autoplay-btn { width: 30px; height: 30px; }
+        .carousel-strip { gap: 8px; padding: 10px 2px 8px; }
+        .strip-thumb { flex: 0 0 76px; height: 46px; }
+        .lightbox-caption { font-size: 0.76rem; bottom: 46px; padding: 5px 12px; }
 
         .install-grid { grid-template-columns: 1fr; gap: 14px; }
         .install-card { padding: 22px 18px; }
@@ -3075,17 +3233,29 @@
     <div class="section-header fade-in">
         <span class="section-eyebrow" data-i18n="screens_eyebrow">Interfaz</span>
         <h2 class="section-title"><span data-i18n="screens_title">Capturas</span></h2>
-        <p class="section-sub" data-i18n="screens_sub">Gira el carrusel o haz clic en cualquier tarjeta.</p>
+        <p class="section-sub" data-i18n="screens_sub">Gira el carrusel, usa las miniaturas o haz clic para ampliar.</p>
     </div>
 
-    <div class="carousel-3d-wrap fade-in">
-        <div class="carousel-3d" id="carousel3d"></div>
-    </div>
+    <div class="showcase fade-in" id="showcase">
+        <div class="carousel-3d-wrap" id="carouselStage" tabindex="0" role="region" aria-roledescription="carrusel" aria-label="Capturas de OmegaSolver">
+            <div class="carousel-3d" id="carousel3d"></div>
+            <button class="stage-arrow stage-prev" id="carouselPrev" aria-label="Anterior" type="button">‹</button>
+            <button class="stage-arrow stage-next" id="carouselNext" aria-label="Siguiente" type="button">›</button>
+        </div>
 
-    <div class="carousel-nav">
-        <button class="carousel-btn" id="carouselPrev" aria-label="Anterior">‹</button>
-        <div class="carousel-dots" id="carouselDots"></div>
-        <button class="carousel-btn" id="carouselNext" aria-label="Siguiente">›</button>
+        <div class="stage-meta">
+            <span class="stage-badge" id="stageBadge">Modos</span>
+            <div class="stage-text">
+                <strong id="stageCaption">Modo Básico — 2 columnas balanceadas</strong>
+                <div class="stage-progress" aria-hidden="true"><i id="stageProgress"></i></div>
+            </div>
+            <div class="stage-right">
+                <button class="autoplay-btn" id="autoplayToggle" type="button" aria-label="Pausar carrusel" aria-pressed="true">❚❚</button>
+                <span class="stage-count" id="stageCount">1 / 11</span>
+            </div>
+        </div>
+
+        <div class="carousel-strip" id="carouselStrip" aria-label="Miniaturas de capturas"></div>
     </div>
 </section>
 
@@ -3339,6 +3509,7 @@
     <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Anterior">‹</button>
     <img src="" alt="Zoom" id="lightboxImg">
     <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Siguiente">›</button>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
     <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
 </div>
 
@@ -3418,8 +3589,10 @@
             bento_f8_t:"Low Mode", bento_f8_d:"Para PCs con recursos limitados.",
             bento_f10_t:"Reporte de limpieza",
             bento_f10_d:"Tras cada limpieza: qué se eliminó, cuánto espacio se liberó y en qué rutas.",
-            screens_eyebrow:"Interfaz", screens_title:"Capturas", screens_sub:"Gira el carrusel o haz clic en cualquier tarjeta.",
-            slide_basic:"Modo Básico — 2 columnas balanceadas", slide_advanced:"Modo Avanzado — 3 columnas técnicas", slide_omega:"Estilo OMEGASOLVER con gradientes", slide_manual:"Manual trilingüe con emojis contextuales", slide_share:"Compartir archivos por red — Robocopy y FTP", slide_loading:"Pantalla de carga con logo embebido",
+            screens_eyebrow:"Interfaz", screens_title:"Capturas", screens_sub:"Gira el carrusel, usa las miniaturas o haz clic para ampliar.",
+            slide_basic:"Modo Básico — 2 columnas balanceadas", slide_advanced:"Modo Avanzado — 3 columnas técnicas", slide_omega:"Estilo OMEGASOLVER con gradientes", slide_report:"Reporte de limpieza — archivos, rutas y espacio liberado", slide_quicktools:"Herramientas de uso rápido — 6 secciones de ajustes", slide_quicksec:"Privacidad — toggles con el estado real del sistema", slide_store:"Omega App Store — catálogo curado con Winget Live", slide_settings:"Ajustes — reportes, autolimpieza y rutas propias", slide_manual:"Manual trilingüe con emojis contextuales", slide_share:"Compartir archivos por red — Robocopy y FTP", slide_loading:"Pantalla de carga con logo embebido",
+            cat_modes:"Modos", cat_tools:"Herramientas", cat_store:"Tienda", cat_system:"Sistema", cat_extra:"Extras",
+            carousel_prev:"Anterior", carousel_next:"Siguiente", carousel_pause:"Pausar carrusel", carousel_play:"Reanudar carrusel",
             install_eyebrow:"Empezar", install_title:"Instalación", install_sub:"Elige el método que prefieras.",
             tag_pending:"En revisión", tag_recommended:"Recomendado", install_new:"Instalación limpia", install_update:"Actualizar a V5.0.0",
             install_winget_desc:"Instala OmegaSolver con un solo comando desde la terminal.",
@@ -3545,8 +3718,10 @@
             bento_f8_t:"Low Mode", bento_f8_d:"For PCs with limited resources.",
             bento_f10_t:"Cleanup report",
             bento_f10_d:"After every cleanup: what was deleted, how much space was freed and where.",
-            screens_eyebrow:"Interface", screens_title:"Screenshots", screens_sub:"Rotate the carousel or click any card.",
-            slide_basic:"Basic Mode — 2 balanced columns", slide_advanced:"Advanced Mode — 3 technical columns", slide_omega:"OMEGASOLVER style with gradients", slide_manual:"Trilingual manual with contextual emojis", slide_share:"Network file sharing — Robocopy and FTP", slide_loading:"Loading screen with embedded logo",
+            screens_eyebrow:"Interface", screens_title:"Screenshots", screens_sub:"Rotate the carousel, use the thumbnails or click to zoom.",
+            slide_basic:"Basic Mode — 2 balanced columns", slide_advanced:"Advanced Mode — 3 technical columns", slide_omega:"OMEGASOLVER style with gradients", slide_report:"Cleanup report — files, paths and freed space", slide_quicktools:"Quick tools — 6 categories of tweaks", slide_quicksec:"Privacy — toggles with the real system state", slide_store:"Omega App Store — curated catalog with Winget Live", slide_settings:"Settings — reports, auto-clean and custom paths", slide_manual:"Trilingual manual with contextual emojis", slide_share:"Network file sharing — Robocopy and FTP", slide_loading:"Loading screen with embedded logo",
+            cat_modes:"Modes", cat_tools:"Tools", cat_store:"Store", cat_system:"System", cat_extra:"Extras",
+            carousel_prev:"Previous", carousel_next:"Next", carousel_pause:"Pause carousel", carousel_play:"Resume carousel",
             install_eyebrow:"Get started", install_title:"Installation", install_sub:"Choose your preferred method.",
             tag_pending:"In review", tag_recommended:"Recommended", install_new:"Fresh install", install_update:"Upgrade to V5.0.0",
             install_winget_desc:"Install OmegaSolver with a single command from the terminal.",
@@ -3672,8 +3847,10 @@
             bento_f8_t:"Low Mode", bento_f8_d:"Para PCs com recursos limitados.",
             bento_f10_t:"Relatório de limpeza",
             bento_f10_d:"Após cada limpeza: o que foi removido, quanto espaço foi liberado e em quais caminhos.",
-            screens_eyebrow:"Interface", screens_title:"Capturas", screens_sub:"Gire o carrossel ou clique em qualquer cartão.",
-            slide_basic:"Modo Básico — 2 colunas balanceadas", slide_advanced:"Modo Avançado — 3 colunas técnicas", slide_omega:"Estilo OMEGASOLVER com gradientes", slide_manual:"Manual trilíngue com emojis contextuais", slide_share:"Compartilhar arquivos por rede — Robocopy e FTP", slide_loading:"Tela de carregamento com logo embutido",
+            screens_eyebrow:"Interface", screens_title:"Capturas", screens_sub:"Gire o carrossel, use as miniaturas ou clique para ampliar.",
+            slide_basic:"Modo Básico — 2 colunas balanceadas", slide_advanced:"Modo Avançado — 3 colunas técnicas", slide_omega:"Estilo OMEGASOLVER com gradientes", slide_report:"Relatório de limpeza — arquivos, caminhos e espaço liberado", slide_quicktools:"Ferramentas rápidas — 6 seções de ajustes", slide_quicksec:"Privacidade — toggles com o estado real do sistema", slide_store:"Omega App Store — catálogo curado com Winget Live", slide_settings:"Configurações — relatórios, limpeza automática e caminhos próprios", slide_manual:"Manual trilíngue com emojis contextuais", slide_share:"Compartilhar arquivos por rede — Robocopy e FTP", slide_loading:"Tela de carregamento com logo embutido",
+            cat_modes:"Modos", cat_tools:"Ferramentas", cat_store:"Loja", cat_system:"Sistema", cat_extra:"Extras",
+            carousel_prev:"Anterior", carousel_next:"Próximo", carousel_pause:"Pausar carrossel", carousel_play:"Retomar carrossel",
             install_eyebrow:"Começar", install_title:"Instalação", install_sub:"Escolha o método que preferir.",
             tag_pending:"Em revisão", tag_recommended:"Recomendado", install_new:"Instalação limpa", install_update:"Atualizar para V5.0.0",
             install_winget_desc:"Instale o OmegaSolver com um único comando no terminal.",
@@ -3898,62 +4075,117 @@
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
     const carousel3d = document.getElementById('carousel3d');
-    const carouselDots = document.getElementById('carouselDots');
+    const carouselStage = document.getElementById('carouselStage');
+    const carouselStrip = document.getElementById('carouselStrip');
+    const showcase = document.getElementById('showcase');
+    const stageBadge = document.getElementById('stageBadge');
+    const stageCaption = document.getElementById('stageCaption');
+    const stageProgress = document.getElementById('stageProgress');
+    const stageCount = document.getElementById('stageCount');
+    const autoplayToggle = document.getElementById('autoplayToggle');
+    const carouselPrev = document.getElementById('carouselPrev');
+    const carouselNext = document.getElementById('carouselNext');
 
     const slides = [
-        { src: './screenshots/basic-mode.png',    key: 'slide_basic' },
-        { src: './screenshots/advanced-mode.png', key: 'slide_advanced' },
-        { src: './screenshots/omega-style.png',   key: 'slide_omega' },
-        { src: './screenshots/manual.png',        key: 'slide_manual' },
-        { src: './screenshots/share-files.png',   key: 'slide_share' },
-        { src: './screenshots/loading.png',       key: 'slide_loading' }
+        { src: './screenshots/basic-mode.png',          key: 'slide_basic',      cat: 'cat_modes'  },
+        { src: './screenshots/advanced-mode.png',       key: 'slide_advanced',   cat: 'cat_modes'  },
+        { src: './screenshots/omega-style.png',         key: 'slide_omega',      cat: 'cat_modes'  },
+        { src: './screenshots/cleanup-report.png',      key: 'slide_report',     cat: 'cat_system' },
+        { src: './screenshots/quick-tools.png',         key: 'slide_quicktools', cat: 'cat_tools'  },
+        { src: './screenshots/quick-tools-section.png', key: 'slide_quicksec',   cat: 'cat_tools'  },
+        { src: './screenshots/winget-store.png',        key: 'slide_store',      cat: 'cat_store'  },
+        { src: './screenshots/settings.png',            key: 'slide_settings',   cat: 'cat_system' },
+        { src: './screenshots/manual.png',              key: 'slide_manual',     cat: 'cat_extra'  },
+        { src: './screenshots/share-files.png',         key: 'slide_share',      cat: 'cat_extra'  },
+        { src: './screenshots/loading.png',             key: 'slide_loading',    cat: 'cat_system' }
     ];
 
-    function updateCarouselCaptions(lang) {
-        const dict = i18n[lang] || i18n.es;
-        document.querySelectorAll('.carousel-card').forEach(card => {
-            const key = card.dataset.slideKey;
-            if (!key || !dict[key]) return;
-            const caption = card.querySelector('.card-caption');
-            const img = card.querySelector('img');
-            if (caption) caption.textContent = dict[key];
-            if (img) img.alt = dict[key];
-        });
-    }
+    const reduceMotion = (() => {
+        try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; }
+    })();
 
     let currentSlide = 0;
+    let slideLang = document.documentElement.lang || 'es';
+    let autoplayOn = true;
+    let autoplayHover = false;
+    let showcaseInView = !('IntersectionObserver' in window);
+    let pageHidden = document.hidden;
+    let autoplayTimer = null;
+    var showcaseReady = false;
+
+    try { autoplayOn = localStorage.getItem('omega_carousel_auto') !== '0'; } catch (e) {}
+    if (reduceMotion) autoplayOn = false;
+
+    function dict() { return i18n[slideLang] || i18n.es; }
+
+    function updateCarouselCaptions(lang) {
+        if (!showcaseReady) return;
+        slideLang = lang || slideLang;
+        const d = dict();
+        const slide = slides[currentSlide];
+        if (stageBadge) stageBadge.textContent = d[slide.cat] || '';
+        if (stageCaption) stageCaption.textContent = d[slide.key] || '';
+        if (stageCount) stageCount.textContent = (currentSlide + 1) + ' / ' + slides.length;
+        if (stageProgress) stageProgress.style.width = (((currentSlide + 1) / slides.length) * 100) + '%';
+        if (carouselPrev) carouselPrev.setAttribute('aria-label', d.carousel_prev || '');
+        if (carouselNext) carouselNext.setAttribute('aria-label', d.carousel_next || '');
+        syncAutoplayBtn(d);
+        carouselStrip.querySelectorAll('.strip-thumb').forEach(t => {
+            const sl = slides[+t.dataset.index];
+            if (!sl) return;
+            const label = d[sl.key] || '';
+            t.title = label;
+            t.setAttribute('aria-label', label);
+            const img = t.querySelector('img');
+            if (img) img.alt = label;
+        });
+        carousel3d.querySelectorAll('.carousel-card').forEach(card => {
+            const sl = slides[+card.dataset.index];
+            const img = card.querySelector('img');
+            if (sl && img) img.alt = d[sl.key] || '';
+        });
+        const lb = document.getElementById('lightbox');
+        const lbCap = document.getElementById('lightboxCaption');
+        const lbImg = document.getElementById('lightboxImg');
+        if (lb && lb.classList.contains('open') && lbCap && lbImg) {
+            const label = d[slides[currentLightboxIdx].key] || '';
+            lbCap.textContent = label;
+            lbImg.alt = label;
+        }
+    }
 
     slides.forEach((slide, i) => {
         const card = document.createElement('div');
         card.className = 'carousel-card';
         card.dataset.index = i;
-        card.dataset.slideKey = slide.key;
         card.innerHTML = `
-            <img src="${slide.src}" alt="" loading="lazy" decoding="async" onerror="this.style.opacity=0.2">
-            <div class="card-caption"></div>
+            <img src="${slide.src}" alt="" loading="lazy" decoding="async" onerror="this.style.opacity=0.25">
+            <span class="card-index">${String(i + 1).padStart(2, '0')}</span>
             <div class="card-shine"></div>
             <div class="card-spark"></div>
         `;
         card.addEventListener('click', () => {
+            if (dragMoved) return;
             if (i === currentSlide) openLightbox(i);
             else goToSlide(i);
         });
         carousel3d.appendChild(card);
 
-        const dot = document.createElement('button');
-        dot.className = 'carousel-dot';
-        dot.dataset.index = i;
-        dot.addEventListener('click', () => goToSlide(i));
-        carouselDots.appendChild(dot);
+        const thumb = document.createElement('button');
+        thumb.type = 'button';
+        thumb.className = 'strip-thumb';
+        thumb.dataset.index = i;
+        thumb.innerHTML = `<img src="${slide.src}" alt="" loading="lazy" decoding="async">`;
+        thumb.addEventListener('click', () => goToSlide(i));
+        carouselStrip.appendChild(thumb);
     });
 
     function layoutCarousel() {
         const cards = carousel3d.querySelectorAll('.carousel-card');
-        const dots = carouselDots.querySelectorAll('.carousel-dot');
         const total = cards.length;
-        const isMobile = window.innerWidth <= 640;
-        const spacing = isMobile ? 180 : 340;
-        const depth = isMobile ? 130 : 250;
+        const compact = window.innerWidth <= 640;
+        const spacing = compact ? 170 : 350;
+        const depth = compact ? 120 : 260;
 
         cards.forEach((card, i) => {
             let offset = i - currentSlide;
@@ -3961,57 +4193,156 @@
             if (offset < -total / 2) offset += total;
 
             const absOffset = Math.abs(offset);
-            const scale = absOffset === 0 ? 1 : (absOffset === 1 ? 0.82 : 0.65);
-            const translateX = offset * spacing;
-            const translateZ = -absOffset * depth;
-            const rotateY = offset * -22;
-            const opacity = absOffset === 0 ? 1 : (absOffset === 1 ? 0.65 : 0.25);
-            const zIndex = 100 - absOffset;
+            const scale = absOffset === 0 ? 1 : (absOffset === 1 ? 0.84 : 0.68);
+            const opacity = absOffset === 0 ? 1 : (absOffset === 1 ? 0.6 : 0.22);
 
-            card.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+            card.style.transform = `translateX(${offset * spacing}px) translateZ(${-absOffset * depth}px) rotateY(${offset * -20}deg) scale(${scale})`;
             card.style.opacity = opacity;
-            card.style.zIndex = zIndex;
+            card.style.zIndex = 100 - absOffset;
             card.classList.toggle('active', i === currentSlide);
             card.style.display = absOffset > 2 ? 'none' : 'block';
+            card.style.pointerEvents = absOffset > 2 ? 'none' : 'auto';
         });
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === currentSlide);
+
+        carouselStrip.querySelectorAll('.strip-thumb').forEach((thumb, i) => {
+            const active = i === currentSlide;
+            thumb.classList.toggle('active', active);
+            thumb.setAttribute('aria-current', active ? 'true' : 'false');
         });
+    }
+
+    function centerThumb(idx) {
+        const thumb = carouselStrip.children[idx];
+        if (!thumb) return;
+        const thumbRect = thumb.getBoundingClientRect();
+        const stripRect = carouselStrip.getBoundingClientRect();
+        const delta = (thumbRect.left - stripRect.left) - (carouselStrip.clientWidth - thumbRect.width) / 2;
+        const target = Math.max(0, carouselStrip.scrollLeft + delta);
+        if (Math.abs(target - carouselStrip.scrollLeft) < 4) return;
+        carouselStrip.scrollTo({ left: target, behavior: reduceMotion ? 'auto' : 'smooth' });
     }
 
     function goToSlide(i) {
         currentSlide = (i + slides.length) % slides.length;
         layoutCarousel();
+        updateCarouselCaptions(slideLang);
+        centerThumb(currentSlide);
+        scheduleAutoplay();
     }
     function nextSlide() { goToSlide(currentSlide + 1); }
     function prevSlide() { goToSlide(currentSlide - 1); }
 
-    document.getElementById('carouselNext').addEventListener('click', nextSlide);
-    document.getElementById('carouselPrev').addEventListener('click', prevSlide);
+    function syncAutoplayBtn(d) {
+        if (!autoplayToggle) return;
+        const text = d || dict();
+        autoplayToggle.textContent = autoplayOn ? '❚❚' : '▶';
+        autoplayToggle.classList.toggle('paused', !autoplayOn);
+        autoplayToggle.setAttribute('aria-pressed', autoplayOn ? 'true' : 'false');
+        autoplayToggle.setAttribute('aria-label', autoplayOn ? (text.carousel_pause || 'Pause') : (text.carousel_play || 'Play'));
+    }
+
+    function scheduleAutoplay() {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+        if (!autoplayOn || autoplayHover || !showcaseInView || pageHidden) return;
+        autoplayTimer = setInterval(nextSlide, 6500);
+    }
+
+    autoplayToggle.addEventListener('click', () => {
+        autoplayOn = !autoplayOn;
+        try { localStorage.setItem('omega_carousel_auto', autoplayOn ? '1' : '0'); } catch (e) {}
+        syncAutoplayBtn();
+        scheduleAutoplay();
+    });
+
+    if (showcase) {
+        showcase.addEventListener('pointerenter', () => { autoplayHover = true; scheduleAutoplay(); });
+        showcase.addEventListener('pointerleave', () => { autoplayHover = false; scheduleAutoplay(); });
+        showcase.addEventListener('focusin', () => { autoplayHover = true; scheduleAutoplay(); });
+        showcase.addEventListener('focusout', () => { autoplayHover = false; scheduleAutoplay(); });
+    }
+    document.addEventListener('visibilitychange', () => {
+        pageHidden = document.hidden;
+        scheduleAutoplay();
+    });
+    if ('IntersectionObserver' in window && showcase) {
+        new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.target === showcase) {
+                    showcaseInView = entry.isIntersecting;
+                    scheduleAutoplay();
+                }
+            });
+        }, { threshold: 0.2 }).observe(showcase);
+    }
+
+    let dragStartX = null;
+    let dragMoved = false;
+    carouselStage.addEventListener('pointerdown', e => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        dragStartX = e.clientX;
+        dragMoved = false;
+    });
+    carouselStage.addEventListener('pointermove', e => {
+        if (dragStartX === null) return;
+        if (Math.abs(e.clientX - dragStartX) > 12) dragMoved = true;
+    });
+    carouselStage.addEventListener('pointerup', e => {
+        if (dragStartX === null) return;
+        const dx = e.clientX - dragStartX;
+        dragStartX = null;
+        if (dx > 45) prevSlide();
+        else if (dx < -45) nextSlide();
+        if (dragMoved) setTimeout(() => { dragMoved = false; }, 0);
+    });
+    carouselStage.addEventListener('pointercancel', () => { dragStartX = null; dragMoved = false; });
+    carouselStage.addEventListener('keydown', e => {
+        const lb = document.getElementById('lightbox');
+        if (lb && lb.classList.contains('open')) return;
+        if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); nextSlide(); }
+    });
+
+    carouselNext.addEventListener('click', nextSlide);
+    carouselPrev.addEventListener('click', prevSlide);
+
     layoutCarousel();
+    showcaseReady = true;
     updateCarouselCaptions(document.documentElement.lang || 'es');
-    window.addEventListener('resize', layoutCarousel);
+    centerThumb(0);
+    syncAutoplayBtn();
+    scheduleAutoplay();
+    window.addEventListener('resize', () => { layoutCarousel(); });
 
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCounter = document.getElementById('lightboxCounter');
+    const lightboxCaption = document.getElementById('lightboxCaption');
     let currentLightboxIdx = 0;
 
+    function updateLightbox(idx) {
+        const d = dict();
+        const label = d[slides[idx].key] || '';
+        lightboxImg.src = slides[idx].src;
+        lightboxImg.alt = label;
+        lightboxCaption.textContent = label;
+        lightboxCounter.textContent = `${idx + 1} / ${slides.length}`;
+    }
     function openLightbox(idx) {
         currentLightboxIdx = idx;
-        lightboxImg.src = slides[idx].src;
+        updateLightbox(idx);
         lightbox.classList.add('open');
-        lightboxCounter.textContent = `${idx + 1} / ${slides.length}`;
         document.body.style.overflow = 'hidden';
+        clearInterval(autoplayTimer);
     }
     function closeLightbox() {
         lightbox.classList.remove('open');
         document.body.style.overflow = '';
+        scheduleAutoplay();
     }
     function navLightbox(dir) {
         currentLightboxIdx = (currentLightboxIdx + dir + slides.length) % slides.length;
-        lightboxImg.src = slides[currentLightboxIdx].src;
-        lightboxCounter.textContent = `${currentLightboxIdx + 1} / ${slides.length}`;
+        updateLightbox(currentLightboxIdx);
     }
 
     document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
