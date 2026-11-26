@@ -1,0 +1,52 @@
+name: "💡 Solicitud de mejora"
+description: "Propón una nueva función o mejora para OmegaSolver"
+title: "[Mejora]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe el **caso de uso**, no solo el botón: qué quieres lograr y por qué. Eso ayuda a decidir si llega al modo básico o solo al técnico.
+  - type: textarea
+    id: necesidad
+    attributes:
+      label: "Problema o necesidad"
+      description: "¿Qué quieres lograr y por qué? Ej.: 'Tengo 3 navegadores y la autolimpieza solo cierra uno'."
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: "Solución propuesta"
+      description: "Qué haría OmegaSolver (comportamiento, no implementación técnica)."
+    validations:
+      required: true
+  - type: checkboxes
+    id: modo
+    attributes:
+      label: "¿Dónde debería vivir esta función?"
+      description: "Marca todas las que apliquen."
+      options:
+        - label: "Modo básico (visible para todo tipo de usuarios)"
+        - label: "Modo técnico"
+        - label: "Ambos modos"
+    validations:
+      required: true
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: "Alternativas que has probado"
+      description: "Herramientas externas, pasos manuales, ajustes de Windows, etc."
+    validations:
+      required: false
+  - type: checkboxes
+    id: contribucion
+    attributes:
+      label: "¿Estás dispuesto a ayudar?"
+      options:
+        - label: "Sí, puedo contribuir con código (PR)"
+        - label: "Puedo ayudar probando (modo básico y técnico)"
+        - label: "Puedo ayudar con traducciones (ES / EN / PT)"
+        - label: "No, solo sugiero la idea"
+    validations:
+      required: false

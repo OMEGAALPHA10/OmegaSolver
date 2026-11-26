@@ -1,0 +1,99 @@
+name: "🐞 Reporte de error"
+description: "Reporta un fallo de OmegaSolver (crash, limpieza incorrecta, texto mal traducido, etc.)"
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ¡Gracias por reportar! Completa la información: cuanto más precisa, más rápido se puede reproducir y corregir.
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: "Descripción del error"
+      description: "Qué pasó y qué esperabas que pasara (1-3 líneas)."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: "Versión de OmegaSolver"
+      description: "Cómprala con `OmegaSolver.exe --version` o en Ajustes › Acerca de."
+      placeholder: "ej. 5.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: instalacion
+    attributes:
+      label: "Modo de instalación"
+      options:
+        - "Instalador (ProgramData)"
+        - "Portable (carpeta junto al .exe)"
+        - "No estoy seguro"
+    validations:
+      required: true
+  - type: dropdown
+    id: modo_uso
+    attributes:
+      label: "Modo de uso"
+      options:
+        - "Modo básico"
+        - "Modo técnico"
+    validations:
+      required: true
+  - type: dropdown
+    id: idioma
+    attributes:
+      label: "Idioma de la interfaz"
+      options:
+        - "Español (ES)"
+        - "English (EN)"
+        - "Português (PT)"
+    validations:
+      required: true
+  - type: dropdown
+    id: windows
+    attributes:
+      label: "Versión de Windows"
+      options:
+        - "Windows 11"
+        - "Windows 10"
+        - "Windows 8.1 / 8"
+        - "Windows 7"
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: "Pasos para reproducirlo"
+      description: "Lista numerada exacta: 1. Abrir... 2. Ir a... 3. Pulsar..."
+      placeholder: |
+        1. Abro OmegaSolver
+        2. Voy a Ajustes › Autolimpieza
+        3. Marco "Al iniciar Windows" y guardo
+    validations:
+      required: true
+  - type: textarea
+    id: evidencia
+    attributes:
+      label: "Capturas o video"
+      description: "Arrastra aquí la imagen. Marca datos personales antes de subir."
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Logs"
+      description: "Pega el contenido de `logs\\crash.txt` o de `logs\\*.log` dentro de un bloque de código ``` ."
+      render: shell
+    validations:
+      required: false
+  - type: checkboxes
+    id: contexto
+    attributes:
+      label: "Información adicional"
+      options:
+        - label: "El error ocurre siempre, no solo a veces"
+        - label: "Se creó/consultó un punto de restauración antes del cambio"
+        - label: "Ejecuté OmegaSolver como administrador"
+        - label: "Busqué en issues abiertos/cerrados y no encontré un reporte igual"

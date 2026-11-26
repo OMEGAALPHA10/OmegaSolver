@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "💬 Dudas y soporte"
+    url: https://github.com/OMEGAALPHA10/OmegaSolver/discussions/categories/q-a
+    about: "Preguntas de '¿cómo hago X?' — no abran un issue para esto"
+  - name: "💡 Lluvia de ideas"
+    url: https://github.com/OMEGAALPHA10/OmegaSolver/discussions/categories/ideas
+    about: "Ideas informales antes de proponerlas como mejora formal"
+  - name: "🛡️ Reporte de seguridad (privado)"
+    url: https://github.com/OMEGAALPHA10/OmegaSolver/security/advisories/new
+    about: "Por favor NO abras un issue público para vulnerabilidades"

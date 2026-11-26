@@ -1,0 +1,57 @@
+name: "🌐 Corrección de traducción"
+description: "Reporta un texto incorrecto, sin traducir o con paridad rota entre ES / EN / PT"
+title: "[Traducción]: "
+labels: ["translation", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        OmegaSolver mantiene **738 claves por idioma** (ES / EN / PT). Si un texto está mal, dinos la clave o una captura de la pantalla.
+  - type: dropdown
+    id: idioma
+    attributes:
+      label: "Idioma con el problema"
+      options:
+        - "Español (ES)"
+        - "English (EN)"
+        - "Português (PT)"
+        - "Varios idiomas"
+    validations:
+      required: true
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: "Tipo de problema"
+      options:
+        - "Texto mal traducido"
+        - "Texto sin traducir (aparece en inglés/clave @@...@@)"
+        - "Texto cortado / no cabe en la interfaz"
+        - "Error ortográfico o gramatical"
+        - "Texto duplicado o en el lugar equivocado"
+    validations:
+      required: true
+  - type: input
+    id: pantalla
+    attributes:
+      label: "Pantalla donde aparece"
+      description: "Ej.: Ajustes › Autolimpieza, panel principal, reporte emergente."
+    validations:
+      required: true
+  - type: textarea
+    id: tabla
+    attributes:
+      label: "Claves y textos"
+      description: "Si conoces la clave @@...@@ inclúyela. Si no, copia el texto exacto actual."
+      value: |
+        | Clave | Texto actual | Texto correcto |
+        |---|---|---|
+        | @@clave@@ | ... | ... |
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: "Captura de pantalla"
+      description: "Arrastra aquí la imagen donde se ve el texto."
+    validations:
+      required: false
